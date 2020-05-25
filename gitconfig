@@ -1,6 +1,8 @@
 [user]
 	name = Julien Calixte
 	email = julienc@bam.tech
+[github]
+    user = jcalixte
 [filter "lfs"]
 	process = git-lfs filter-process
 	required = true
@@ -10,10 +12,14 @@
 	co = checkout
 	st = status
 	br = branch
+  s = status -s
+  ca = commit --amend --no-edit
+  unstage = reset HEAD
+  tree = log --graph --pretty=format:'%C(auto)%h - %s [%an] (%C(blue)%ar)%C(auto)%d'
+  bigtree = log --graph --decorate --pretty=format:'%C(auto)%d%n%h %s%+b%n(%G?) %an <%ae> (%C(blue)%ad%C(auto))%n'
+  hist = log --date=short --pretty=format:'%C(auto)%ad %h (%G?) %s [%an] %d'
+	autofixup = "!f() { COMMIT=$(git log --pretty=oneline | fzf | awk '{print $1}'); git commit --fixup $COMMIT; GIT_SEQUENCE_EDITOR=: git rebase --autostash --autosquash -i $COMMIT^; }; f"
+	alias = ! git config --get-regexp ^alias\\. | sed -e s/^alias\\.// -e s/\\ /\\ =\\ /
 [push]
 	default = current
 	followTags = false
-
-[alias]
-	autofixup = "!f() { COMMIT=$(git log --pretty=oneline | fzf | awk '{print $1}'); git commit --fixup $COMMIT; GIT_SEQUENCE_EDITOR=: git rebase --autostash --autosquash -i $COMMIT^; }; f"
-	alias = ! git config --get-regexp ^alias\\. | sed -e s/^alias\\.// -e s/\\ /\\ =\\ /
