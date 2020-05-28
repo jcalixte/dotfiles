@@ -141,5 +141,6 @@
     "vsicons.dontShowNewVersionMessage": true,
     "editor.lineHeight": 0,
     "vetur.useWorkspaceDependencies": true,
-    "zenMode.hideLineNumbers": false
+    "zenMode.hideLineNumbers": false,
+    "extensions.ignoreRecommendations": true
 }
