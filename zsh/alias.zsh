@@ -1,4 +1,3 @@
-
 # Set personal aliases, overriding those provided by oh-my-zsh libs,
 # plugins, and themes. Aliases can be placed here, though oh-my-zsh
 # users are encouraged to define aliases within the ZSH_CUSTOM folder.
@@ -31,6 +30,10 @@ alias liveand="scrcpy"
 alias sshpi="ssh pi@192.168.1.36"
 alias ide="tmux split-window -h -p 30 && tmux split-window -v -p 66"
 alias vueconfig="cp -r ~/vueconfig/. ."
+alias chdot="vim ~/.dotfiles"
+
+# yarn commands
+alias ys="yarn serve"
 
 # Dotnet Core aliases
 alias efdbreset="rm -rf Migrations && dotnet ef database drop --force && dotnet ef migrations add Initial && dotnet ef database update"
