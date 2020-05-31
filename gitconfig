@@ -2,7 +2,7 @@
 	name = Julien Calixte
 	email = julienc@bam.tech
 [github]
-    user = jcalixte
+  user = jcalixte
 [filter "lfs"]
 	process = git-lfs filter-process
 	required = true
@@ -23,3 +23,5 @@
 [push]
 	default = current
 	followTags = false
+[pull]
+	default = current
