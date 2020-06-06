@@ -1,6 +1,12 @@
-
 # If you come from bash you might have to change your $PATH.
+cd ~
 export PATH=$HOME/bin:/usr/local/bin:$PATH
+export DENO_INSTALL="$HOME/.deno"
+export PATH="$DENO_INSTALL/bin:$PATH"
+
+# fnm
+export PATH=/home/julien/.fnm:$PATH
+eval "`fnm env --multi`"
 
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
@@ -73,7 +79,7 @@ ENABLE_CORRECTION="true"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git git-flow react-native tmux zsh-autosuggestions copyfile docker encode64 extract yarn-autocompletions fzf-yarn)
+plugins=(git git-flow react-native tmux zsh-autosuggestions copyfile docker encode64 extract yarn-autocompletions)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -87,13 +93,6 @@ export PATH=$PATH:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools
 # You may need to manually set your language environment
 # export LANG=en_US.UTF-8
 
-# Preferred editor for local and remote sessions
-# if [[ -n $SSH_CONNECTION ]]; then
-#   export EDITOR='vim'
-# else
-#   export EDITOR='mvim'
-# fi
-
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
 
@@ -104,5 +103,3 @@ export FZF_COMPLETION_TRIGGER=','
 source ~/.dotfiles/zsh/alias.zsh
 
 eval $(thefuck --alias)
-# fnm
-eval "$(fnm env --multi)"
