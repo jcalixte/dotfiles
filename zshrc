@@ -1,5 +1,4 @@
 # If you come from bash you might have to change your $PATH.
-cd ~
 export PATH=$HOME/bin:/usr/local/bin:$PATH
 export DENO_INSTALL="$HOME/.deno"
 export PATH="$DENO_INSTALL/bin:$PATH"
@@ -103,3 +102,9 @@ export FZF_COMPLETION_TRIGGER=','
 source ~/.dotfiles/zsh/alias.zsh
 
 eval $(thefuck --alias)
+
+# eval "$(starship init zsh)"
+
+# tabtab source for yarn package
+# uninstall by removing these lines or running `tabtab uninstall yarn`
+[[ -f /home/julien/.fnm/node-versions/v12.18.0/installation/lib/node_modules/yarn-completions/node_modules/tabtab/.completions/yarn.zsh ]] && . /home/julien/.fnm/node-versions/v12.18.0/installation/lib/node_modules/yarn-completions/node_modules/tabtab/.completions/yarn.zsh
