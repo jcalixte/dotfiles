@@ -30,10 +30,13 @@ alias liveand="scrcpy"
 alias sshpi="ssh pi@192.168.1.36"
 alias ide="tmux split-window -h -p 30 && tmux split-window -v -p 66"
 alias vueconfig="cp -r ~/vueconfig/. ."
-alias chdot="vim ~/.dotfiles"
+alias chdot="code ~/.dotfiles"
 
 # yarn commands
 alias ys="yarn serve"
+
+# side project aliases
+alias bp="cd ~/jclab/bons-programmeurs"
 
 # Dotnet Core aliases
 alias efdbreset="rm -rf Migrations && dotnet ef database drop --force && dotnet ef migrations add Initial && dotnet ef database update"
