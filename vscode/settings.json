@@ -1,9 +1,8 @@
 {
-    "workbench.colorTheme": "GitHub Dark",
-    "editor.fontFamily": "MonoLisa, 'Cascadia Code', NovaMono, 'Anonymous Pro', 'Fira Code', 'Victor Mono', Hasklig, 'JetBrains Mono', Menlo, mononoki, 'Source Code Pro', monofur, 'DejaVu Sans Mono', Monaco, 'Courier New', monospace",
-    "editor.fontSize": 18,
+  "editor.fontFamily": "MonoLisa, 'Cascadia Code', NovaMono, 'Anonymous Pro', 'Fira Code', 'Victor Mono', Hasklig, 'JetBrains Mono', Menlo, mononoki, 'Source Code Pro', monofur, 'DejaVu Sans Mono', Monaco, 'Courier New', monospace",
+    "editor.fontSize": 13,
     "workbench.iconTheme": "vscode-icons",
-    "editor.formatOnType": false,
+    "editor.formatOnType": true,
     "html.format.endWithNewline": true,
     "[typescript]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode",
@@ -22,7 +21,8 @@
     "window.zoomLevel": 0,
     "typescript.updateImportsOnFileMove.enabled": "always",
     "[typescriptreact]": {
-        "editor.tabSize": 2
+        "editor.tabSize": 2,
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
     "editor.tabSize": 2,
     "prettier.requireConfig": true,
@@ -36,7 +36,7 @@
       "**/.jest": true,
       "**/*.flat": true,
       "**/bin": true,
-      "**/node_modules": true,
+      "**/node_moduless": true,
       "**/obj": true
     },
     "peacock.favoriteColors": [
@@ -98,7 +98,7 @@
     "[json]": {
         "editor.defaultFormatter": "vscode.json-language-features"
     },
-    "breadcrumbs.enabled": false,
+    "breadcrumbs.enabled": true,
     "gitlens.advanced.messages": {
         "suppressLineUncommittedWarning": true
     },
@@ -123,7 +123,7 @@
         "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
     "debug.console.fontSize": 13,
-    "terminal.integrated.fontSize": 17,
+    "terminal.integrated.fontSize": 16,
     "javascript.updateImportsOnFileMove.enabled": "always",
     "files.watcherExclude": {
         "**/.jest": true,
@@ -142,5 +142,10 @@
     "editor.lineHeight": 0,
     "vetur.useWorkspaceDependencies": true,
     "zenMode.hideLineNumbers": false,
-    "extensions.ignoreRecommendations": true
+    "extensions.ignoreRecommendations": true,
+    "FSharp.useSdkScripts": true,
+    "editor.formatOnPaste": true,
+    "pomodoro.workTime": 45,
+    "i18n-ally.displayLanguage": "fr",
+    "workbench.colorTheme": "Hacker"
 }

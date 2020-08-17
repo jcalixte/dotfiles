@@ -47,6 +47,28 @@
       "</style>",
       ""
     ],
-    "description": "VueJS Composition file"
+    "description": "Vue composition component"
+  },
+  "Vue 3": {
+    "prefix": "vue3",
+    "body": [
+      "<template>",
+      "  <div class=\"${1:home-page}\"></div>",
+      "</template>",
+      "",
+      "<script lang=\"ts\">",
+      "export default {",
+      "  name: '${2:HomePage}',",
+      "  setup() {}",
+      "}",
+      "</script>",
+      "",
+      "<style scoped lang=\"scss\">",
+      ".$1 {",
+      "}",
+      "</style>",
+      ""
+    ],
+    "description": "Vue composition component"
   }
 }
