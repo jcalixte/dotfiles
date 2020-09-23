@@ -2,31 +2,15 @@
   "editor.fontFamily": "MonoLisa, 'Cascadia Code', NovaMono, 'Anonymous Pro', 'Fira Code', 'Victor Mono', Hasklig, 'JetBrains Mono', Menlo, mononoki, 'Source Code Pro', monofur, 'DejaVu Sans Mono', Monaco, 'Courier New', monospace",
     "editor.fontSize": 13,
     "workbench.iconTheme": "vscode-icons",
-    "editor.formatOnType": true,
+    "editor.formatOnType": false,
     "html.format.endWithNewline": true,
-    "[typescript]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode",
-        "editor.tabSize": 2
-    },
-    "[typescript-react]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode",
-        "editor.tabSize": 2
-    },
-    "[vue]": {
-        "editor.tabSize": 2,
-        "editor.defaultFormatter": "octref.vetur"
-    },
     "git.confirmSync": false,
     "git.autofetch": true,
     "window.zoomLevel": 0,
     "typescript.updateImportsOnFileMove.enabled": "always",
-    "[typescriptreact]": {
-        "editor.tabSize": 2,
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
-    },
     "editor.tabSize": 2,
     "prettier.requireConfig": true,
-    "editor.formatOnSave": true,
+    "editor.formatOnSave": false,
     "vetur.format.defaultFormatter.html": "prettier",
     "git.enableSmartCommit": true,
     "typescript.format.enable": false,
@@ -122,6 +106,22 @@
     "[javascript]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
+    "[typescript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.tabSize": 2
+    },
+    "[typescript-react]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.tabSize": 2
+    },
+    "[vue]": {
+        "editor.tabSize": 2,
+        "editor.defaultFormatter": "octref.vetur"
+    },
+    "[typescriptreact]": {
+        "editor.tabSize": 2,
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
     "debug.console.fontSize": 13,
     "terminal.integrated.fontSize": 16,
     "javascript.updateImportsOnFileMove.enabled": "always",
@@ -144,8 +144,8 @@
     "zenMode.hideLineNumbers": false,
     "extensions.ignoreRecommendations": true,
     "FSharp.useSdkScripts": true,
-    "editor.formatOnPaste": true,
-    "pomodoro.workTime": 45,
-    "i18n-ally.displayLanguage": "fr",
-    "workbench.colorTheme": "Hacker"
+    "editor.formatOnPaste": false,
+    "i18n-ally.displayLanguage": "en",
+    "workbench.colorTheme": "Night Owl",
+    "sort-imports.on-save": false
 }

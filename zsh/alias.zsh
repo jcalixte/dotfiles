@@ -44,6 +44,8 @@ alias efdbreset="rm -rf Migrations && dotnet ef database drop --force && dotnet 
 # BAM Project aliases
 alias fwe="cd ~/bddf_app_pri/apps/FWE"
 alias fwe-cov="open coverage/lcov-report/index.html"
+alias col-mob="cd ~/lab/chantier360/apps/front/mobile"
+alias col-ser="cd ~/lab/chantier360/apps/server"
 alias ywf="yarn workspace fwe"
 
 alias wtr='curl "wttr.in/Paris?lang=fr"'
