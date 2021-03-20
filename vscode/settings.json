@@ -1,8 +1,8 @@
 {
-  "editor.fontFamily": "MonoLisa, 'Cascadia Code', NovaMono, 'Anonymous Pro', 'Fira Code', 'Victor Mono', Hasklig, 'JetBrains Mono', Menlo, mononoki, 'Source Code Pro', monofur, 'DejaVu Sans Mono', Monaco, 'Courier New', monospace",
-    "editor.fontSize": 12,
+  "editor.fontFamily": "'Fira Code', MonoLisa, 'Cascadia Code', NovaMono, 'Anonymous Pro', 'Victor Mono', Hasklig, 'JetBrains Mono', Menlo, mononoki, 'Source Code Pro', monofur, 'DejaVu Sans Mono', Monaco, 'Courier New', monospace",
+    "editor.fontSize": 13,
     "workbench.iconTheme": "vscode-icons",
-    "editor.formatOnType": false,
+    "editor.formatOnType": true,
     "html.format.endWithNewline": true,
     "git.confirmSync": false,
     "git.autofetch": true,
@@ -10,7 +10,7 @@
     "typescript.updateImportsOnFileMove.enabled": "always",
     "editor.tabSize": 2,
     "prettier.requireConfig": true,
-    "editor.formatOnSave": false,
+    "editor.formatOnSave": true,
     "vetur.format.defaultFormatter.html": "prettier",
     "git.enableSmartCommit": true,
     "typescript.format.enable": false,
@@ -19,7 +19,6 @@
       "**/.git": true,
       "**/.jest": true,
       "**/*.flat": true,
-      "**/bin": true,
       "**/node_moduless": true,
       "**/obj": true
     },
@@ -87,11 +86,11 @@
         "suppressLineUncommittedWarning": true
     },
     "search.exclude": {
-      "**/.jest": true,
-      "**/*.flat": true,
-      "**/bin": true,
-      "**/bower_components": false,
-      "**/obj": true
+        "**/.jest": true,
+        "**/*.flat": true,
+        "**/bin": true,
+        "**/bower_components": false,
+        "**/obj": true
     },
     "explorer.confirmDragAndDrop": false,
     "[jsonc]": {
@@ -144,8 +143,17 @@
     "zenMode.hideLineNumbers": false,
     "extensions.ignoreRecommendations": true,
     "FSharp.useSdkScripts": true,
-    "editor.formatOnPaste": false,
     "i18n-ally.displayLanguage": "en",
-    "workbench.colorTheme": "Night Owl",
-    "sort-imports.on-save": false
+    "sort-imports.on-save": false,
+    "diffEditor.ignoreTrimWhitespace": true,
+    "editor.formatOnPaste": true,
+    "javascript.preferences.importModuleSpecifier": "non-relative",
+    "typescript.preferences.importModuleSpecifier": "non-relative",
+    "workbench.productIconTheme": "fluent-icons",
+    "explorer.compactFolders": false,
+    "liveshare.authenticationProvider": "GitHub",
+    "[markdown]": {
+      "editor.defaultFormatter": "yzhang.markdown-all-in-one"
+    },
+    "workbench.colorTheme": "1984 - Orwellian"
 }
