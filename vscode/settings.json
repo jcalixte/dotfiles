@@ -1,6 +1,6 @@
 {
   "editor.fontFamily": "'Fira Code', MonoLisa, 'Cascadia Code', NovaMono, 'Anonymous Pro', 'Victor Mono', Hasklig, 'JetBrains Mono', Menlo, mononoki, 'Source Code Pro', monofur, 'DejaVu Sans Mono', Monaco, 'Courier New', monospace",
-    "editor.fontSize": 13,
+    "editor.fontSize": 14,
     "workbench.iconTheme": "vscode-icons",
     "editor.formatOnType": true,
     "html.format.endWithNewline": true,
@@ -144,16 +144,20 @@
     "extensions.ignoreRecommendations": true,
     "FSharp.useSdkScripts": true,
     "i18n-ally.displayLanguage": "en",
-    "sort-imports.on-save": false,
     "diffEditor.ignoreTrimWhitespace": true,
-    "editor.formatOnPaste": true,
     "javascript.preferences.importModuleSpecifier": "non-relative",
     "typescript.preferences.importModuleSpecifier": "non-relative",
     "workbench.productIconTheme": "fluent-icons",
     "explorer.compactFolders": false,
-    "liveshare.authenticationProvider": "GitHub",
+    "workbench.colorTheme": "Solarized Dark",
+    "explorer.confirmDelete": false,
+    "editor.quickSuggestions": {
+      "other": true
+    },
     "[markdown]": {
       "editor.defaultFormatter": "yzhang.markdown-all-in-one"
     },
-    "workbench.colorTheme": "Hacker"
+    "editor.tabCompletion": "onlySnippets",
+    "editor.formatOnPaste": true,
+    "sort-imports.on-save": false
 }
