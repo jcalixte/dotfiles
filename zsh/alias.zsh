@@ -9,10 +9,11 @@
 alias c='code .'
 alias v='vim .'
 alias lsc='ls -lah | lolcat'
-alias gbr="git branch | grep -v "master" | xargs git branch -D"
+alias gbr="git branch --merged | grep -v "master" | xargs git branch -D"
 alias chzsh="code ~/.zshrc"
 alias srczsh="source ~/.zshrc"
 alias gcz="git cz"
+alias gcaf="git commit --amend --no-edit && gpf"
 alias lab="cd ~/lab"
 alias labcli="cd ~/lab-cli"
 alias jc="cd ~/jclab"
@@ -42,6 +43,7 @@ alias efdbreset="rm -rf Migrations && dotnet ef database drop --force && dotnet 
 
 # BAM Project aliases
 alias col-mob="cd ~/lab/chantier360/apps/front/mobile"
+alias col-scripts="cd ~/lab/chantier360/apps/scripts"
 alias col-ser="cd ~/lab/chantier360/apps/server"
 alias col-doc="cd ~/lab/chantier360/apps/docs"
 

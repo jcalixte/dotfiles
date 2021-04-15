@@ -1,7 +1,5 @@
 {
-  "editor.fontFamily": "'Fira Code', MonoLisa, 'Cascadia Code', NovaMono, 'Anonymous Pro', 'Victor Mono', Hasklig, 'JetBrains Mono', Menlo, mononoki, 'Source Code Pro', monofur, 'DejaVu Sans Mono', Monaco, 'Courier New', monospace",
-    "editor.fontSize": 14,
-    "workbench.iconTheme": "vscode-icons",
+  "editor.fontFamily": "MonoLisa, 'Fira Code', 'Cascadia Code', NovaMono, 'Anonymous Pro', 'Victor Mono', Hasklig, 'JetBrains Mono', Menlo, mononoki, 'Source Code Pro', monofur, 'DejaVu Sans Mono', Monaco, 'Courier New', monospace",
     "editor.formatOnType": true,
     "html.format.endWithNewline": true,
     "git.confirmSync": false,
@@ -138,7 +136,6 @@
     },
     "editor.detectIndentation": false,
     "vsicons.dontShowNewVersionMessage": true,
-    "editor.lineHeight": 0,
     "vetur.useWorkspaceDependencies": true,
     "zenMode.hideLineNumbers": false,
     "extensions.ignoreRecommendations": true,
@@ -149,7 +146,7 @@
     "typescript.preferences.importModuleSpecifier": "non-relative",
     "workbench.productIconTheme": "fluent-icons",
     "explorer.compactFolders": false,
-    "workbench.colorTheme": "Solarized Dark",
+    "workbench.colorTheme": "1984 - Orwellian",
     "explorer.confirmDelete": false,
     "editor.quickSuggestions": {
       "other": true
