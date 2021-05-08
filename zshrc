@@ -78,7 +78,7 @@ ENABLE_CORRECTION="true"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git git-flow react-native tmux zsh-autosuggestions copyfile docker encode64 extract yarn-autocompletions)
+plugins=(git git-flow tmux zsh-autosuggestions copyfile docker encode64 extract yarn-autocompletions fzf-yarn)
 
 source $ZSH/oh-my-zsh.sh
 # autoload -U promptinit; promptinit
@@ -102,8 +102,6 @@ source ~/.dotfiles/zsh/private.zsh
 export FZF_COMPLETION_TRIGGER=','
 
 source ~/.dotfiles/zsh/alias.zsh
-
-eval $(thefuck --alias)
 
 # eval "$(starship init zsh)"
 

@@ -8,7 +8,6 @@
     "typescript.updateImportsOnFileMove.enabled": "always",
     "editor.tabSize": 2,
     "prettier.requireConfig": true,
-    "editor.formatOnSave": true,
     "vetur.format.defaultFormatter.html": "prettier",
     "git.enableSmartCommit": true,
     "typescript.format.enable": false,
@@ -113,7 +112,7 @@
     },
     "[vue]": {
         "editor.tabSize": 2,
-        "editor.defaultFormatter": "octref.vetur"
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
     "[typescriptreact]": {
         "editor.tabSize": 2,
@@ -146,7 +145,7 @@
     "typescript.preferences.importModuleSpecifier": "non-relative",
     "workbench.productIconTheme": "fluent-icons",
     "explorer.compactFolders": false,
-    "workbench.colorTheme": "1984 - Orwellian",
+    "workbench.colorTheme": "A Touch of Lilac Theme",
     "explorer.confirmDelete": false,
     "editor.quickSuggestions": {
       "other": true
@@ -156,5 +155,8 @@
     },
     "editor.tabCompletion": "onlySnippets",
     "editor.formatOnPaste": true,
-    "sort-imports.on-save": false
+    "sort-imports.on-save": false,
+    "editor.lineHeight": 0,
+    "editor.fontSize": 14,
+    "editor.formatOnSave": true
 }

@@ -1,56 +1,6 @@
 {
-  "VueJS TypeScript": {
-    "prefix": "vuets",
-    "body": [
-      "<template>",
-      "  <div class=\"$1\">",
-      "    <h1>{{ $3 }}</h1>",
-      "  </div>",
-      "</template>",
-      "",
-      "<script lang=\"ts\">",
-      "import { Component, Prop, Vue } from 'vue-property-decorator'",
-      "",
-      "@Component",
-      "export default class $2 extends Vue {",
-      "  @Prop() private $3!: string",
-      "}",
-      "</script>",
-      "",
-      "<style scoped lang=\"scss\">",
-      ".$1 {",
-      "}",
-      "</style>",
-      ""
-    ],
-    "description": "VueJS TypeScript"
-  },
-  "VueJS Composition file": {
-    "prefix": "vuecomposition",
-    "body": [
-      "<template>",
-      "  <div class=\"${1:home-page}\"></div>",
-      "</template>",
-      "",
-      "<script lang=\"ts\">",
-      "import { defineComponent } from '@vue/composition-api'",
-      "",
-      "export default defineComponent({",
-      "  name: '${2:HomePage}',",
-      "  setup() {}",
-      "})",
-      "</script>",
-      "",
-      "<style scoped lang=\"scss\">",
-      ".$1 {",
-      "}",
-      "</style>",
-      ""
-    ],
-    "description": "Vue composition component"
-  },
-  "Vue 3": {
-    "prefix": "vue3",
+  "Vue component": {
+    "prefix": "vue",
     "body": [
       "<template>",
       "  <div class=\"${1:home-page}\"></div>",
@@ -71,6 +21,6 @@
       "</style>",
       ""
     ],
-    "description": "Vue composition component"
+    "description": "Vue component"
   }
 }
