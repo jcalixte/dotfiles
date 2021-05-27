@@ -1,5 +1,5 @@
 # If you come from bash you might have to change your $PATH.
-export PATH=$HOME/bin:/usr/local/bin:$PATH
+export PATH="$HOME/bin:/usr/local/bin:$PATH"
 export DENO_INSTALL="$HOME/.deno"
 export PATH="$DENO_INSTALL/bin:$PATH"
 
@@ -20,7 +20,7 @@ ZSH_THEME="dogenpunk"
 # Setting this variable when ZSH_THEME=random will cause zsh to load
 # a theme from this variable instead of looking in ~/.oh-my-zsh/themes/
 # If set to an empty array, this variable will have no effect.
-ZSH_THEME_RANDOM_CANDIDATES=( "avit" "wezm" "ys" "af-magic" "amuse" "candy" "dogenpunk" "lambda" "nanotech" )
+# ZSH_THEME_RANDOM_CANDIDATES=( "avit" "wezm" "ys" "af-magic" "amuse" "candy" "dogenpunk" "lambda" "nanotech" )
 
 #enable color output
 export CLICOLOR=1
@@ -78,7 +78,8 @@ ENABLE_CORRECTION="true"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git git-flow tmux zsh-autosuggestions copyfile docker encode64 extract yarn-autocompletions fzf-yarn)
+# plugins=(git git-flow tmux zsh-autosuggestions copyfile docker encode64 extract yarn-autocompletions fzf-yarn)
+plugins=(git zsh-autosuggestions encode64 extract yarn-autocompletions fzf-yarn)
 
 source $ZSH/oh-my-zsh.sh
 # autoload -U promptinit; promptinit
@@ -107,4 +108,4 @@ source ~/.dotfiles/zsh/alias.zsh
 
 # tabtab source for yarn package
 # uninstall by removing these lines or running `tabtab uninstall yarn`
-[[ -f /home/julien/.fnm/node-versions/v12.18.0/installation/lib/node_modules/yarn-completions/node_modules/tabtab/.completions/yarn.zsh ]] && . /home/julien/.fnm/node-versions/v12.18.0/installation/lib/node_modules/yarn-completions/node_modules/tabtab/.completions/yarn.zsh
+# [[ -f /home/julien/.fnm/node-versions/v12.18.0/installation/lib/node_modules/yarn-completions/node_modules/tabtab/.completions/yarn.zsh ]] && . /home/julien/.fnm/node-versions/v12.18.0/installation/lib/node_modules/yarn-completions/node_modules/tabtab/.completions/yarn.zsh
