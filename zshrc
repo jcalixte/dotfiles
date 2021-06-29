@@ -5,7 +5,7 @@ export PATH="$DENO_INSTALL/bin:$PATH"
 
 # fnm
 export PATH=/home/julien/.fnm:$PATH
-eval "`fnm env --multi`"
+eval "`fnm env`"
 
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
