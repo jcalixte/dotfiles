@@ -157,6 +157,7 @@
     "editor.formatOnPaste": true,
     "sort-imports.on-save": false,
     "editor.lineHeight": 0,
-    "editor.fontSize": 13,
-    "editor.formatOnSave": true
+    "editor.fontSize": 14,
+    "editor.formatOnSave": true,
+    "editor.accessibilitySupport": "off"
 }
