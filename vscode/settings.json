@@ -145,7 +145,7 @@
     "typescript.preferences.importModuleSpecifier": "non-relative",
     "workbench.productIconTheme": "fluent-icons",
     "explorer.compactFolders": false,
-    "workbench.colorTheme": "Black Ocean",
+    "workbench.colorTheme": "Hacker",
     "explorer.confirmDelete": false,
     "editor.quickSuggestions": {
       "other": true

@@ -17,5 +17,15 @@
   {
     "key": "cmd+'",
     "command": "extension.jumpy-line"
+  },
+  {
+    "key": "alt+c",
+    "command": "-markdown.extension.checkTaskList",
+    "when": "editorTextFocus && editorLangId == 'markdown'"
+  },
+  {
+    "key": "alt+c",
+    "command": "-gitlens.showQuickCommitFileDetails",
+    "when": "editorTextFocus && !gitlens:disabled && config.gitlens.keymap == 'alternate'"
   }
 ]
