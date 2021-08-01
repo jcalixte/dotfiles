@@ -2,6 +2,7 @@
 export PATH="$HOME/bin:/usr/local/bin:$PATH"
 export DENO_INSTALL="$HOME/.deno"
 export PATH="$DENO_INSTALL/bin:$PATH"
+export PATH=$(echo "$PATH" | sed -e 's/:\/mnt[^:]*//g') # strip out problematic Windows %PATH%
 
 # fnm
 export PATH=/home/julien/.fnm:$PATH
@@ -109,3 +110,7 @@ source ~/.dotfiles/zsh/alias.zsh
 # tabtab source for yarn package
 # uninstall by removing these lines or running `tabtab uninstall yarn`
 # [[ -f /home/julien/.fnm/node-versions/v12.18.0/installation/lib/node_modules/yarn-completions/node_modules/tabtab/.completions/yarn.zsh ]] && . /home/julien/.fnm/node-versions/v12.18.0/installation/lib/node_modules/yarn-completions/node_modules/tabtab/.completions/yarn.zsh
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
