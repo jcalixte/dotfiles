@@ -7,6 +7,9 @@ export PATH="$DENO_INSTALL/bin:$PATH"
 export PATH=/home/julien/.fnm:$PATH
 eval "`fnm env`"
 
+# RVM - ruby version manager
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm" 
+
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 

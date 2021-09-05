@@ -11,7 +11,7 @@
     "when": "editorHasCompletionItemProvider && textInputFocus && !editorReadonly"
   },
   {
-    "key": "cmd+;",
+    "key": "ctrl+;",
     "command": "extension.jumpy-word"
   },
   {
@@ -27,5 +27,15 @@
     "key": "alt+c",
     "command": "-gitlens.showQuickCommitFileDetails",
     "when": "editorTextFocus && !gitlens:disabled && config.gitlens.keymap == 'alternate'"
+  },
+  {
+    "key": "alt+b",
+    "command": "markdown.extension.editing.toggleBold",
+    "when": "editorTextFocus && !editorReadonly && editorLangId == 'markdown'"
+  },
+  {
+    "key": "ctrl+b",
+    "command": "-markdown.extension.editing.toggleBold",
+    "when": "editorTextFocus && !editorReadonly && editorLangId == 'markdown'"
   }
 ]
