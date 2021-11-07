@@ -136,7 +136,7 @@
   "typescript.preferences.importModuleSpecifier": "non-relative",
   "workbench.productIconTheme": "fluent-icons",
   "explorer.compactFolders": false,
-  "workbench.colorTheme": "Monokai",
+  "workbench.colorTheme": "Monokai Dimmed",
   "explorer.confirmDelete": false,
   "editor.quickSuggestions": {
     "comments": false,
