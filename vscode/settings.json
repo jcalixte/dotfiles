@@ -1,5 +1,5 @@
 {
-  "editor.fontFamily": "'Cascadia Code', MonoLisa, 'Fira Code', NovaMono, 'Anonymous Pro', 'Victor Mono', Hasklig, 'JetBrains Mono', Menlo, mononoki, 'Source Code Pro', monofur, 'DejaVu Sans Mono', Monaco, 'Courier New', monospace",
+  "editor.fontFamily": "monofur, 'Cascadia Code', MonoLisa, 'Fira Code', NovaMono, 'Anonymous Pro', 'Victor Mono', Hasklig, 'JetBrains Mono', Menlo, mononoki, 'Source Code Pro', 'DejaVu Sans Mono', Monaco, 'Courier New', monospace",
   "editor.formatOnType": true,
   "html.format.endWithNewline": true,
   "git.confirmSync": false,
@@ -14,7 +14,7 @@
     "**/.git": true,
     "**/.jest": true,
     "**/*.flat": true,
-    "**/node_moduless": true,
+    "**/node_modules": true,
     "**/obj": true
   },
   "peacock.favoriteColors": [
@@ -153,7 +153,7 @@
   "editor.formatOnSave": true,
   "editor.accessibilitySupport": "off",
   "editor.lineHeight": 0,
-  "editor.fontSize": 19,
+  "editor.fontSize": 20,
   "emmet.showSuggestionsAsSnippets": true,
   "volar.checkVueTscVersion": false,
   "editor.bracketPairColorization.enabled": true
