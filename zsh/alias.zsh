@@ -35,17 +35,16 @@ alias chdot="code ~/.dotfiles"
 alias ys="yarn serve"
 
 # side project aliases
-alias bp="cd ~/jclab/bons-programmeurs"
 alias jcln="cd ~/jclab/lite-note"
 
 # Dotnet Core aliases
 alias efdbreset="rm -rf Migrations && dotnet ef database drop --force && dotnet ef migrations add Initial && dotnet ef database update"
 
 # BAM Project aliases
-alias col-mob="cd ~/lab/chantier360/apps/front/mobile"
-alias col-scripts="cd ~/lab/chantier360/apps/scripts"
-alias col-ser="cd ~/lab/chantier360/apps/server"
-alias col-doc="cd ~/lab/chantier360/apps/docs"
+alias colmob="cd ~/lab/chantier360/apps/front/mobile"
+alias colscripts="cd ~/lab/chantier360/apps/scripts"
+alias colser="cd ~/lab/chantier360/apps/server"
+alias coldoc="cd ~/lab/chantier360/apps/docs"
 
 # Weather
 alias wtr='curl "wttr.in/Paris?lang=fr"'

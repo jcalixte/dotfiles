@@ -14,6 +14,7 @@
     "**/.git": true,
     "**/.jest": true,
     "**/*.flat": true,
+    "**/dist": true,
     "**/node_modules": true,
     "**/obj": true
   },
@@ -81,6 +82,7 @@
     "**/*.flat": true,
     "**/bin": true,
     "**/bower_components": false,
+    "**/dist": true,
     "**/obj": true
   },
   "explorer.confirmDragAndDrop": false,
@@ -136,7 +138,7 @@
   "typescript.preferences.importModuleSpecifier": "non-relative",
   "workbench.productIconTheme": "fluent-icons",
   "explorer.compactFolders": false,
-  "workbench.colorTheme": "Monokai Dimmed",
+  "workbench.colorTheme": "Ayu Mirage",
   "explorer.confirmDelete": false,
   "editor.quickSuggestions": {
     "comments": false,
@@ -153,8 +155,11 @@
   "editor.formatOnSave": true,
   "editor.accessibilitySupport": "off",
   "editor.lineHeight": 0,
-  "editor.fontSize": 20,
+  "editor.fontSize": 19,
   "emmet.showSuggestionsAsSnippets": true,
   "volar.checkVueTscVersion": false,
-  "editor.bracketPairColorization.enabled": true
+  "editor.bracketPairColorization.enabled": true,
+  "[dockercompose]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
 }
