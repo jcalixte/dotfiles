@@ -155,7 +155,7 @@
   "editor.formatOnSave": true,
   "editor.accessibilitySupport": "off",
   "editor.lineHeight": 0,
-  "editor.fontSize": 15,
+  "editor.fontSize": 17,
   "emmet.showSuggestionsAsSnippets": true,
   "volar.checkVueTscVersion": false,
   "editor.bracketPairColorization.enabled": true,
