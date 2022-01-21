@@ -42,6 +42,7 @@ alias jcln="cd ~/jclab/lite-note"
 alias efdbreset="rm -rf Migrations && dotnet ef database drop --force && dotnet ef migrations add Initial && dotnet ef database update"
 
 # BAM Project aliases
+alias col="cd ~/lab/chantier360"
 alias mob="cd ~/lab/chantier360/apps/front/mobile"
 alias scripts="cd ~/lab/chantier360/apps/scripts"
 alias ser="cd ~/lab/chantier360/apps/server"
