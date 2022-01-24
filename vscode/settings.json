@@ -138,7 +138,7 @@
   "typescript.preferences.importModuleSpecifier": "non-relative",
   "workbench.productIconTheme": "fluent-icons",
   "explorer.compactFolders": false,
-  "workbench.colorTheme": "Ayu Mirage",
+  "workbench.colorTheme": "Hacker",
   "explorer.confirmDelete": false,
   "editor.quickSuggestions": {
     "comments": false,
