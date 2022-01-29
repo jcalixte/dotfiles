@@ -35,6 +35,9 @@ alias chdot="~/.dotfiles && gl && code ."
 # yarn commands
 alias ys="yarn serve"
 
+# pnpm commands
+alias p='pnpm'
+
 # side project aliases
 alias jcln="cd ~/jclab/lite-note"
 
