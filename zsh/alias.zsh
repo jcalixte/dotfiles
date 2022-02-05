@@ -14,6 +14,7 @@ alias chzsh="code ~/.zshrc"
 alias srczsh="source ~/.zshrc"
 alias gcz="git cz"
 alias gcaf="git commit --amend --no-edit && gpf"
+alias gpuo='git push --set-upstream origin $(git branch --show-current)'
 alias lab="cd ~/lab"
 alias labcli="cd ~/lab-cli"
 alias jc="cd ~/jclab"

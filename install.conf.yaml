@@ -1,4 +1,4 @@
-- clean: ['~']
+- clean: ["~"]
 
 - link:
     ~/.profile: profile
@@ -6,16 +6,12 @@
     ~/.bashrc: bashrc
     ~/.gitconfig: gitconfig
     ~/.ssh/config:
-        path: ssh/config
-        create: true
+      path: ssh/config
+      create: true
     ~/.czrc: czrc
     ~/.vimrc: vimrc
     ~/.zprofile: zprofile
     ~/.zshrc: zshrc
     ~/bin:
-        path: bin/
-        create: true
-    # VS Code
-    ~/Library/Application Support/Code/User/settings.json: vscode/settings.json
-    ~/Library/Application Support/Code/User/keybindings.json: vscode/keybindings.json
-    ~/Library/Application Support/Code/User/snippets: vscode/snippets
+      path: bin/
+      create: true
