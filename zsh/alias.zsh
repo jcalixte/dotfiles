@@ -46,11 +46,10 @@ alias jcln="cd ~/jclab/lite-note"
 alias efdbreset="rm -rf Migrations && dotnet ef database drop --force && dotnet ef migrations add Initial && dotnet ef database update"
 
 # BAM Project aliases
-alias col="cd ~/lab/chantier360"
-alias mob="cd ~/lab/chantier360/apps/front/mobile"
-alias scripts="cd ~/lab/chantier360/apps/scripts"
-alias ser="cd ~/lab/chantier360/apps/server"
-alias doc="cd ~/lab/chantier360/apps/docs"
+alias col="cd ~/lab/colas360"
+alias mob="cd ~/lab/colas360/apps/chantier360"
+alias ser="cd ~/lab/colas360/apps/server"
+alias doc="cd ~/lab/colas360/docs"
 
 # Weather
 alias wtr='curl "wttr.in/Paris?lang=fr"'
