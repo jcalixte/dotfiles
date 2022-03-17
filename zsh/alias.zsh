@@ -47,7 +47,8 @@ alias efdbreset="rm -rf Migrations && dotnet ef database drop --force && dotnet 
 
 # BAM Project aliases
 alias col="cd ~/lab/colas360"
-alias mob="cd ~/lab/colas360/apps/chantier360"
+alias amob="cd ~/lab/colas360/apps/atelier360"
+alias cmob="cd ~/lab/colas360/apps/chantier360"
 alias ser="cd ~/lab/colas360/apps/server"
 alias doc="cd ~/lab/colas360/docs"
 
