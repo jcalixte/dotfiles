@@ -38,6 +38,7 @@ alias ys="yarn serve"
 
 # pnpm commands
 alias p='pnpm'
+alias pi='p i'
 
 # side project aliases
 alias jcln="cd ~/jclab/lite-note"
