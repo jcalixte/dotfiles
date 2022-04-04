@@ -27,6 +27,7 @@
     "prefix": "iles",
     "body": [
       "<script setup lang=\"ts\">",
+      "$2",
       "</script>",
       "",
       "<template>",

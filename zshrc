@@ -82,7 +82,15 @@ DISABLE_UPDATE_PROMPT="true"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 # plugins=(git git-flow tmux zsh-autosuggestions copyfile docker encode64 extract yarn-autocompletions fzf-yarn)
-plugins=(git zsh-autosuggestions encode64 extract yarn-autocompletions fzf-yarn)
+plugins=(
+  git
+  zsh-autosuggestions
+  zsh-syntax-highlighting
+  encode64
+  extract
+  yarn-autocompletions
+  fzf-yarn
+)
 
 source $ZSH/oh-my-zsh.sh
 # autoload -U promptinit; promptinit

@@ -1,14 +1,13 @@
 {
-  "editor.fontFamily": "'DejaVu Sans Mono', 'Cascadia Code', monofur, MonoLisa, 'Fira Code', NovaMono, 'Anonymous Pro', 'Victor Mono', Hasklig, 'JetBrains Mono', Menlo, mononoki, 'Source Code Pro', Monaco, 'Courier New', monospace",
-  "editor.formatOnType": true,
+  "editor.fontFamily": "MonoLisa, mononoki, 'DejaVu Sans Mono', 'Cascadia Code', monofur, 'Fira Code', NovaMono, 'Anonymous Pro', 'Victor Mono', Hasklig, 'JetBrains Mono', Menlo, 'Source Code Pro', Monaco, 'Courier New', monospace",
+  "editor.formatOnType": false,
   "html.format.endWithNewline": true,
   "git.confirmSync": false,
   "git.autofetch": true,
   "typescript.updateImportsOnFileMove.enabled": "always",
   "editor.tabSize": 2,
-  "prettier.requireConfig": false,
+  "prettier.requireConfig": true,
   "git.enableSmartCommit": true,
-  "typescript.format.enable": false,
   "files.exclude": {
     "**/.DS_Store": true,
     "**/.git": true,
@@ -150,12 +149,12 @@
     "editor.defaultFormatter": "yzhang.markdown-all-in-one"
   },
   "editor.tabCompletion": "on",
-  "editor.formatOnPaste": true,
+  "editor.formatOnPaste": false,
   "sort-imports.on-save": false,
-  "editor.formatOnSave": true,
+  "editor.formatOnSave": false,
   "editor.accessibilitySupport": "off",
   "editor.lineHeight": 0,
-  "editor.fontSize": 14,
+  "editor.fontSize": 15,
   "emmet.showSuggestionsAsSnippets": true,
   "volar.checkVueTscVersion": false,
   "editor.bracketPairColorization.enabled": true,
@@ -166,5 +165,10 @@
   "files.associations": {
     "*.mdx": "markdown"
   },
-  "window.zoomLevel": 1
+  "window.zoomLevel": 1,
+  "eslint.alwaysShowStatus": true,
+  "eslint.packageManager": "pnpm",
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "prettier.semi": false,
+  "settingsSync.ignoredExtensions": ["lokalise.i18n-ally"]
 }
