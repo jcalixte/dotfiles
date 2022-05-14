@@ -1,6 +1,6 @@
 {
   "editor.fontFamily": "MonoLisa, mononoki, 'DejaVu Sans Mono', 'Cascadia Code', monofur, 'Fira Code', NovaMono, 'Anonymous Pro', 'Victor Mono', Hasklig, 'JetBrains Mono', Menlo, 'Source Code Pro', Monaco, 'Courier New', monospace",
-  "editor.formatOnType": false,
+  "editor.formatOnType": true,
   "html.format.endWithNewline": true,
   "git.confirmSync": false,
   "git.autofetch": true,
@@ -137,7 +137,7 @@
   "typescript.preferences.importModuleSpecifier": "non-relative",
   "workbench.productIconTheme": "fluent-icons",
   "explorer.compactFolders": false,
-  "workbench.colorTheme": "Vitesse Dark",
+  "workbench.colorTheme": "Tomorrow Night Blue",
   "explorer.confirmDelete": false,
   "editor.quickSuggestions": {
     "comments": false,
@@ -149,12 +149,12 @@
     "editor.defaultFormatter": "yzhang.markdown-all-in-one"
   },
   "editor.tabCompletion": "on",
-  "editor.formatOnPaste": false,
+  "editor.formatOnPaste": true,
   "sort-imports.on-save": false,
-  "editor.formatOnSave": false,
+  "editor.formatOnSave": true,
   "editor.accessibilitySupport": "off",
   "editor.lineHeight": 0,
-  "editor.fontSize": 15,
+  "editor.fontSize": 14,
   "emmet.showSuggestionsAsSnippets": true,
   "volar.checkVueTscVersion": false,
   "editor.bracketPairColorization.enabled": true,
@@ -170,5 +170,6 @@
   "eslint.packageManager": "pnpm",
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "prettier.semi": false,
-  "settingsSync.ignoredExtensions": ["lokalise.i18n-ally"]
+  "settingsSync.ignoredExtensions": ["lokalise.i18n-ally"],
+  "codetour.showMarkers": false
 }

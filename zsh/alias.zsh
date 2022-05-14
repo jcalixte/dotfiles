@@ -55,3 +55,6 @@ alias doc="cd ~/lab/colas360/docs"
 
 # Weather
 alias wtr='curl "wttr.in/Paris?lang=fr"'
+
+# Python
+alias python=python3
