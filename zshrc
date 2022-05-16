@@ -88,7 +88,6 @@ plugins=(
   zsh-syntax-highlighting
   encode64
   extract
-  yarn-autocompletions
   fzf-yarn
 )
 
