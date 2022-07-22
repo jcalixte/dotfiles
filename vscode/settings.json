@@ -1,5 +1,5 @@
 {
-  "editor.fontFamily": "MonoLisa, mononoki, 'DejaVu Sans Mono', 'Cascadia Code', monofur, 'Fira Code', NovaMono, 'Anonymous Pro', 'Victor Mono', Hasklig, 'JetBrains Mono', Menlo, 'Source Code Pro', Monaco, 'Courier New', monospace",
+  "editor.fontFamily": "'JetBrains Mono', NovaMono, MonoLisa, mononoki, 'DejaVu Sans Mono', 'Cascadia Code', monofur, 'Fira Code', 'Anonymous Pro', 'Victor Mono', Hasklig, 'Source Code Pro', Monaco, 'Courier New', monospace",
   "editor.formatOnType": true,
   "html.format.endWithNewline": true,
   "git.confirmSync": false,
@@ -15,7 +15,8 @@
     "**/*.flat": true,
     "**/dists": true,
     "**/node_moduless": true,
-    "**/obj": true
+    "**/obj": true,
+    "~": true
   },
   "peacock.favoriteColors": [
     {
@@ -86,7 +87,7 @@
   },
   "explorer.confirmDragAndDrop": false,
   "[jsonc]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "vscode.json-language-features"
   },
   "editor.cursorBlinking": "smooth",
   "editor.cursorSmoothCaretAnimation": true,
@@ -108,7 +109,11 @@
   "[vue]": {
     "editor.tabSize": 2,
     "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.quickSuggestions": true
+    "editor.quickSuggestions": {
+      "comments": "on",
+      "strings": "on",
+      "other": "on"
+    }
   },
   "[typescriptreact]": {
     "editor.tabSize": 2,
@@ -131,13 +136,12 @@
   "vsicons.dontShowNewVersionMessage": true,
   "zenMode.hideLineNumbers": false,
   "extensions.ignoreRecommendations": true,
-  "i18n-ally.displayLanguage": "en",
   "diffEditor.ignoreTrimWhitespace": true,
   "javascript.preferences.importModuleSpecifier": "non-relative",
   "typescript.preferences.importModuleSpecifier": "non-relative",
   "workbench.productIconTheme": "fluent-icons",
   "explorer.compactFolders": false,
-  "workbench.colorTheme": "Tomorrow Night Blue",
+  "workbench.colorTheme": "Palenight (Mild Contrast)",
   "explorer.confirmDelete": false,
   "editor.quickSuggestions": {
     "comments": false,
@@ -145,7 +149,11 @@
     "other": true
   },
   "[markdown]": {
-    "editor.quickSuggestions": true,
+    "editor.quickSuggestions": {
+      "comments": "on",
+      "strings": "on",
+      "other": "on"
+    },
     "editor.defaultFormatter": "yzhang.markdown-all-in-one"
   },
   "editor.tabCompletion": "on",
@@ -154,9 +162,8 @@
   "editor.formatOnSave": true,
   "editor.accessibilitySupport": "off",
   "editor.lineHeight": 0,
-  "editor.fontSize": 14,
+  "editor.fontSize": 16,
   "emmet.showSuggestionsAsSnippets": true,
-  "volar.checkVueTscVersion": false,
   "editor.bracketPairColorization.enabled": true,
   "[dockercompose]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
@@ -170,6 +177,14 @@
   "eslint.packageManager": "pnpm",
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "prettier.semi": false,
-  "settingsSync.ignoredExtensions": ["lokalise.i18n-ally"],
-  "codetour.showMarkers": false
+  "settingsSync.ignoredExtensions": [
+    "lokalise.i18n-ally"
+  ],
+  "codetour.showMarkers": false,
+  "csharp.unitTestDebuggingOptions": {},
+  "markdown.experimental.editor.pasteLinks.enabled": true,
+  "editor.experimental.pasteActions.enabled": true,
+  "[xml]": {
+    "editor.defaultFormatter": "DotJoshJohnson.xml"
+  },
 }

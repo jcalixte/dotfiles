@@ -22,10 +22,6 @@ alias note="cd ~/jcnote"
 alias notes="cd ~/jcnote/notes && code ~/jcnote/notes && gl"
 alias n="notes"
 alias podinstall="cd ios && bundle exec pod install && cd .."
-alias deployand="bundle exec fastlane android deploy --env=staging"
-alias deployios="bundle exec fastlane ios deploy --env=staging"
-alias emulatepixel="~/Library/Android/sdk/emulator/emulator -avd Pixel_3_XL_API_29"
-alias emulatenexus="~/Library/Android/sdk/emulator/emulator -avd Nexus_5_API_28"
 alias resetiphone="sudo killall -9 com.apple.CoreSimulator.CoreSimulatorService"
 alias tct="tiny-care-terminal"
 alias liveandroid="scrcpy"
@@ -33,8 +29,8 @@ alias sshpi="ssh pi@192.168.1.36"
 alias ide="tmux split-window -h -p 30 && tmux split-window -v -p 66"
 alias chdot="~/.dotfiles && gl && code ."
 
-# yarn commands
-alias ys="yarn serve"
+# Vaquant
+alias va="cd ~/jclab/vaquant"
 
 # pnpm commands
 alias p='pnpm'
@@ -42,9 +38,6 @@ alias pi='p i'
 
 # side project aliases
 alias jcln="cd ~/jclab/lite-note"
-
-# Dotnet Core aliases
-alias efdbreset="rm -rf Migrations && dotnet ef database drop --force && dotnet ef migrations add Initial && dotnet ef database update"
 
 # BAM Project aliases
 alias col="cd ~/lab/colas360"
