@@ -22,6 +22,7 @@ Plugin 'mattn/emmet-vim'
 Plugin 'Quramy/tsuquyomi'
 Plugin 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plugin 'junegunn/fzf.vim'
+Plugin 'junegunn/vim-emoji'
 " Install L9 and avoid a Naming conflict if you've already installed a
 " different version somewhere else.
 " Plugin 'ascenator/L9', {'name': 'newL9'}
