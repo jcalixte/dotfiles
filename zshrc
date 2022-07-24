@@ -85,7 +85,6 @@ DISABLE_UPDATE_PROMPT="true"
 plugins=(
   git
   zsh-autosuggestions
-  zsh-syntax-highlighting
   encode64
   extract
   fzf-yarn
