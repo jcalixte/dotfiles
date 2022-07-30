@@ -154,7 +154,7 @@
       "strings": "on",
       "other": "on"
     },
-    "editor.defaultFormatter": "yzhang.markdown-all-in-one"
+    "editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
   },
   "editor.tabCompletion": "on",
   "editor.formatOnPaste": true,
