@@ -141,7 +141,7 @@
   "typescript.preferences.importModuleSpecifier": "non-relative",
   "workbench.productIconTheme": "fluent-icons",
   "explorer.compactFolders": false,
-  "workbench.colorTheme": "Palenight (Mild Contrast)",
+  "workbench.colorTheme": "Ocean Space Italic",
   "explorer.confirmDelete": false,
   "editor.quickSuggestions": {
     "comments": false,
@@ -187,4 +187,16 @@
   "[xml]": {
     "editor.defaultFormatter": "DotJoshJohnson.xml"
   },
+  "vim.insertModeKeyBindings": [
+    {
+      "before": [
+        "j",
+        "j"
+      ],
+      "after": [
+        "<esc>"
+      ]
+    }
+  ],
+  "vim.easymotion": true,
 }
