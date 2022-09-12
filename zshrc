@@ -6,6 +6,7 @@ export PATH="$DENO_INSTALL/bin:$PATH"
 # fnm
 export PATH=/home/julien/.fnm:$PATH
 eval "`fnm env`"
+ln -sf "$(which node)" /usr/local/bin/node
 
 # RVM - ruby version manager
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm" 
