@@ -6,7 +6,12 @@ export PATH="$DENO_INSTALL/bin:$PATH"
 # fnm
 export PATH=/home/julien/.fnm:$PATH
 eval "`fnm env`"
-ln -sf "$(which node)" /usr/local/bin/node
+
+if uname -r |grep -q 'microsoft' ; then
+  # Nothing to do when on WSL
+else
+  ln -sf "$(which node)" /usr/local/bin/node
+fi
 
 # RVM - ruby version manager
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm" 
