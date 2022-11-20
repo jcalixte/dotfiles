@@ -18,15 +18,11 @@ alias gpuo='git push --set-upstream origin $(git branch --show-current)'
 alias lab="cd ~/lab"
 alias labcli="cd ~/lab-cli"
 alias jc="cd ~/jclab"
-alias note="cd ~/jcnote"
-alias notes="cd ~/jcnote/notes && code ~/jcnote/notes && gl"
-alias n="notes"
+alias n="cd ~/jcnote/notes && code ~/jcnote/notes && gl"
 alias podinstall="cd ios && bundle exec pod install && cd .."
 alias resetiphone="sudo killall -9 com.apple.CoreSimulator.CoreSimulatorService"
 alias tct="tiny-care-terminal"
-alias liveandroid="scrcpy"
 alias sshpi="ssh pi@192.168.1.36"
-alias ide="tmux split-window -h -p 30 && tmux split-window -v -p 66"
 alias chdot="~/.dotfiles && gl && code ."
 
 # Vaquant
