@@ -86,7 +86,7 @@
   },
   "explorer.confirmDragAndDrop": false,
   "[jsonc]": {
-    "editor.defaultFormatter": "vscode.json-language-features"
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "editor.cursorBlinking": "smooth",
   "editor.cursorSmoothCaretAnimation": true,
@@ -107,7 +107,7 @@
   },
   "[vue]": {
     "editor.tabSize": 2,
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.defaultFormatter": "Vue.volar",
     "editor.quickSuggestions": {
       "comments": "on",
       "strings": "on",
@@ -140,7 +140,7 @@
   "typescript.preferences.importModuleSpecifier": "non-relative",
   "workbench.productIconTheme": "fluent-icons",
   "explorer.compactFolders": false,
-  "workbench.colorTheme": "Horizon",
+  "workbench.colorTheme": "Black Ocean",
   "explorer.confirmDelete": false,
   "editor.quickSuggestions": {
     "comments": false,
@@ -173,7 +173,7 @@
   "markdown.validate.enabled": true,
   "markdown.preview.fontFamily": "'Segoe UI', -apple-system, BlinkMacSystemFont, 'Segoe WPC', system-ui, 'Ubuntu', 'Droid Sans', sans-serif",
   "files.associations": {
-    "*.mdx": "markdown"
+    "*.mdx": "mdx"
   },
   "window.zoomLevel": 1,
   "eslint.alwaysShowStatus": true,
@@ -187,4 +187,9 @@
   "csharp.unitTestDebuggingOptions": {},
   "markdown.experimental.editor.pasteLinks.enabled": true,
   "editor.experimental.pasteActions.enabled": true,
+  "markdown.updateLinksOnFileMove.enabled": "always",
+  "markdown.extension.tableFormatter.normalizeIndentation": true,
+  "[scss]": {
+    "editor.defaultFormatter": "vscode.css-language-features"
+  },
 }
