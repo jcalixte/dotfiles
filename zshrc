@@ -7,6 +7,7 @@ export PATH="$DENO_INSTALL/bin:$PATH"
 export PATH=/home/julien/.fnm:$PATH
 eval "`fnm env`"
 
+# Specificity code for WSL or linux base OSs
 if uname -r |grep -q 'microsoft' ; then
   # Nothing to do when on WSL
 else
