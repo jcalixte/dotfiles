@@ -192,4 +192,11 @@
   "[scss]": {
     "editor.defaultFormatter": "vscode.css-language-features"
   },
+  "editor.unicodeHighlight.allowedCharacters": {
+    "×": true,
+    "ℹ": true,
+    "️": true
+  },
+  "promyze.feature.useLegacySuggestions": false,
+  "promyze.connection.apiKey": "ZXlKMGVYQWlPaUpLVjFRaUxDSmhiR2NpT2lKSVV6VXhNaUo5LmV5SjFjMlZ5U1dRaU9pSTJNMkprT1RjME9UWXlPREZpTVRFd01ESmpZV1F3TnpnaUxDSnZjbWRoYm1sNllYUnBiMjVKWkNJNklqWXpZbVE1TnpFNU5qSTRNV0l4TVRBd01tTmhaREF4T1NJc0ltaHZjM1FpT2lKaVlXMTBaV05vTG5CeWIyMTVlbVV1WVhCd0lpd2ljMlZqZFhKbElqcDBjblZsZlEubERzNktEbnpIWnU1QnUzVmNZQkpHelJRWXZHckFlaWdUVzhxZExMMjNIc2RvY1B0cDViZTJsQlhQc3dERkdXTGJtWlhDdWlrZDVlQUlCcTUtbFBMUUE=",
 }
