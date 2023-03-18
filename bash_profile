@@ -7,3 +7,5 @@ export NVM_DIR="$HOME/.nvm"
 source ~/.bashrc
 
 export PATH="$HOME/.cargo/bin:$PATH"
+
+source /Users/julien/.docker/init-bash.sh || true # Added by Docker Desktop
