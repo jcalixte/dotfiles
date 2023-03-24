@@ -140,4 +140,6 @@ export PATH="$PATH:$HOME/.rvm/bin"
 # uninstall by removing these lines
 [[ -f ~/.config/tabtab/zsh/__tabtab.zsh ]] && . ~/.config/tabtab/zsh/__tabtab.zsh || true
 
-source /Users/julien/.docker/init-zsh.sh || true # Added by Docker Desktop
+if [[ -f "/Users/julien/.docker/init-zsh.sh" ]]; then
+  source /Users/julien/.docker/init-zsh.sh || true # Added by Docker Desktop
+fi

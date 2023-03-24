@@ -8,4 +8,6 @@ source ~/.bashrc
 
 export PATH="$HOME/.cargo/bin:$PATH"
 
-source /Users/julien/.docker/init-bash.sh || true # Added by Docker Desktop
+if [[ -f "/Users/julien/.docker/init-zsh.sh" ]]; then
+  source /Users/julien/.docker/init-bash.sh || true # Added by Docker Desktop
+fi
