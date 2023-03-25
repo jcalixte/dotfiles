@@ -20,15 +20,43 @@
   "peacock.favoriteColors": [
     {
       "name": "Angular Red",
-      "value": "#b52e31"
-    },
-    {
-      "name": "Auth0 Orange",
-      "value": "#eb5424"
+      "value": "#dd0531"
     },
     {
       "name": "Azure Blue",
       "value": "#007fff"
+    },
+    {
+      "name": "JavaScript Yellow",
+      "value": "#f9e64f"
+    },
+    {
+      "name": "Mandalorian Blue",
+      "value": "#1857a4"
+    },
+    {
+      "name": "Node Green",
+      "value": "#215732"
+    },
+    {
+      "name": "React Blue",
+      "value": "#61dafb"
+    },
+    {
+      "name": "Something Different",
+      "value": "#832561"
+    },
+    {
+      "name": "Svelte Orange",
+      "value": "#ff3d00"
+    },
+    {
+      "name": "Vue Green",
+      "value": "#42b883"
+    },
+    {
+      "name": "Auth0 Orange",
+      "value": "#eb5424"
     },
     {
       "name": "C# Purple",
@@ -45,30 +73,6 @@
     {
       "name": "Java Blue-Gray",
       "value": "#557c9b"
-    },
-    {
-      "name": "JavaScript Yellow",
-      "value": "#f9e64f"
-    },
-    {
-      "name": "Mandalorian Blue",
-      "value": "#1857a4"
-    },
-    {
-      "name": "Node Green",
-      "value": "#215732"
-    },
-    {
-      "name": "React Blue",
-      "value": "#00b3e6"
-    },
-    {
-      "name": "Something Different",
-      "value": "#832561"
-    },
-    {
-      "name": "Vue Green",
-      "value": "#42b883"
     }
   ],
   "editor.fontLigatures": true,
@@ -140,7 +144,7 @@
   "typescript.preferences.importModuleSpecifier": "non-relative",
   "workbench.productIconTheme": "fluent-icons",
   "explorer.compactFolders": false,
-  "workbench.colorTheme": "1984 - Cyberpunk",
+  "workbench.colorTheme": "Abyss",
   "explorer.confirmDelete": false,
   "editor.quickSuggestions": {
     "comments": false,
@@ -161,7 +165,7 @@
   "editor.formatOnSave": true,
   "editor.accessibilitySupport": "off",
   "editor.lineHeight": 0,
-  "editor.fontSize": 14,
+  "editor.fontSize": 15,
   "emmet.showSuggestionsAsSnippets": true,
   "editor.bracketPairColorization.enabled": true,
   "[dockercompose]": {
@@ -175,7 +179,6 @@
   "files.associations": {
     "*.mdx": "mdx"
   },
-  "window.zoomLevel": 1,
   "eslint.alwaysShowStatus": true,
   "eslint.packageManager": "pnpm",
   "editor.defaultFormatter": "esbenp.prettier-vscode",
@@ -202,4 +205,5 @@
   "promyze.connection.apiKey": "ZXlKMGVYQWlPaUpLVjFRaUxDSmhiR2NpT2lKSVV6VXhNaUo5LmV5SjFjMlZ5U1dRaU9pSTJNMkprT1RjME9UWXlPREZpTVRFd01ESmpZV1F3TnpnaUxDSnZjbWRoYm1sNllYUnBiMjVKWkNJNklqWXpZbVE1TnpFNU5qSTRNV0l4TVRBd01tTmhaREF4T1NJc0ltaHZjM1FpT2lKaVlXMTBaV05vTG5CeWIyMTVlbVV1WVhCd0lpd2ljMlZqZFhKbElqcDBjblZsZlEubERzNktEbnpIWnU1QnUzVmNZQkpHelJRWXZHckFlaWdUVzhxZExMMjNIc2RvY1B0cDViZTJsQlhQc3dERkdXTGJtWlhDdWlrZDVlQUlCcTUtbFBMUUE=",
   "git.openRepositoryInParentFolders": "never",
   "vitest.commandLine": "pnpm test --",
+  "window.zoomLevel": 1,
 }
