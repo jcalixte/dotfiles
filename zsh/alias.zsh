@@ -35,6 +35,7 @@ alias pi='p i'
 
 # side project aliases
 alias jcln="cd ~/jclab/lite-note"
+alias jcl="cd ~/jclab/loopycode"
 
 # BAM Project aliases
 alias col="cd ~/lab/colas360"
