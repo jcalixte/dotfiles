@@ -1,9 +1,0 @@
-{
-	"Export module": {
-		"prefix": "export",
-		"body": [
-			"export { $2 } from '$1';"
-		],
-		"description": "Export module in TypeScript"
-	}
-}
