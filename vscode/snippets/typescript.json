@@ -5,5 +5,12 @@
 			"export { $2 } from '$1';"
 		],
 		"description": "Export module in TypeScript"
-	}
+	},
+  "defineProps with const": {
+    "prefix": "dpc",
+    "body": [
+      "const props = defineProps<{$1}>()"
+    ],
+    "description": "defineProps with TypeScript and const props"
+  }
 }

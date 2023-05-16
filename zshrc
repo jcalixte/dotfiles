@@ -143,3 +143,4 @@ export PATH="$PATH:$HOME/.rvm/bin"
 if [[ -f "/Users/julien/.docker/init-zsh.sh" ]]; then
   source /Users/julien/.docker/init-zsh.sh || true # Added by Docker Desktop
 fi
+source /Users/julien/.docker/init-zsh.sh || true # Added by Docker Desktop

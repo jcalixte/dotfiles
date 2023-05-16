@@ -1,9 +1,8 @@
 {
-  "editor.fontFamily": "MonoLisa, 'Cascadia Code', 'JetBrains Mono', NovaMono, mononoki, 'DejaVu Sans Mono', monofur, 'Fira Code', 'Anonymous Pro', 'Victor Mono', Hasklig, 'Source Code Pro', Monaco, 'Courier New', monospace",
+  "editor.fontFamily": "'JetBrains Mono', 'Victor Mono', mononoki, 'DejaVu Sans Mono', MonoLisa, 'Cascadia Code', 'Fira Code', NovaMono, monofur, Hasklig, 'Source Code Pro', Monaco, 'Courier New', monospace",
   "editor.formatOnType": true,
   "git.confirmSync": false,
   "git.autofetch": true,
-  "typescript.updateImportsOnFileMove.enabled": "always",
   "editor.tabSize": 2,
   "prettier.requireConfig": true,
   "git.enableSmartCommit": true,
@@ -76,9 +75,6 @@
     }
   ],
   "editor.fontLigatures": true,
-  "[json]": {
-    "editor.defaultFormatter": "vscode.json-language-features"
-  },
   "breadcrumbs.enabled": true,
   "search.exclude": {
     "**/.jest": true,
@@ -89,17 +85,22 @@
     "**/obj": true
   },
   "explorer.confirmDragAndDrop": false,
+  "editor.cursorBlinking": "phase",
+  "editor.cursorSmoothCaretAnimation": "on",
+  "terminal.integrated.cursorStyle": "underline",
+  "[json]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
   "[jsonc]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "editor.cursorBlinking": "smooth",
-  "editor.cursorSmoothCaretAnimation": "on",
-  "terminal.integrated.cursorStyle": "underline",
   "[html]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.tabSize": 2
   },
   "[javascript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.tabSize": 2
   },
   "[typescript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
@@ -110,8 +111,8 @@
     "editor.tabSize": 2
   },
   "[vue]": {
-    "editor.tabSize": 2,
     "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.tabSize": 2,
     "editor.quickSuggestions": {
       "comments": "on",
       "strings": "on",
@@ -120,18 +121,14 @@
   },
   "[typescriptreact]": {
     "editor.tabSize": 2,
-    "editor.defaultFormatter": "ms-vsliveshare.vsliveshare"
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "debug.console.fontSize": 13,
   "terminal.integrated.fontSize": 16,
-  "javascript.updateImportsOnFileMove.enabled": "always",
   "files.watcherExclude": {
     "**/.jest": true,
     "**/*.flat": true
   },
-  "editor.suggestSelection": "first",
-  "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
-  "workbench.activityBar.visible": true,
   "[csharp]": {
     "editor.tabSize": 4
   },
@@ -140,11 +137,9 @@
   "zenMode.hideLineNumbers": false,
   "extensions.ignoreRecommendations": true,
   "diffEditor.ignoreTrimWhitespace": true,
-  "javascript.preferences.importModuleSpecifier": "non-relative",
-  "typescript.preferences.importModuleSpecifier": "non-relative",
   "workbench.productIconTheme": "fluent-icons",
   "explorer.compactFolders": false,
-  "workbench.colorTheme": "Abyss",
+  "workbench.colorTheme": "Catppuccin Frappé",
   "explorer.confirmDelete": false,
   "editor.quickSuggestions": {
     "comments": false,
@@ -157,7 +152,7 @@
       "strings": "on",
       "other": "on"
     },
-    "editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
+    "editor.defaultFormatter": "yzhang.markdown-all-in-one"
   },
   "editor.tabCompletion": "on",
   "editor.formatOnPaste": true,
@@ -171,9 +166,6 @@
   "[dockercompose]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "markdown.experimental.updateLinksOnFileMove.enabled": "always",
-  "markdown.experimental.updateLinksOnFileMove.enableForDirectories": true,
-  "markdown.experimental.updateLinksOnFileMove.externalFileGlobs": "**/*.{jpg,jpe,jpeg,png,bmp,gif,ico,webp,avif,tiff,svg,mp4}",
   "markdown.validate.enabled": true,
   "markdown.preview.fontFamily": "'Segoe UI', -apple-system, BlinkMacSystemFont, 'Segoe WPC', system-ui, 'Ubuntu', 'Droid Sans', sans-serif",
   "files.associations": {
@@ -187,7 +179,6 @@
     "lokalise.i18n-ally",
     "kingwl.vscode-vitest-runner"
   ],
-  "codetour.showMarkers": false,
   "csharp.unitTestDebuggingOptions": {},
   "markdown.experimental.editor.pasteLinks.enabled": true,
   "editor.experimental.pasteActions.enabled": true,
@@ -201,9 +192,18 @@
     "ℹ": true,
     "️": true
   },
-  "promyze.feature.useLegacySuggestions": false,
-  "promyze.connection.apiKey": "ZXlKMGVYQWlPaUpLVjFRaUxDSmhiR2NpT2lKSVV6VXhNaUo5LmV5SjFjMlZ5U1dRaU9pSTJNMkprT1RjME9UWXlPREZpTVRFd01ESmpZV1F3TnpnaUxDSnZjbWRoYm1sNllYUnBiMjVKWkNJNklqWXpZbVE1TnpFNU5qSTRNV0l4TVRBd01tTmhaREF4T1NJc0ltaHZjM1FpT2lKaVlXMTBaV05vTG5CeWIyMTVlbVV1WVhCd0lpd2ljMlZqZFhKbElqcDBjblZsZlEubERzNktEbnpIWnU1QnUzVmNZQkpHelJRWXZHckFlaWdUVzhxZExMMjNIc2RvY1B0cDViZTJsQlhQc3dERkdXTGJtWlhDdWlrZDVlQUlCcTUtbFBMUUE=",
   "git.openRepositoryInParentFolders": "never",
-  "vitest.commandLine": "pnpm test --",
   "window.zoomLevel": 1,
+  "security.workspace.trust.untrustedFiles": "open",
+  "editor.codeActionsOnSave": {
+    "source.fixAll": true,
+    "source.organizeImports": true,
+  },
+  "editor.suggest.snippetsPreventQuickSuggestions": false,
+  "volar.inlayHints.eventArgumentInInlineHandlers": false,
+  "workbench.iconTheme": "ayu",
+  "window.menuBarVisibility": "toggle",
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "workbench.statusBar.visible": false,
 }

@@ -2,18 +2,13 @@
   "Vue component": {
     "prefix": "vue",
     "body": [
+      "<script setup lang=\"ts\">",
+      "",
+      "</script>",
+      "",
       "<template>",
       "  <div class=\"${1:home-page}\"></div>",
       "</template>",
-      "",
-      "<script lang=\"ts\">",
-      "import { defineComponent } from 'vue'",
-      "",
-      "export default defineComponent({",
-      "  name: '${2:HomePage}',",
-      "  setup() {}",
-      "})",
-      "</script>",
       "",
       "<style scoped lang=\"scss\">",
       ".$1 {",
@@ -41,5 +36,12 @@
       ""
     ],
     "description": "Îles component"
+  },
+  "defineProps with const": {
+    "prefix": "dpc",
+    "body": [
+      "const props = defineProps<{$1}>()"
+    ],
+    "description": "defineProps with TypeScript and const props"
   }
 }
