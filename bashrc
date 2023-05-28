@@ -9,3 +9,4 @@ export NVM_DIR="$HOME/.nvm"
 if [[ -f "/Users/julien/.docker/init-zsh.sh" ]]; then
   source /Users/julien/.docker/init-bash.sh || true # Added by Docker Desktop
 fi
+. "$HOME/.cargo/env"

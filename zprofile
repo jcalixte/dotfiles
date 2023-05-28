@@ -1,5 +1,4 @@
 
-export PATH="$HOME/.cargo/bin:$PATH"
 
 # Setting PATH for Python 3.10
 # The original version is saved in .zprofile.pysave
