@@ -36,13 +36,10 @@ alias pi='p i'
 # side project aliases
 alias jcln="cd ~/jclab/lite-note"
 alias jcl="cd ~/jclab/loopycode"
+alias jcb="cd ~/jclab/blog"
 
 # BAM Project aliases
 alias col="cd ~/lab/colas360"
-alias amob="cd ~/lab/colas360/apps/atelier360"
-alias cmob="cd ~/lab/colas360/apps/chantier360"
-alias ser="cd ~/lab/colas360/apps/server"
-alias doc="cd ~/lab/colas360/docs"
 
 # Weather
 alias wtr='curl "wttr.in/Paris?lang=fr"'
