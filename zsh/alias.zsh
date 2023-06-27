@@ -37,6 +37,8 @@ alias pi='p i'
 alias jcln="cd ~/jclab/lite-note"
 alias jcl="cd ~/jclab/loopycode"
 alias jcb="cd ~/jclab/blog"
+alias jcbc="cd ~/jclab/burdown"
+alias jcbcc="cd ~/jclab/burdown/packages/core"
 
 # BAM Project aliases
 alias col="cd ~/lab/colas360"
