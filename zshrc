@@ -143,3 +143,7 @@ export PATH="$PATH:$HOME/.rvm/bin"
 if [[ -f "/Users/julien/.docker/init-zsh.sh" ]]; then
   source /Users/julien/.docker/init-zsh.sh || true # Added by Docker Desktop
 fi
+
+# fnm
+export PATH="/Users/julien/Library/Application Support/fnm:$PATH"
+eval "`fnm env`"
