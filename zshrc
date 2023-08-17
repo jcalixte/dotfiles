@@ -7,13 +7,6 @@ export PATH="$DENO_INSTALL/bin:$PATH"
 export PATH=/home/julien/.fnm:$PATH
 eval "`fnm env`"
 
-# Specificity code for WSL or linux base OSs
-if uname -r |grep -q 'microsoft' ; then
-  # Nothing to do when on WSL
-else
-  ln -sf "$(which node)" /usr/local/bin/node
-fi
-
 # RVM - ruby version manager
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm" 
 
@@ -91,10 +84,8 @@ DISABLE_UPDATE_PROMPT="true"
 # plugins=(git git-flow tmux zsh-autosuggestions copyfile docker encode64 extract yarn-autocompletions fzf-yarn)
 plugins=(
   git
-  zsh-autosuggestions
   encode64
   extract
-  fzf-yarn
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -142,4 +133,11 @@ export PATH="$PATH:$HOME/.rvm/bin"
 
 if [[ -f "/Users/julien/.docker/init-zsh.sh" ]]; then
   source /Users/julien/.docker/init-zsh.sh || true # Added by Docker Desktop
+fi
+
+# Specificity code for WSL or linux base OSs
+if uname -r |grep -q 'microsoft' ; then
+  # Nothing to do when on WSL
+else
+  ln -sf "$(which node)" /usr/local/bin/node
 fi
