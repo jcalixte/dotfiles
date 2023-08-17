@@ -86,6 +86,7 @@ plugins=(
   git
   encode64
   extract
+  zsh-autosuggestions
 )
 
 source $ZSH/oh-my-zsh.sh
