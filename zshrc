@@ -134,10 +134,3 @@ export PATH="$PATH:$HOME/.rvm/bin"
 if [[ -f "/Users/julien/.docker/init-zsh.sh" ]]; then
   source /Users/julien/.docker/init-zsh.sh || true # Added by Docker Desktop
 fi
-
-# Specificity code for WSL or linux base OSs
-if uname -r |grep -q 'microsoft' ; then
-  # Nothing to do when on WSL
-else
-  ln -sf "$(which node)" /usr/local/bin/node
-fi
