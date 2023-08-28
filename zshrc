@@ -2,6 +2,8 @@
 export PATH="$HOME/bin:/usr/local/bin:$PATH"
 export DENO_INSTALL="$HOME/.deno"
 export PATH="$DENO_INSTALL/bin:$PATH"
+export PATH="$HOME/.jenv/shims:$PATH"
+export JAVA_HOME="/Library/Java/JavaVirtualMachines/jdk-11.jdk/Contents/Home"
 
 # fnm
 export PATH=/home/julien/.fnm:$PATH
