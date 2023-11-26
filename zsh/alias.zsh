@@ -12,6 +12,7 @@ alias lsc='ls -lah | lolcat'
 alias gbr="git branch --merged | grep -v "master" | xargs git branch -D"
 alias chzsh="code ~/.zshrc"
 alias srczsh="source ~/.zshrc"
+alias lz="lazygit"
 alias gcz="git cz"
 alias gcaf="git commit --amend --no-edit && gpf"
 alias gpuo='git push --set-upstream origin $(git branch --show-current)'
