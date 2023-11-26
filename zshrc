@@ -2,20 +2,15 @@
 export PATH="$HOME/bin:/usr/local/bin:$PATH"
 export DENO_INSTALL="$HOME/.deno"
 export PATH="$DENO_INSTALL/bin:$PATH"
+export PATH="$HOME/.jenv/shims:$PATH"
+export JAVA_HOME="/Library/Java/JavaVirtualMachines/jdk-11.jdk/Contents/Home"
 
 # fnm
 export PATH=/home/julien/.fnm:$PATH
 eval "`fnm env`"
 
-# Specificity code for WSL or linux base OSs
-if uname -r |grep -q 'microsoft' ; then
-  # Nothing to do when on WSL
-else
-  ln -sf "$(which node)" /usr/local/bin/node
-fi
-
-# RVM - ruby version manager
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm" 
+# ruby
+eval "$(rbenv init - zsh)"
 
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
@@ -24,7 +19,7 @@ export ZSH="$HOME/.oh-my-zsh"
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
-ZSH_THEME="cloud"
+ZSH_THEME="nanotech"
 
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
@@ -91,10 +86,9 @@ DISABLE_UPDATE_PROMPT="true"
 # plugins=(git git-flow tmux zsh-autosuggestions copyfile docker encode64 extract yarn-autocompletions fzf-yarn)
 plugins=(
   git
-  zsh-autosuggestions
   encode64
   extract
-  fzf-yarn
+  zsh-autosuggestions
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -144,8 +138,12 @@ if [[ -f "/Users/julien/.docker/init-zsh.sh" ]]; then
   source /Users/julien/.docker/init-zsh.sh || true # Added by Docker Desktop
 fi
 
+source /opt/homebrew/opt/chruby/share/chruby/chruby.sh
+source /opt/homebrew/opt/chruby/share/chruby/auto.sh
+chruby ruby-3.2.2
+
 # bun completions
-[ -s "/home/julien/.bun/_bun" ] && source "/home/julien/.bun/_bun"
+[ -s "/Users/julien/.bun/_bun" ] && source "/Users/julien/.bun/_bun"
 
 # bun
 export BUN_INSTALL="$HOME/.bun"

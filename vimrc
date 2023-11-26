@@ -6,8 +6,7 @@ source ~/.dotfiles/vim/plugin.vimrc
 set runtimepath^=~/.vim/bundle/ctrlp.vim
 packloadall
 syntax on
-colorscheme lucius
-LuciusBlack
+colorscheme desert
 set tabstop=2 shiftwidth=2 expandtab
 set backspace=indent,eol,start
 set number relativenumber

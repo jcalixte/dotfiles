@@ -31,3 +31,6 @@
 	defaultBranch = main
 [core]
 	editor = vim
+[safe]
+	directory = /Users/julien/.dotfiles/dotbot
+	directory = /Users/julien/.dotfiles/dotbot/lib/pyyaml
