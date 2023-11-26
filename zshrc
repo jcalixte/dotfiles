@@ -10,7 +10,10 @@ export PATH=/home/julien/.fnm:$PATH
 eval "`fnm env`"
 
 # ruby
-eval "$(rbenv init - zsh)"
+
+if [ -x "$(command -v rbenv)" ]; then
+  eval "$(rbenv init - zsh)"
+fi
 
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
@@ -134,16 +137,19 @@ export PATH="$PATH:$HOME/.rvm/bin"
 # uninstall by removing these lines
 [[ -f ~/.config/tabtab/zsh/__tabtab.zsh ]] && . ~/.config/tabtab/zsh/__tabtab.zsh || true
 
-if [[ -f "/Users/julien/.docker/init-zsh.sh" ]]; then
-  source /Users/julien/.docker/init-zsh.sh || true # Added by Docker Desktop
+if [[ -f "~/.docker/init-zsh.sh" ]]; then
+  source ~/.docker/init-zsh.sh || true # Added by Docker Desktop
 fi
 
-source /opt/homebrew/opt/chruby/share/chruby/chruby.sh
-source /opt/homebrew/opt/chruby/share/chruby/auto.sh
-chruby ruby-3.2.2
+
+if [[ -s " /opt/homebrew/opt/chruby/share/chruby/chruby.sh" ]]; then
+  source /opt/homebrew/opt/chruby/share/chruby/chruby.sh
+  source /opt/homebrew/opt/chruby/share/chruby/auto.sh
+  chruby ruby-3.2.2
+fi
 
 # bun completions
-[ -s "/Users/julien/.bun/_bun" ] && source "/Users/julien/.bun/_bun"
+[ -s "~/.bun/_bun" ] && source "~/.bun/_bun"
 
 # bun
 export BUN_INSTALL="$HOME/.bun"
