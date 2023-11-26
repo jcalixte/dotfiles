@@ -143,3 +143,10 @@ export PATH="$PATH:$HOME/.rvm/bin"
 if [[ -f "/Users/julien/.docker/init-zsh.sh" ]]; then
   source /Users/julien/.docker/init-zsh.sh || true # Added by Docker Desktop
 fi
+
+# bun completions
+[ -s "/home/julien/.bun/_bun" ] && source "/home/julien/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
