@@ -148,3 +148,9 @@ chruby ruby-3.2.2
 # bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
+
+# flashlight
+export PATH="/Users/julien/.flashlight/bin:$PATH"
+
+# Zoxide
+eval "$(zoxide init zsh)"
