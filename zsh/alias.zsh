@@ -33,7 +33,7 @@ alias jcbc="cd ~/jclab/burdown"
 alias jcbcc="cd ~/jclab/burdown/packages/core"
 
 # BAM Project aliases
-alias col="cd ~/lab/colas360"
+alias col="cd ~/lab/chantier360"
 
 # Utils
 alias podinstall="cd ios && bundle exec pod install && cd .."
