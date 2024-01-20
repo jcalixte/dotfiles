@@ -31,6 +31,7 @@ alias jcl="cd ~/jclab/loopycode"
 alias jcb="cd ~/jclab/blog"
 alias jcbc="cd ~/jclab/burdown"
 alias jcbcc="cd ~/jclab/burdown/packages/core"
+alias best="cd ~/jclab/bestagons"
 
 # BAM Project aliases
 alias col="cd ~/lab/chantier360"
@@ -44,6 +45,9 @@ alias sshpi="ssh pi@192.168.1.36"
 # pnpm commands
 alias p='pnpm'
 alias pi='p i'
+
+# yarn commands
+alias y='yarn'
 
 # Weather
 alias wtr='curl "wttr.in/Paris?lang=fr"'
