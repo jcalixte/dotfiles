@@ -45,6 +45,7 @@ alias sshpi="ssh pi@192.168.1.36"
 # pnpm commands
 alias p='pnpm'
 alias pi='p i'
+alias pc='p commit'
 
 # yarn commands
 alias y='yarn'
