@@ -3,7 +3,7 @@ export PATH="$HOME/bin:/usr/local/bin:$HOME/.local/bin:$PATH"
 export DENO_INSTALL="$HOME/.deno"
 export PATH="$DENO_INSTALL/bin:$PATH"
 export PATH="$HOME/.jenv/shims:$PATH"
-export JAVA_HOME="/Library/Java/JavaVirtualMachines/jdk-11.jdk/Contents/Home"
+export JAVA_HOME="/Library/Java/JavaVirtualMachines/zulu-17.jdk/Contents/Home/"
 
 # Homebrew
 if command -v /opt/homebrew/bin/brew > /dev/null 2>&1;
@@ -12,7 +12,8 @@ fi
 
 # fnm
 export PATH="$HOME/.fnm:$PATH"
-eval "`fnm env`"
+eval "`fnm env --use-on-cd`"
+export FNM_DIR="~/.fnm"
 
 # ruby
 
@@ -121,6 +122,7 @@ source ~/.dotfiles/zsh/private.zsh
 export FZF_COMPLETION_TRIGGER=','
 
 source ~/.dotfiles/zsh/alias.zsh
+source ~/.dotfiles/zsh/zprofile
 
 # eval "$(starship init zsh)"
 
@@ -146,7 +148,6 @@ if [[ -f "~/.docker/init-zsh.sh" ]]; then
   source ~/.docker/init-zsh.sh || true # Added by Docker Desktop
 fi
 
-
 if [[ -s " /opt/homebrew/opt/chruby/share/chruby/chruby.sh" ]]; then
   source /opt/homebrew/opt/chruby/share/chruby/chruby.sh
   source /opt/homebrew/opt/chruby/share/chruby/auto.sh
@@ -155,13 +156,14 @@ fi
 
 # bun completions
 [ -s "~/.bun/_bun" ] && source "~/.bun/_bun"
-
-# bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
 
 # flashlight
-export PATH="/Users/julien/.flashlight/bin:$PATH"
+export PATH="~/.flashlight/bin:$PATH"
 
 # Zoxide
 eval "$(zoxide init zsh)"
+
+# Maestro
+export PATH=$PATH:$HOME/.maestro/bin
