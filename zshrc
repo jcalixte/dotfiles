@@ -4,6 +4,7 @@ export DENO_INSTALL="$HOME/.deno"
 export PATH="$DENO_INSTALL/bin:$PATH"
 export PATH="$HOME/.jenv/shims:$PATH"
 export JAVA_HOME="/Library/Java/JavaVirtualMachines/zulu-17.jdk/Contents/Home/"
+export scheme=dev
 
 # Homebrew
 if command -v /opt/homebrew/bin/brew > /dev/null 2>&1;
