@@ -14,7 +14,7 @@ alias srczsh="source ~/.zshrc"
 # git
 alias lz="lazygit"
 alias gcz="git cz"
-alias gcaf="git commit --amend --no-edit && gpf"
+alias gcaf="gaa && git commit --amend --no-edit && gpf"
 alias gpuo='git push --set-upstream origin $(git branch --show-current)'
 alias gitfiles='git log --pretty=format: --name-only --since="7 days ago" | sort | uniq'
 alias gw="watch -n 300 \"git pull && (git ls-files --modified --others --exclude-standard | grep . > /dev/null) && { git add . ; git commit -m 'autocommit' ; git push; }\""

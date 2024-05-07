@@ -14,7 +14,7 @@ fi
 # fnm
 export PATH="$HOME/.fnm:$PATH"
 eval "`fnm env --use-on-cd`"
-export FNM_DIR="/Users/julien/.fnm"
+export FNM_DIR="~/.fnm"
 
 # ruby
 
@@ -161,7 +161,7 @@ export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
 
 # flashlight
-export PATH="/Users/julien/.flashlight/bin:$PATH"
+export PATH="~/.flashlight/bin:$PATH"
 
 # Zoxide
 eval "$(zoxide init zsh)"
