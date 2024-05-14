@@ -14,7 +14,8 @@ fi
 # fnm
 export PATH="$HOME/.fnm:$PATH"
 eval "`fnm env --use-on-cd`"
-export FNM_DIR="~/.fnm"
+# TODO: having custom files for macos and linux
+export FNM_DIR="/Users/julien/.fnm"
 
 # ruby
 
