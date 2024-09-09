@@ -6,9 +6,8 @@ export PATH="$HOME/.jenv/shims:$PATH"
 export JAVA_HOME="/Library/Java/JavaVirtualMachines/zulu-17.jdk/Contents/Home/"
 export scheme=dev
 
-# Homebrew
-if command -v /opt/homebrew/bin/brew > /dev/null 2>&1;
-  then eval "$(/opt/homebrew/bin/brew shellenv)";
+if [[ $(uname) == "Darwin" ]]; then
+  source ~/.dotfiles/zsh/macos.zsh
 fi
 
 # fnm
