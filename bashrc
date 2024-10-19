@@ -10,3 +10,4 @@ if [[ -f "/Users/julien/.docker/init-zsh.sh" ]]; then
   source /Users/julien/.docker/init-zsh.sh || true # Added by Docker Desktop
 fi
 . "$HOME/.cargo/env"
+. "/Users/julien/.deno/env"

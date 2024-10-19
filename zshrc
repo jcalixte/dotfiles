@@ -1,3 +1,5 @@
+# Add deno completions to search path
+if [[ ":$FPATH:" != *":/Users/julien/.zsh/completions:"* ]]; then export FPATH="/Users/julien/.zsh/completions:$FPATH"; fi
 # If you come from bash you might have to change your $PATH.
 export PATH="$HOME/bin:/usr/local/bin:$HOME/.local/bin:$PATH"
 export DENO_INSTALL="$HOME/.deno"
@@ -168,3 +170,7 @@ eval "$(zoxide init zsh)"
 
 # Maestro
 export PATH=$PATH:$HOME/.maestro/bin
+. "/Users/julien/.deno/env"
+# Initialize zsh completions (added by deno install script)
+autoload -Uz compinit
+compinit

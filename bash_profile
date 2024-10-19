@@ -13,3 +13,4 @@ fi
 . "$HOME/.cargo/env"
 
 export PATH=$PATH:$HOME/.maestro/bin
+. "/Users/julien/.deno/env"

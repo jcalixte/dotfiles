@@ -10,6 +10,7 @@ alias lsc='ls -lah | lolcat'
 alias gbr="git branch --merged | grep -v "master" | xargs git branch -D"
 alias chzsh="code ~/.zshrc"
 alias srczsh="source ~/.zshrc"
+alias ide="tmux"
 
 # git
 alias lz="lazygit"
