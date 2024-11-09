@@ -11,6 +11,7 @@ alias gbr="git branch --merged | grep -v "master" | xargs git branch -D"
 alias chzsh="code ~/.zshrc"
 alias srczsh="source ~/.zshrc"
 alias ide="tmux"
+alias vim="nvim"
 
 # git
 alias lz="lazygit"
@@ -19,6 +20,11 @@ alias gcaf="gaa && git commit --amend --no-edit && gpf"
 alias gpuo='git push --set-upstream origin $(git branch --show-current)'
 alias gitfiles='git log --pretty=format: --name-only --since="7 days ago" | sort | uniq'
 alias gw="watch -n 300 \"git pull && (git ls-files --modified --others --exclude-standard | grep . > /dev/null) && { git add . ; git commit -m 'autocommit' ; git push; }\""
+alias gcgh='function _clone_github() {
+    repo_url="https://github.com/$1.git"
+    folder_name="${2:-$(basename "$1")}"
+    git clone "$repo_url" "$folder_name" && cd "$folder_name"
+}; _clone_github'
 
 # folder shortcuts
 alias lab="cd ~/lab"
