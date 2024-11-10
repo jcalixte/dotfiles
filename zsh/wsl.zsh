@@ -1,0 +1,1 @@
+export FNM_DIR="/home/julien/.fnm"

@@ -8,6 +8,8 @@
 	required = true
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
+[init]
+	defaultBranch = main
 [alias]
 	co = checkout
 	st = status
@@ -21,14 +23,21 @@
 	autofixup = "!f() { COMMIT=$(git log --pretty=oneline | fzf | awk '{print $1}'); git commit --fixup $COMMIT; GIT_SEQUENCE_EDITOR=: git rebase --autostash --autosquash -i $COMMIT^; }; f"
 	alias = ! git config --get-regexp ^alias\\. | sed -e s/^alias\\.// -e s/\\ /\\ =\\ /
   freb = "!f() { git log --pretty=oneline | fzf -n 2.. | awk '{print $1\"^\"}' | xargs -o git rebase --autostash -i; }; f"
+  # Get default branch name (copied from <https://stackoverflow.com/a/67672350/14870317>)
+  defaultBranch = !git symbolic-ref refs/remotes/origin/HEAD | cut -d'/' -f4
+  # Clean merged branches (adapted from <https://stackoverflow.com/a/6127884/14870317>)
+  sweepdev = !git branch --merged dev | \
+  grep -E -v " dev$" | \
+  xargs -r git branch -d && git remote prune origin
+  sweep = !git branch --merged $(git defaultBranch) | \
+  grep -E -v " $(git defaultBranch)$" | \
+  xargs -r git branch -d && git remote prune origin
 [push]
 	default = current
 	followTags = false
 [pull]
 	default = current
 	rebase = false
-[init]
-	defaultBranch = main
 [core]
 	editor = vim
 [safe]

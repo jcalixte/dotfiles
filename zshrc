@@ -1,22 +1,25 @@
+# Add deno completions to search path
+if [[ ":$FPATH:" != *":/Users/julien/.zsh/completions:"* ]]; then export FPATH="/Users/julien/.zsh/completions:$FPATH"; fi
 # If you come from bash you might have to change your $PATH.
 export PATH="$HOME/bin:/usr/local/bin:$HOME/.local/bin:$PATH"
 export DENO_INSTALL="$HOME/.deno"
 export PATH="$DENO_INSTALL/bin:$PATH"
 export PATH="$HOME/.jenv/shims:$PATH"
 export JAVA_HOME="/Library/Java/JavaVirtualMachines/zulu-17.jdk/Contents/Home/"
+export scheme=dev
 
-# Homebrew
-if command -v /opt/homebrew/bin/brew > /dev/null 2>&1;
-  then eval "$(/opt/homebrew/bin/brew shellenv)";
+
+if [[ $(uname) == "Darwin" ]]; then
+  source ~/.dotfiles/zsh/macos.zsh
+else
+  source ~/.dotfiles/zsh/wsl.zsh
 fi
 
 # fnm
 export PATH="$HOME/.fnm:$PATH"
 eval "`fnm env --use-on-cd`"
-export FNM_DIR="/home/julien/.fnm" # need to be absolute, fix to have the same on Linux and MacOS
 
 # ruby
-
 if [ -x "$(command -v rbenv)" ]; then
   eval "$(rbenv init - zsh)"
 fi
@@ -167,3 +170,7 @@ eval "$(zoxide init zsh)"
 
 # Maestro
 export PATH=$PATH:$HOME/.maestro/bin
+
+# Initialize zsh completions (added by deno install script)
+autoload -Uz compinit
+compinit
