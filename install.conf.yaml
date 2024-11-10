@@ -5,12 +5,11 @@
     ~/.bash_profile: bash_profile
     ~/.bashrc: bashrc
     ~/.gitconfig: gitconfig
+    ~/.config/nvim: nvim
     ~/.ssh/config:
       path: ssh/config
       create: true
     ~/.czrc: czrc
-    ~/.vimrc: vimrc
-    ~/.config/nvim/init.vim: nvim/init.vim
     ~/.zprofile: zprofile
     ~/.zshrc: zshrc
     ~/bin:
