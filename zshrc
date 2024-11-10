@@ -13,7 +13,7 @@ fi
 # fnm
 export PATH="$HOME/.fnm:$PATH"
 eval "`fnm env --use-on-cd`"
-export FNM_DIR="~/.fnm"
+export FNM_DIR="/home/julien/.fnm" # need to be absolute, fix to have the same on Linux and MacOS
 
 # ruby
 
