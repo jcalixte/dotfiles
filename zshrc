@@ -122,7 +122,7 @@ source ~/.dotfiles/zsh/private.zsh
 export FZF_COMPLETION_TRIGGER=','
 
 source ~/.dotfiles/zsh/alias.zsh
-source ~/.dotfiles/zsh/zprofile
+source ~/.dotfiles/zsh/git-fzf.zsh
 
 # eval "$(starship init zsh)"
 
