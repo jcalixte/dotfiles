@@ -15,10 +15,6 @@ else
   source ~/.dotfiles/zsh/wsl.zsh
 fi
 
-# fnm
-export PATH="$HOME/.fnm:$PATH"
-eval "`fnm env --use-on-cd --corepack-enabled`"
-
 # ruby
 if [ -x "$(command -v rbenv)" ]; then
   eval "$(rbenv init - zsh)"
