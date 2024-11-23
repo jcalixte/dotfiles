@@ -15,9 +15,6 @@ else
   source ~/.dotfiles/zsh/wsl.zsh
 fi
 
-# fnm
-export PATH="$HOME/.fnm:$PATH"
-eval "`fnm env --use-on-cd`"
 
 # ruby
 if [ -x "$(command -v rbenv)" ]; then
