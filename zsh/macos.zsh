@@ -2,7 +2,7 @@ export FNM_DIR="/Users/julien/.fnm"
 
 # fnm
 export PATH="$HOME/.fnm:$PATH"
-eval "`fnm env --use-on-cd`"
+eval "`fnm env --use-on-cd --corepack-enabled`"
 
 # Homebrew
 if command -v /opt/homebrew/bin/brew > /dev/null 2>&1;
