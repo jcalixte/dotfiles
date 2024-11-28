@@ -8,7 +8,6 @@ export PATH="$HOME/.jenv/shims:$PATH"
 export JAVA_HOME="/Library/Java/JavaVirtualMachines/zulu-17.jdk/Contents/Home/"
 export scheme=dev
 
-
 if [[ $(uname) == "Darwin" ]]; then
   source ~/.dotfiles/zsh/macos.zsh
 else
@@ -124,10 +123,6 @@ source ~/.dotfiles/zsh/alias.zsh
 source ~/.dotfiles/zsh/git-fzf.zsh
 
 # eval "$(starship init zsh)"
-
-# tabtab source for yarn package
-# uninstall by removing these lines or running `tabtab uninstall yarn`
-# [[ -f /home/julien/.fnm/node-versions/v12.18.0/installation/lib/node_modules/yarn-completions/node_modules/tabtab/.completions/yarn.zsh ]] && . /home/julien/.fnm/node-versions/v12.18.0/installation/lib/node_modules/yarn-completions/node_modules/tabtab/.completions/yarn.zsh
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm

@@ -1,9 +1,5 @@
 export FNM_DIR="/Users/julien/.fnm"
 
-# fnm
-export PATH="$HOME/.fnm:$PATH"
-eval "`fnm env --use-on-cd --corepack-enabled`"
-
 # Homebrew
 if command -v /opt/homebrew/bin/brew > /dev/null 2>&1;
   then eval "$(/opt/homebrew/bin/brew shellenv)";
@@ -15,3 +11,7 @@ fi
 # From https://raw.githubusercontent.com/dreamsofautonomy/zen-omp/main/zen.toml
 eval "$(oh-my-posh init zsh --config $HOME/.config/ohmyposh/zen.toml)"
 . "/Users/julien/.deno/env"
+
+# fnm
+export PATH="$HOME/.fnm:$PATH"
+eval "`fnm env --use-on-cd --corepack-enabled`"
