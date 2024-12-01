@@ -56,5 +56,4 @@
     side-by-side = true
 
 [merge]
-    conflictstyle = zdiff3
-
+	  conflictstyle = diff3
