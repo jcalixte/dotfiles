@@ -186,3 +186,18 @@ ghce() {
 
 	GH_DEBUG="$GH_DEBUG" gh copilot explain "$@"
 }
+
+searchgit() {
+  STRING_TO_SEARCH=$1
+  shift;
+
+  git log -S"$STRING_TO_SEARCH" --color=always \
+      --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" "$@" |
+  fzf --ansi --reverse --tiebreak=index \
+      --bind "ctrl-m:execute:
+                (grep -o '[a-f0-9]\{7\}' | head -1 |
+                xargs -I % sh -c 'git show --color=always % | less -R') << 'FZF-EOF'
+                {}
+                FZF-EOF
+              "
+}
