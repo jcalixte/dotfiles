@@ -1,12 +1,13 @@
-# Add deno completions to search path
-if [[ ":$FPATH:" != *":/Users/julien/.zsh/completions:"* ]]; then export FPATH="/Users/julien/.zsh/completions:$FPATH"; fi
-# If you come from bash you might have to change your $PATH.
 export PATH="$HOME/bin:/usr/local/bin:$HOME/.local/bin:$PATH"
 export DENO_INSTALL="$HOME/.deno"
 export PATH="$DENO_INSTALL/bin:$PATH"
 export PATH="$HOME/.jenv/shims:$PATH"
 export JAVA_HOME="/Library/Java/JavaVirtualMachines/zulu-17.jdk/Contents/Home/"
 export scheme=dev
+# Initialize zsh completions (added by deno install script)
+autoload -Uz compinit
+compinit
+. "~/.deno/env"
 
 if [[ $(uname) == "Darwin" ]]; then
   source ~/.dotfiles/zsh/macos.zsh
@@ -162,6 +163,9 @@ eval "$(zoxide init zsh)"
 # Maestro
 export PATH=$PATH:$HOME/.maestro/bin
 
-# Initialize zsh completions (added by deno install script)
-autoload -Uz compinit
-compinit
+# Git
+gcu() {
+  git add --all
+  git commit -m "$1"
+  git push
+}
