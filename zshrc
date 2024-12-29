@@ -4,10 +4,7 @@ export PATH="$DENO_INSTALL/bin:$PATH"
 export PATH="$HOME/.jenv/shims:$PATH"
 export JAVA_HOME="/Library/Java/JavaVirtualMachines/zulu-17.jdk/Contents/Home/"
 export scheme=dev
-# Initialize zsh completions (added by deno install script)
-autoload -Uz compinit
-compinit
-. "~/.deno/env"
+
 
 if [[ $(uname) == "Darwin" ]]; then
   source ~/.dotfiles/zsh/macos.zsh
