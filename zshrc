@@ -94,6 +94,7 @@ plugins=(
   encode64
   extract
   zsh-autosuggestions
+  zsh-autopair
 )
 
 source $ZSH/oh-my-zsh.sh
