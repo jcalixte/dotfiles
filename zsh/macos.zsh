@@ -1,5 +1,5 @@
 export FNM_DIR="/Users/julien/.fnm"
-export JAVA_HOME="/Users/julien/Library/Java/JavaVirtualMachines/corretto-17.0.14/Contents/Home"
+export JAVA_HOME=$(/usr/libexec/java_home -v 17)
 
 # Homebrew
 if command -v /opt/homebrew/bin/brew > /dev/null 2>&1;
