@@ -1,4 +1,5 @@
 export FNM_DIR="/Users/julien/.fnm"
+export JAVA_HOME="/Users/julien/Library/Java/JavaVirtualMachines/corretto-17.0.14/Contents/Home"
 
 # Homebrew
 if command -v /opt/homebrew/bin/brew > /dev/null 2>&1;
@@ -7,9 +8,6 @@ fi
 
 # Aliases
 alias chgho="nvim ~/.config/ghostty/config"
-
-# source /Users/julien/.kepler/kntools/environment-setup-sdk.sh
-# source /Users/julien/.kepler/kntools/sdk/0.10.4/environment-setup-sdk.sh
 
 # From https://raw.githubusercontent.com/dreamsofautonomy/zen-omp/main/zen.toml
 eval "$(oh-my-posh init zsh --config $HOME/.config/ohmyposh/zen.toml)"
