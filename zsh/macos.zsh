@@ -19,4 +19,4 @@ compinit
 
 # fnm
 export PATH="$HOME/.fnm:$PATH"
-eval "`fnm env --use-on-cd --corepack-enabled`"
+eval "`fnm env --use-on-cd --corepack-enabled --version-file-strategy=recursive`"
