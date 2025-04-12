@@ -5,3 +5,5 @@ if [ -d "$FNM_PATH" ]; then
   export PATH="/home/julien/.fnm:$PATH"
   eval "`fnm env --use-on-cd --corepack-enabled --version-file-strategy=recursive`"
 fi
+
+export EDITOR="code"

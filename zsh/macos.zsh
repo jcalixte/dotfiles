@@ -1,6 +1,8 @@
 export FNM_DIR="/Users/julien/.fnm"
 export JAVA_HOME=$(/usr/libexec/java_home -v 17)
 
+export EDITOR="zed"
+
 # Homebrew
 if command -v /opt/homebrew/bin/brew > /dev/null 2>&1;
   then eval "$(/opt/homebrew/bin/brew shellenv)";

@@ -11,6 +11,8 @@ else
   source ~/.dotfiles/zsh/wsl.zsh
 fi
 
+source ~/.dotfiles/zsh/notes.zsh
+
 # ruby
 if [ -x "$(command -v rbenv)" ]; then
   eval "$(rbenv init - zsh)"
