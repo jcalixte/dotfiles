@@ -8,7 +8,7 @@ alias c='code .'
 alias v='vim .'
 alias lsc='ls -lah | lolcat'
 alias gbr="git branch --merged | grep -v "master" | xargs git branch -D"
-alias chzsh="code ~/.zshrc"
+alias chzsh="$EDITOR ~/.zshrc"
 alias srczsh="source ~/.zshrc"
 alias ide="tmux"
 alias vim="nvim"
@@ -31,7 +31,7 @@ alias lab="cd ~/lab"
 alias labcli="cd ~/lab-cli"
 alias jc="cd ~/jclab"
 alias n="nvim ."
-alias note="cd ~/jcnote/notes && code ~/jcnote/notes & gl &"
+alias note="cd ~/jcnote/notes && $EDITOR ~/jcnote/notes & gl &"
 alias chdot="~/.dotfiles && gl & code . &"
 
 # Utils
