@@ -48,12 +48,26 @@ function open-oldest-note() {
 function git-commit-timestamp() {
   local timestamp=$(date +"%Y-%m-%d %H:%M:%S")
   git add .
+
+  if git diff --cached --exit-code > /dev/null; then
+    echo "ℹ️ No changes to commit."
+    return 0
+  fi
+  
   git commit -m "${timestamp}"
   git push
   echo "✅ Changes committed and pushed with timestamp: ${timestamp}"
+}
+
+function git-commit-timestamp-watch() {
+  while true; do
+    git-commit-timestamp
+    sleep 120
+  done
 }
 
 # Create aliases for easier access
 alias nn="new-note"
 alias on="open-oldest-note"
 alias gct="git-commit-timestamp"
+alias gctw="git-commit-timestamp-watch"
