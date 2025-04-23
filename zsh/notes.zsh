@@ -12,21 +12,22 @@ INBOX_DIR="$NOTES_DIR/_inbox"
 function new-note() {
   local date_filename=$(date +"%Y-%m-%d")
   local date_title=$(date +"%d/%m/%Y")
-  local note_path="${INBOX_DIR}/${date_filename}.md"
+  local latest_note="${INBOX_DIR}/${date_filename}.md"
 
   # Create _inbox directory if it doesn't exist
   mkdir -p "${INBOX_DIR}"
 
   # Check if the file already exists
-  if [[ ! -f "${note_path}" ]]; then
+  if [[ ! -f "${latest_note}" ]]; then
     # Create the note with proper title if it doesn't exist
-    echo "# ${date_title}\n" > "${note_path}"
-    echo "Created new fleeting note: ${note_path}"
+    echo "# ${date_title}\n" > "${latest_note}"
+    echo "Created new fleeting note: ${latest_note}"
   else
-    echo "Opening existing note: ${note_path}"
+    echo "Opening existing note: ${latest_note}"
   fi
 
-  $EDITOR "${note_path}"
+  $EDITOR -n "${NOTES_DIR}"
+  $EDITOR "${latest_note}"
 }
 
 # Open the oldest fleeting note in _inbox directory
@@ -41,6 +42,7 @@ function open-oldest-note() {
   local oldest_note=$(ls -1 ${INBOX_DIR}/*.md | sort | head -n 1)
 
   echo "Opening oldest note: ${oldest_note}"
+  $EDITOR -n "${NOTES_DIR}"
   $EDITOR "${oldest_note}"
 }
 
