@@ -52,7 +52,6 @@ function git-commit-timestamp() {
   git add .
 
   if git diff --cached --exit-code > /dev/null; then
-    echo "ℹ️ No changes to commit."
     return 0
   fi
   
