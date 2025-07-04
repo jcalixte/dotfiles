@@ -57,7 +57,7 @@ function git-commit-timestamp() {
   
   git commit -m "${timestamp}"
   git push
-  echo "✅ Changes committed and pushed with timestamp: ${timestamp}"
+  echo "✨ Changes pushed: ${timestamp}"
 }
 
 function git-commit-timestamp-watch() {
