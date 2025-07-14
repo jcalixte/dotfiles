@@ -32,7 +32,7 @@ alias labcli="cd ~/lab-cli"
 alias jc="cd ~/jclab"
 alias n="nvim ."
 alias note="cd ~/jcnote/notes && $EDITOR ~/jcnote/notes & gl &"
-alias chdot="~/.dotfiles && gl & code . &"
+alias chdot="~/.dotfiles && gl & $EDITOR . &"
 
 # Utils
 alias podinstall="cd ios && bundle exec pod install && cd .."
