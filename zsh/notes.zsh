@@ -56,8 +56,25 @@ function git-commit-timestamp() {
   fi
   
   git commit -m "${timestamp}"
-  git push
-  echo "✨ Changes pushed: ${timestamp}"
+  
+  # Try to push, if it fails try to pull and push again
+  if ! git push; then
+    echo "⚠️  Push failed, pulling changes first..."
+    if git pull --no-edit; then
+      echo "🔄 Pull successful, pushing again..."
+      if git push; then
+        echo "✨ Changes pushed after pull: ${timestamp}"
+      else
+        echo "❌ Push failed even after pull: ${timestamp}"
+        return 1
+      fi
+    else
+      echo "❌ Pull failed: ${timestamp}"
+      return 1
+    fi
+  else
+    echo "✨ Changes pushed: ${timestamp}"
+  fi
 }
 
 function git-commit-timestamp-watch() {
