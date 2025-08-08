@@ -38,6 +38,10 @@ splitimg() {
         input="$1"
         shift
         ;;
+      --opti)
+        do_optimisation=true
+        shift
+        ;;
       --split)
         splits="$2"
         shift 2
@@ -62,6 +66,11 @@ splitimg() {
     echo "No input image provided."
     echo "Usage: splitimg <image.png> [--split N] [--print] [--preview]"
     return 1
+  fi
+
+  # Preview if requested
+  if [ "$do_optimisation" = true ]; then
+    optipng $input
   fi
 
   crop_width="$((100 / splits))"
