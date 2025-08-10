@@ -1,7 +1,7 @@
 export FNM_DIR="/Users/julien/.fnm"
 export JAVA_HOME=$(/usr/libexec/java_home -v 17)
 
-export EDITOR="zed"
+export EDITOR="code"
 
 # Homebrew
 if command -v /opt/homebrew/bin/brew > /dev/null 2>&1;
