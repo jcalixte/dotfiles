@@ -87,7 +87,7 @@ splitimg() {
 
   # Print if requested
   if [ "$do_print" = true ]; then
-    lp -o media=A3 -o fit-to-page -o position=center -o page-left=0 -o page-right=0 -o page-top=0 -o page-bottom=0 "${base}_split_"*.png
+    lp -o media=A3 -o fit-to-page -o position=center "${base}_split_"*.png
     rm "${base}_split_"*.png
   fi
 }
