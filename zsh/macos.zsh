@@ -91,3 +91,6 @@ splitimg() {
     rm "${base}_split_"*.png
   fi
 }
+
+alias printa3="lp -o media=A3 -o fit-to-page -o position=center"
+alias printa4="lp -o media=A4 -o fit-to-page -o position=center"
