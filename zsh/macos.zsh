@@ -85,10 +85,15 @@ splitimg() {
     open "${base}_split_"*.png
   fi
 
-  # Print if requested
+  # Print if requested then delete split files
   if [ "$do_print" = true ]; then
-    lp -o media=A3 -o fit-to-page -o position=center "${base}_split_"*.png
-    rm "${base}_split_"*.png
+    img2pdf \
+      --pagesize A3 \
+      --fit shrink \
+      --border 0 \
+      "${base}_split_"*.png \
+    | lp -o media=A3 -o fit-to-page -o position=center - && \
+      rm "${base}_split_"*.png
   fi
 }
 
