@@ -87,15 +87,16 @@ splitimg() {
 
   # Print if requested then delete split files
   if [ "$do_print" = true ]; then
+    echo "Merge splitted prints in a pdf and send to printer..."
     img2pdf \
       --pagesize A3 \
       --fit shrink \
       --border 0 \
       "${base}_split_"*.png \
-    | lp -o media=A3 -o fit-to-page -o position=center - && \
+    | lp -o media=A3 -o fit-to-page -o position=center -o sides=one-sided - && \
       rm "${base}_split_"*.png
   fi
 }
 
-alias printa3="lp -o media=A3 -o fit-to-page -o position=center"
-alias printa4="lp -o media=A4 -o fit-to-page -o position=center"
+alias printa3="lp -o media=A3 -o fit-to-page -o position=center -o sides=one-sided"
+alias printa4="lp -o media=A4 -o fit-to-page -o position=center -o sides=one-sided"
