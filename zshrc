@@ -4,7 +4,6 @@ export PATH="$DENO_INSTALL/bin:$PATH"
 export PATH="$HOME/.jenv/shims:$PATH"
 export scheme=dev
 
-
 if [[ $(uname) == "Darwin" ]]; then
   source ~/.dotfiles/zsh/macos.zsh
 else
@@ -99,6 +98,8 @@ plugins=(
 )
 
 source $ZSH/oh-my-zsh.sh
+autoload zmv
+
 # autoload -U promptinit; promptinit
 # prompt pure
 
