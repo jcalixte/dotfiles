@@ -103,3 +103,6 @@ splitimg() {
 
 alias printa3="lp -o media=A3 -o fit-to-page -o position=center -o sides=one-sided"
 alias printa4="lp -o media=A4 -o fit-to-page -o position=center -o sides=one-sided"
+
+# Suffix alias
+alias -s html=open

@@ -201,3 +201,13 @@ searchgit() {
                 FZF-EOF
               "
 }
+
+# Suffix alias
+alias -s json=jless
+alias -s md=bat
+alias -s txt=bat
+alias -s log=bat
+alias -s css='$EDITOR'
+alias -s vue='$EDITOR'
+alias -s js='$EDITOR'
+alias -s ts='$EDITOR'
