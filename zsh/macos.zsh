@@ -13,6 +13,7 @@ fi
 
 # Aliases
 alias chgho="nvim ~/.config/ghostty/config"
+alias f=yazi
 
 # From https://raw.githubusercontent.com/dreamsofautonomy/zen-omp/main/zen.toml
 eval "$(oh-my-posh init zsh --config $HOME/.config/ohmyposh/zen.toml)"
