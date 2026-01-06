@@ -211,3 +211,8 @@ alias -s css='$EDITOR'
 alias -s vue='$EDITOR'
 alias -s js='$EDITOR'
 alias -s ts='$EDITOR'
+
+function killport {
+	echo '🚨 Killing all processes at port' $1
+	lsof -ti tcp:$1 | xargs kill
+}
