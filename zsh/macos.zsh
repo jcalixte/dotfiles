@@ -6,6 +6,9 @@ export PATH="/Users/julien/.antigravity/antigravity/bin:$PATH"
 
 export EDITOR="code"
 
+# OCR Model
+export OCR_WORKER_PATH=~/lab/booktonote/scripts/ocr_worker.py
+
 # Homebrew
 if command -v /opt/homebrew/bin/brew > /dev/null 2>&1;
   then eval "$(/opt/homebrew/bin/brew shellenv)";
