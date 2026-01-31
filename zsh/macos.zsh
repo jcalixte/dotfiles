@@ -110,3 +110,6 @@ alias printa4="lp -o media=A4 -o fit-to-page -o position=center -o sides=one-sid
 
 # Suffix alias
 alias -s html=open
+
+## Sequoia dev
+alias ioa="~/lab-cli/sequoia/packages/cli/dist/sequoia"
