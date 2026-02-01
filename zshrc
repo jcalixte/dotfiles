@@ -4,7 +4,7 @@ export PATH="$DENO_INSTALL/bin:$PATH"
 export PATH="$HOME/.jenv/shims:$PATH"
 export scheme=dev
 
-export OCR_SCRIPT_PATH=~/lab/booktonote/scripts/ocr_engine.py
+export OCR_SCRIPT_PATH=~/jclab/booktonote/scripts/ocr_engine.py
 
 if [[ $(uname) == "Darwin" ]]; then
   source ~/.dotfiles/zsh/macos.zsh

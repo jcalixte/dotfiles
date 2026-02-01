@@ -7,7 +7,8 @@ export PATH="/Users/julien/.antigravity/antigravity/bin:$PATH"
 export EDITOR="code"
 
 # OCR Model
-export OCR_WORKER_PATH=~/lab/booktonote/scripts/ocr_worker.py
+export BEARER_TOKEN=test-token
+export OCR_WORKER_PATH=~/jclab/booktonote-server/scripts/ocr_worker.py
 
 # Homebrew
 if command -v /opt/homebrew/bin/brew > /dev/null 2>&1;

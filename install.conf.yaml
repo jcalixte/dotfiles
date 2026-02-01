@@ -12,6 +12,7 @@
     ~/.czrc: czrc
     ~/.zprofile: zprofile
     ~/.zshrc: zshrc
+    ~/CLAUDE.md: claude/CLAUDE.md
     ~/bin:
       path: bin/
       create: true
