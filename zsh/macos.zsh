@@ -6,6 +6,10 @@ export PATH="/Users/julien/.antigravity/antigravity/bin:$PATH"
 
 export EDITOR="code"
 
+# OCR Model
+export BEARER_TOKEN=test-token
+export OCR_WORKER_PATH=~/jclab/booktonote-server/scripts/ocr_worker.py
+
 # Homebrew
 if command -v /opt/homebrew/bin/brew > /dev/null 2>&1;
   then eval "$(/opt/homebrew/bin/brew shellenv)";
@@ -107,3 +111,6 @@ alias printa4="lp -o media=A4 -o fit-to-page -o position=center -o sides=one-sid
 
 # Suffix alias
 alias -s html=open
+
+## Sequoia dev
+alias ioa="~/lab-cli/sequoia/packages/cli/dist/sequoia"
