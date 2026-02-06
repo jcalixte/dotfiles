@@ -1,3 +1,5 @@
+# Add deno completions to search path
+if [[ ":$FPATH:" != *":/home/julien/.zsh/completions:"* ]]; then export FPATH="/home/julien/.zsh/completions:$FPATH"; fi
 export PATH="$HOME/bin:/usr/local/bin:$HOME/.local/bin:$PATH"
 export DENO_INSTALL="$HOME/.deno"
 export PATH="$DENO_INSTALL/bin:$PATH"
@@ -95,6 +97,7 @@ plugins=(
   extract
   zsh-autosuggestions
   zsh-autopair
+  fzf-tab
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -169,3 +172,4 @@ gcu() {
   git commit -m "$1"
   git push
 }
+. "/home/julien/.deno/env"

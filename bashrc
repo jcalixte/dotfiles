@@ -11,3 +11,5 @@ if [[ -f "/Users/julien/.docker/init-zsh.sh" ]]; then
 fi
 . "$HOME/.cargo/env"
 . "/Users/julien/.deno/env"
+. "/home/julien/.deno/env"
+source /home/julien/.local/share/bash-completion/completions/deno.bash

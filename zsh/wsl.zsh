@@ -7,3 +7,6 @@ if [ -d "$FNM_PATH" ]; then
 fi
 
 export EDITOR="code"
+
+# Erlang
+export PATH=/home/julien/.cache/rebar3/bin:$PATH

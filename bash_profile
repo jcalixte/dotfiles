@@ -14,3 +14,5 @@ fi
 
 export PATH=$PATH:$HOME/.maestro/bin
 . "/Users/julien/.deno/env"
+. "/home/julien/.deno/env"
+source /home/julien/.local/share/bash-completion/completions/deno.bash
