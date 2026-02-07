@@ -1,0 +1,339 @@
+{
+  "Todo": {
+    "prefix": "todo",
+    "body": "- [ ] ",
+    "description": "Make a todo item"
+  },
+  "Bloc de références": {
+    "prefix": "reference",
+    "body": [
+      "___",
+      "",
+      "## Références",
+      ""
+    ],
+    "description": "Adding a reference block"
+  },
+  "Idée de notes permanentes": {
+    "prefix": "ideenote",
+    "body": [
+      "___",
+      "",
+      "## Idées de note permanente",
+      ""
+    ],
+    "description": "Idées de notes permanentes"
+  },
+  "Table traduction for French and Korean": {
+    "prefix": "traduction",
+    "body": [
+      "| Français | Coréen |",
+      "|-|-|",
+      "| "
+    ],
+    "description": "Table traduction for French and Korean"
+  },
+  "Table": {
+    "prefix": "table",
+    "body": [
+      "| ${1} | ${2} |",
+      "|-|-|",
+      "| ${3} | ${4} |"
+    ],
+    "description": "Table"
+  },
+  "Youtube integration": {
+    "prefix": "youtube",
+    "body": [
+      "@[youtube](${1})",
+      "",
+      "- ${2} | ${3}",
+      ""
+    ],
+    "description": "Youtube integration"
+  },
+  "Twitter integration": {
+    "prefix": "tweet",
+    "body": [
+      "@[tweet](${1})",
+      "",
+      "- ${2} | ${3}",
+      ""
+    ],
+    "description": "Twitter integration"
+  },
+  "Standard": {
+    "prefix": "standard",
+    "body": [
+      "# ${1:Standard}",
+      "",
+      "## Points clefs",
+      "",
+      "## Erreurs à éviter",
+      "",
+      "___",
+      "",
+      "## Exemples",
+      "",
+      "___",
+      "",
+      "## Références"
+    ],
+    "description": "Standard"
+  },
+  "fiche de lecture": {
+    "prefix": "fiche",
+    "body": [
+      "# 📘 ${1:Titre}",
+      "",
+      "## ${2:Auteur} - ${3:année}",
+      "",
+      "## De quoi traite le livre",
+      ""
+    ],
+    "description": "Fiche de lecture"
+  },
+  "createur": {
+    "prefix": "createur",
+    "body": [
+      "# 🖋️ ${1:Créateur}",
+      "",
+      "## Contact",
+      "",
+      "${2}",
+      "",
+      "## À propos",
+      "",
+      "${3}",
+      "",
+      "## Ce qui m'inspire chez cette personne",
+      "",
+      "${4}",
+      "",
+      "## Quelles sont mes réticences ?",
+      "",
+      "${5}",
+      ""
+    ],
+    "description": "Fiche de créateur"
+  },
+  "biais": {
+    "prefix": "biais",
+    "body": [
+      "# ${1}",
+      "",
+      "## Idée fausse",
+      "",
+      "${3}",
+      "",
+      "## La réalité",
+      "",
+      "${4}",
+      "",
+      "___",
+      "",
+      "## Références",
+      "",
+      "- You are not so smart - p. ${2}",
+      ""
+    ],
+    "description": "biais"
+  },
+  "Liste progressive": {
+    "prefix": "vliste",
+    "body": [
+      "<v-clicks>",
+      "",
+      "- ${1}",
+      "",
+      "</v-clicks>"
+    ],
+    "description": "Liste progressive"
+  },
+  "Lien": {
+    "prefix": "lien",
+    "body": [
+      "[${1}](${2})"
+    ],
+    "description": "URL"
+  },
+  "Flèche": {
+    "prefix": "fleche",
+    "body": [
+      "→"
+    ],
+    "description": "Flèche"
+  },
+  "E dans l'o": {
+    "prefix": "edanso",
+    "body": [
+      "œ"
+    ],
+    "description": "Digramme soudé oe"
+  },
+  "Euro": {
+    "prefix": "euro",
+    "body": [
+      "€"
+    ],
+    "description": "Symbole de l'euro"
+  },
+  "Différent de": {
+    "prefix": "different",
+    "body": [
+      "≠"
+    ],
+    "description": "Signe mathématique pour \"est différent de\""
+  },
+  "Degré": {
+    "prefix": "degre",
+    "body": [
+      "°"
+    ],
+    "description": "Signe du degré"
+  },
+  "Fois": {
+    "prefix": "fois",
+    "body": [
+      "×"
+    ],
+    "description": "Signe mathématique pour \"multiplier\""
+  },
+  "Point médian": {
+    "prefix": "median",
+    "body": [
+      "·"
+    ],
+    "description": "Point médian d'inclusion"
+  },
+  "Élément progressif": {
+    "prefix": "vclick",
+    "body": [
+      "<v-click>",
+      "",
+      "${1}",
+      "",
+      "</v-click>"
+    ],
+    "description": "Élément progressif"
+  },
+  "The field guide": {
+    "prefix": "fieldguide",
+    "body": "The field guide of understanding 'human errors'",
+    "description": "The too long book title The field guide of understanding 'human errors'"
+  },
+  "Capture": {
+    "prefix": "capture",
+    "body": [
+      "# ${1:Titre}",
+      "",
+      "## La capture de l'inspiration",
+      "",
+      "${2}",
+      ""
+    ]
+  },
+  "Pensée": {
+    "prefix": "note",
+    "body": [
+      "> [!NOTE] ${1}",
+      "> ${2}"
+    ]
+  },
+  "Conseil": {
+    "prefix": "conseil",
+    "body": [
+      "> [!TIP] ${1}",
+      "> ${2}"
+    ]
+  },
+  "Important": {
+    "prefix": "important",
+    "body": [
+      "> [!IMPORTANT] ${1}",
+      "> ${2}"
+    ]
+  },
+  "Attention": {
+    "prefix": "attention",
+    "body": [
+      "> [!WARNING] ${1}",
+      "> ${2}"
+    ]
+  },
+  "Prudence": {
+    "prefix": "prudence",
+    "body": [
+      "> [!CAUTION] ${1}",
+      "> ${2}"
+    ]
+  },
+  "Spotify": {
+    "prefix": "spotify",
+    "body": [
+      "/i/https://open.spotify.com/embed/episode/${1}",
+      "",
+      "- ${2} | ${3}",
+      ""
+    ]
+  },
+  "Nemawashi": {
+    "prefix": "nemawashi",
+    "body": [
+      "# ${1:Personne}",
+      "",
+      "![Photo de profil](${2})",
+      "",
+      "## Quelles sont les choses que tu espères je ne change pas ?",
+      "",
+      "## Quelles sont les choses que tu espères secrètement que je change ?",
+      "",
+      "## Quelles sont les bonnes choses à propos de Theodos Apps sur lesquelles nous devons batir nos fondations ?",
+      "",
+      "## Si tu étais Head of Engineering, que ferais-tu en premier ?",
+      "",
+      "## Pourquoi notre entreprise ne va pas mieux ?",
+      "",
+      "## Quels sont tes objectifs personnels pour ton temps à Theodos Apps ?",
+      "",
+      "## Que signifie la vision de Theodos Apps pour toi ?",
+      "",
+      "> Apprendre à fabriquer des apps toujours meilleures",
+      "",
+      "## Quels sont les obstacles qui t'empêchent de faire ton travail ?",
+      "",
+      "## Quel est le plus grand challenge pour faire de Theodo Apps une entreprise portée sur l'excellence ?",
+      "",
+      "## Quels sont tes plus grandes frustrations sur Theodo Apps ?",
+      "",
+      "## Quelle est la meilleure chose que je puisse faire pour toi ?",
+      ""
+    ]
+  },
+  "5W1H": {
+    "prefix": "5w1h",
+    "body": [
+      "| Question | Réponse |",
+      "|-|-|",
+      "| Pourquoi | ${1:} |",
+      "| Quoi | ${2:} |",
+      "| Qui | ${3:} |",
+      "| Quand | ${4:} |",
+      "| Où | ${5:} |",
+      "| Comment | ${6:} |"
+    ]
+  },
+  "Mermaid graph": {
+    "prefix": "graph",
+    "body": [
+      "```mermaid",
+      "${1}",
+      "```"
+    ],
+    "description": "Mermaid diagram syntax"
+  },
+  "Première de couverture": {
+    "prefix": "couverture",
+    "body": "![Première de couverture](${1})"
+  }
+}

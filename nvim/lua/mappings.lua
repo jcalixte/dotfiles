@@ -11,6 +11,9 @@ map("i", "jj", "<Esc>", { desc = "Exit insert mode with jj", noremap = true, sil
 -- map({ "n", "i", "v" }, "<C-s>", "<cmd> w <cr>")
 map('n', '<C-M-t>', ':lua CloseOtherBuffers()<CR>', { noremap = true, silent = true })
 
+-- Oil file explorer
+map("n", "-", "<cmd>Oil<CR>", { desc = "Open parent directory in Oil" })
+
 function CloseOtherBuffers()
   local current = vim.fn.bufnr('%')
   for _, bufnr in ipairs(vim.fn.getbufinfo({ buflisted = 1 })) do
