@@ -1,5 +1,5 @@
 # Dotfiles Repository
 
-## Commit Guidelines
+## Git Conventions section
 
-Do not add `Co-Authored-By: Claude` to commit messages.
+Never add 'Co-authored-by' lines to git commits unless explicitly asked.
