@@ -99,7 +99,6 @@ plugins=(
   extract
   zsh-autosuggestions
   zsh-autopair
-  fzf-tab
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -174,4 +173,3 @@ gcu() {
   git commit -m "$1"
   git push
 }
-. "/home/julien/.deno/env"
