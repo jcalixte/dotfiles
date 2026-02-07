@@ -22,9 +22,6 @@ alias f=yazi
 # From https://raw.githubusercontent.com/dreamsofautonomy/zen-omp/main/zen.toml
 eval "$(oh-my-posh init zsh --config $HOME/.config/ohmyposh/zen.toml)"
 
-# Initialize zsh completions (added by deno install script)
-autoload -Uz compinit
-compinit
 . "/Users/julien/.deno/env"
 
 # fnm
