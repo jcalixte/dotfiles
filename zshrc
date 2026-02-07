@@ -1,5 +1,3 @@
-# Add deno completions to search path
-if [[ ":$FPATH:" != *":/home/julien/.zsh/completions:"* ]]; then export FPATH="/home/julien/.zsh/completions:$FPATH"; fi
 export PATH="$HOME/bin:/usr/local/bin:$HOME/.local/bin:$PATH"
 export DENO_INSTALL="$HOME/.deno"
 export PATH="$DENO_INSTALL/bin:$PATH"
@@ -128,10 +126,6 @@ source ~/.dotfiles/zsh/alias.zsh
 source ~/.dotfiles/zsh/git-fzf.zsh
 
 # eval "$(starship init zsh)"
-
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 export PNPM_HOME=~/pnpm
 export PATH="$PNPM_HOME:$PATH"

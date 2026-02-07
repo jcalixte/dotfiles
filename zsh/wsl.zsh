@@ -1,3 +1,6 @@
+# Add deno completions to search path
+if [[ ":$FPATH:" != *":/home/julien/.zsh/completions:"* ]]; then export FPATH="/home/julien/.zsh/completions:$FPATH"; fi
+
 # fnm
 export FNM_DIR="/home/julien/.fnm"
 FNM_PATH="/home/julien/.fnm"
