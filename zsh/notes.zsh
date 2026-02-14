@@ -80,7 +80,7 @@ function git-commit-timestamp() {
 function git-commit-timestamp-watch() {
   while true; do
     git-commit-timestamp
-    sleep 120
+    sleep 200
   done
 }
 
