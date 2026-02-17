@@ -43,6 +43,7 @@
 [safe]
 	directory = /Users/julien/.dotfiles/dotbot
   directory = /Users/julien/.dotfiles/dotbot/lib/pyyaml
+	directory = /Users/julien/.dotfiles/.git/modules/dotbot
 
 [core]
     pager = delta
