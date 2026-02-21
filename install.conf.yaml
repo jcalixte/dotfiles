@@ -13,7 +13,7 @@
     ~/.zprofile: zprofile
     ~/.zshrc: zshrc
     ~/CLAUDE.md: claude/CLAUDE.md
-    ~/.claude: .claude
+    ~/.claude/settings.json: claude/settings.json
     ~/bin:
       path: bin/
       create: true
