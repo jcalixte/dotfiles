@@ -4,6 +4,15 @@
       {
         "hooks" : [
           {
+            "command" : "terminal-notifier -title 'Claude Code' -message 'ℹ️ Needs attention' -activate com.mitchellh.ghostty",
+            "type" : "command"
+          }
+        ],
+        "matcher" : ""
+      },
+      {
+        "hooks" : [
+          {
             "command" : "python3 ~\/.claude\/hooks\/claude-island-state.py",
             "type" : "command"
           }
@@ -89,6 +98,15 @@
       {
         "hooks" : [
           {
+            "command" : "terminal-notifier -title 'Claude Code' -message '✓ Done' -activate com.mitchellh.ghostty",
+            "type" : "command"
+          }
+        ],
+        "matcher" : ""
+      },
+      {
+        "hooks" : [
+          {
             "command" : "python3 ~\/.claude\/hooks\/claude-island-state.py",
             "type" : "command"
           }
@@ -115,30 +133,5 @@
         ]
       }
     ]
-  },
-  "permissions" : {
-    "allow" : [
-      "Bash(bun:*)",
-      "WebSearch",
-      "Bash(gh issue view:*)",
-      "WebFetch(domain:raw.githubusercontent.com)",
-      "WebFetch(domain:github.com)",
-      "Bash(git add:*)",
-      "Bash(git commit -m \"$\\(cat <<''EOF''\nfeat: add Dockerfile and GitLab CI\/CD pipeline\n\nAdd Docker containerization with Deno and persistent SQLite volume.\nAdd GitLab CI pipeline with build and deploy stages.\nUse SQLITE_PATH env var for configurable DB location.\nEOF\n\\)\")",
-      "Bash(docker pull:*)",
-      "Bash(docker run:*)",
-      "Bash(docker stop:*)",
-      "Bash(docker build:*)",
-      "Bash(curl:*)",
-      "Bash(git -C \/Users\/julien\/jclab\/litenote-jetstream log --oneline -20)",
-      "Bash(sqlite3:*)",
-      "Bash(xargs:*)",
-      "Bash(git -C \/Users\/julien\/jclab\/litenote-jetstream show 55699f0 --stat)",
-      "Bash(git -C \/Users\/julien\/jclab\/litenote-jetstream show:*)",
-      "Bash(git -C \/Users\/julien\/jclab\/litenote-jetstream log --all --full-history -- server.ts)",
-      "Bash(deno check:*)"
-    ],
-    "defaultMode" : "default"
-  },
-  "syntaxHighlightingDisabled" : false
+  }
 }
