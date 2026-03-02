@@ -140,5 +140,9 @@
     ],
     "defaultMode" : "default"
   },
-  "syntaxHighlightingDisabled" : false
+  "syntaxHighlightingDisabled" : false,
+  "statusLine" : {
+    "type" : "command",
+    "command" : "bash ~/.claude/statusline-command.sh"
+  }
 }
