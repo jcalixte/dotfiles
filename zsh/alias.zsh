@@ -31,7 +31,7 @@ alias lab="cd ~/lab"
 alias labcli="cd ~/lab-cli"
 alias jc="cd ~/jclab"
 alias n="nvim ."
-alias note="cd ~/jcnote/notes && $EDITOR ~/jcnote/notes & gl & gctw &"
+alias note="cd ~/jcnote/notes && zed ~/jcnote/notes & gl & gctw &"
 alias chdot="~/.dotfiles && gl & $EDITOR . &"
 
 # Utils
