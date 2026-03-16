@@ -46,6 +46,9 @@ alias pc='p commit'
 alias pu='p uninstall'
 alias px="pnpx"
 
+# Markdown
+alias mdz="px mdzilla"
+
 # yarn commands
 alias y='yarn'
 

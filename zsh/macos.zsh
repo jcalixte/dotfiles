@@ -1,4 +1,3 @@
-export FNM_DIR="/Users/julien/.fnm"
 export JAVA_HOME=$(/usr/libexec/java_home -v 17)
 
 # Added by Antigravity
@@ -6,9 +5,8 @@ export PATH="/Users/julien/.antigravity/antigravity/bin:$PATH"
 
 export EDITOR="code"
 
-# OCR Model
-export BEARER_TOKEN=test-token
-export OCR_WORKER_PATH=~/jclab/booktonote-server/scripts/ocr_worker.py
+# Claude Code
+export ENABLE_LSP_TOOL=1
 
 # Homebrew
 if command -v /opt/homebrew/bin/brew > /dev/null 2>&1;
@@ -24,9 +22,6 @@ eval "$(oh-my-posh init zsh --config $HOME/.config/ohmyposh/zen.toml)"
 
 . "/Users/julien/.deno/env"
 
-# fnm
-export PATH="$HOME/.fnm:$PATH"
-eval "`fnm env --use-on-cd --corepack-enabled --version-file-strategy=recursive`"
 
 # Images
 splitimg() {
