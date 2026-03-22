@@ -167,6 +167,3 @@ gcu() {
   git commit -m "$1"
   git push
 }
-
-# Vite+ bin (https://viteplus.dev)
-. "$HOME/.vite-plus/env"
