@@ -78,6 +78,8 @@ searchgit() {
               "
 }
 
+alias sgit=searchgit
+
 # Suffix alias
 alias -s json=jless
 alias -s md=bat
