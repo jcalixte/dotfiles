@@ -1,9 +1,3 @@
-# Set personal aliases, overriding those provided by oh-my-zsh libs,
-# plugins, and themes. Aliases can be placed here, though oh-my-zsh
-# users are encouraged to define aliases within the ZSH_CUSTOM folder.
-# For a full list of active aliases, run `alias`.
-#
-# Example aliases
 alias c='code .'
 alias v='vim .'
 alias lsc='ls -lah | lolcat'
@@ -12,6 +6,8 @@ alias chzsh="$EDITOR ~/.zshrc"
 alias srczsh="source ~/.zshrc"
 alias ide="tmux"
 alias vim="nvim"
+
+alias signal='gurk'
 
 # git
 alias lz="lazygit"
