@@ -33,7 +33,9 @@
   grep -E -v " $(git defaultBranch)$" | \
   xargs -r git branch -d && git remote prune origin
   # Add a mirror push URL to origin (idempotent: preserves original URL if no explicit push URLs yet)
-  add-mirror = "!f() { pushcount=$(git remote -v | grep -c 'origin.*(push)' || true); if [ \"$pushcount\" -le 1 ]; then git remote set-url --add --push origin $(git remote get-url --push origin); fi; git remote set-url --add --push origin \"$1\"; }; f"
+  add-mirror = "!f() { git remote set-url --add --push origin $(git remote get-url --push origin); git remote set-url --add --push origin \"$1\"; }; f"
+  remove-mirror = "!f() { git remote set-url --delete --push origin \"$1\"; }; f"
+  source = remote get-url origin
   urls = remote -v
 [push]
 	default = current

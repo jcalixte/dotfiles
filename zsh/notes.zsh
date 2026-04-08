@@ -63,7 +63,7 @@ function git-commit-timestamp() {
     if git pull --no-edit; then
       echo "🔄 Pull successful, pushing again..."
       if git push; then
-        echo "✨ Changes pushed after pull: ${timestamp}"
+        echo "✔ Changes pushed after pull: ${timestamp}"
       else
         echo "❌ Push failed even after pull: ${timestamp}"
         return 1
@@ -73,7 +73,7 @@ function git-commit-timestamp() {
       return 1
     fi
   else
-    echo "✨ Changes pushed: ${timestamp}"
+    echo "✔ Changes pushed: ${timestamp}"
   fi
 }
 
@@ -240,7 +240,7 @@ function notes-tree() {
   _parse_markdown_tree "$start_file" 0 "true" ""
   
   echo ""
-  echo "✨ Arbre généré avec succès"
+  echo "✔ Arbre généré avec succès"
 
   # Clear visited files tracking
   _notes_visited_files=()

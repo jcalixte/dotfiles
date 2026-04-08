@@ -1,157 +1,166 @@
 {
-  "env": {
-    "ENABLE_LSP_TOOL": "1"
+  "autoUpdatesChannel" : "stable",
+  "enabledPlugins" : {
+    "agent-skills@addy-agent-skills" : true,
+    "rust-analyzer-lsp@claude-plugins-official" : true,
+    "typescript-lsp@claude-plugins-official" : true
   },
-  "permissions": {
-    "allow": [
+  "env" : {
+    "ENABLE_LSP_TOOL" : "1"
+  },
+  "extraKnownMarketplaces" : {
+    "addy-agent-skills" : {
+      "source" : {
+        "repo" : "addyosmani\/agent-skills",
+        "source" : "github"
+      }
+    }
+  },
+  "hooks" : {
+    "Notification" : [
+      {
+        "hooks" : [
+          {
+            "command" : "python3 ~\/.claude\/hooks\/claude-island-state.py",
+            "type" : "command"
+          }
+        ],
+        "matcher" : "*"
+      }
+    ],
+    "PermissionRequest" : [
+      {
+        "hooks" : [
+          {
+            "command" : "python3 ~\/.claude\/hooks\/claude-island-state.py",
+            "timeout" : 86400,
+            "type" : "command"
+          }
+        ],
+        "matcher" : "*"
+      }
+    ],
+    "PostToolUse" : [
+      {
+        "hooks" : [
+          {
+            "command" : "python3 ~\/.claude\/hooks\/claude-island-state.py",
+            "type" : "command"
+          }
+        ],
+        "matcher" : "*"
+      }
+    ],
+    "PreCompact" : [
+      {
+        "hooks" : [
+          {
+            "command" : "python3 ~\/.claude\/hooks\/claude-island-state.py",
+            "type" : "command"
+          }
+        ],
+        "matcher" : "auto"
+      },
+      {
+        "hooks" : [
+          {
+            "command" : "python3 ~\/.claude\/hooks\/claude-island-state.py",
+            "type" : "command"
+          }
+        ],
+        "matcher" : "manual"
+      }
+    ],
+    "PreToolUse" : [
+      {
+        "hooks" : [
+          {
+            "command" : "python3 ~\/.claude\/hooks\/claude-island-state.py",
+            "type" : "command"
+          }
+        ],
+        "matcher" : "*"
+      }
+    ],
+    "SessionEnd" : [
+      {
+        "hooks" : [
+          {
+            "command" : "python3 ~\/.claude\/hooks\/claude-island-state.py",
+            "type" : "command"
+          }
+        ]
+      }
+    ],
+    "SessionStart" : [
+      {
+        "hooks" : [
+          {
+            "command" : "python3 ~\/.claude\/hooks\/claude-island-state.py",
+            "type" : "command"
+          }
+        ]
+      }
+    ],
+    "Stop" : [
+      {
+        "hooks" : [
+          {
+            "command" : "python3 ~\/.claude\/hooks\/claude-island-state.py",
+            "type" : "command"
+          }
+        ]
+      }
+    ],
+    "SubagentStop" : [
+      {
+        "hooks" : [
+          {
+            "command" : "python3 ~\/.claude\/hooks\/claude-island-state.py",
+            "type" : "command"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit" : [
+      {
+        "hooks" : [
+          {
+            "command" : "python3 ~\/.claude\/hooks\/claude-island-state.py",
+            "type" : "command"
+          }
+        ]
+      }
+    ]
+  },
+  "minimumVersion" : "2.1.84",
+  "permissions" : {
+    "allow" : [
       "Bash(bun:*)",
       "WebSearch",
       "Bash(gh issue view:*)",
       "WebFetch(domain:raw.githubusercontent.com)",
       "WebFetch(domain:github.com)",
       "Bash(git add:*)",
-      "Bash(git commit -m \"$\\(cat <<''EOF''\nfeat: add Dockerfile and GitLab CI/CD pipeline\n\nAdd Docker containerization with Deno and persistent SQLite volume.\nAdd GitLab CI pipeline with build and deploy stages.\nUse SQLITE_PATH env var for configurable DB location.\nEOF\n\\)\")",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nfeat: add Dockerfile and GitLab CI\/CD pipeline\n\nAdd Docker containerization with Deno and persistent SQLite volume.\nAdd GitLab CI pipeline with build and deploy stages.\nUse SQLITE_PATH env var for configurable DB location.\nEOF\n\\)\")",
       "Bash(docker pull:*)",
       "Bash(docker run:*)",
       "Bash(docker stop:*)",
       "Bash(docker build:*)",
       "Bash(curl:*)",
-      "Bash(git -C /Users/julien/jclab/litenote-jetstream log --oneline -20)",
+      "Bash(git -C \/Users\/julien\/jclab\/litenote-jetstream log --oneline -20)",
       "Bash(sqlite3:*)",
       "Bash(xargs:*)",
-      "Bash(git -C /Users/julien/jclab/litenote-jetstream show 55699f0 --stat)",
-      "Bash(git -C /Users/julien/jclab/litenote-jetstream show:*)",
-      "Bash(git -C /Users/julien/jclab/litenote-jetstream log --all --full-history -- server.ts)",
+      "Bash(git -C \/Users\/julien\/jclab\/litenote-jetstream show 55699f0 --stat)",
+      "Bash(git -C \/Users\/julien\/jclab\/litenote-jetstream show:*)",
+      "Bash(git -C \/Users\/julien\/jclab\/litenote-jetstream log --all --full-history -- server.ts)",
       "Bash(deno check:*)"
     ],
-    "defaultMode": "default"
+    "defaultMode" : "default"
   },
-  "hooks": {
-    "Notification": [
-      {
-        "matcher": "*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "python3 ~/.claude/hooks/claude-island-state.py"
-          }
-        ]
-      }
-    ],
-    "PermissionRequest": [
-      {
-        "matcher": "*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "python3 ~/.claude/hooks/claude-island-state.py",
-            "timeout": 86400
-          }
-        ]
-      }
-    ],
-    "PostToolUse": [
-      {
-        "matcher": "*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "python3 ~/.claude/hooks/claude-island-state.py"
-          }
-        ]
-      }
-    ],
-    "PreCompact": [
-      {
-        "matcher": "auto",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "python3 ~/.claude/hooks/claude-island-state.py"
-          }
-        ]
-      },
-      {
-        "matcher": "manual",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "python3 ~/.claude/hooks/claude-island-state.py"
-          }
-        ]
-      }
-    ],
-    "PreToolUse": [
-      {
-        "matcher": "*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "python3 ~/.claude/hooks/claude-island-state.py"
-          }
-        ]
-      }
-    ],
-    "SessionEnd": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "python3 ~/.claude/hooks/claude-island-state.py"
-          }
-        ]
-      }
-    ],
-    "SessionStart": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "python3 ~/.claude/hooks/claude-island-state.py"
-          }
-        ]
-      }
-    ],
-    "Stop": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "python3 ~/.claude/hooks/claude-island-state.py"
-          }
-        ]
-      }
-    ],
-    "SubagentStop": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "python3 ~/.claude/hooks/claude-island-state.py"
-          }
-        ]
-      }
-    ],
-    "UserPromptSubmit": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "python3 ~/.claude/hooks/claude-island-state.py"
-          }
-        ]
-      }
-    ]
+  "statusLine" : {
+    "command" : "bash ~\/.claude\/statusline-command.sh",
+    "type" : "command"
   },
-  "statusLine": {
-    "type": "command",
-    "command": "bash ~/.claude/statusline-command.sh"
-  },
-  "enabledPlugins": {
-    "rust-analyzer-lsp@claude-plugins-official": true,
-    "typescript-lsp@claude-plugins-official": true
-  },
-  "syntaxHighlightingDisabled": false,
-  "autoUpdatesChannel": "stable",
-  "minimumVersion": "2.1.84"
+  "syntaxHighlightingDisabled" : false
 }
