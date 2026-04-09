@@ -106,6 +106,7 @@ alias printa4="lp -o media=A4 -o fit-to-page -o position=center -o sides=one-sid
 
 # Suffix alias
 alias -s html=open
+alias note="cd ~/jcnote/notes && open -a Zed ~/jcnote/notes & gl & gctw &"
 
 ## Sequoia dev
 alias ioa="~/lab-cli/sequoia/packages/cli/dist/sequoia"

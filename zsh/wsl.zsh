@@ -10,6 +10,7 @@ if [ -d "$FNM_PATH" ]; then
 fi
 
 export EDITOR="code"
+alias note="cd ~/jcnote/notes && zed ~/jcnote/notes > /dev/null 2>&1 & gl & gctw &"
 
 # Erlang
 export PATH=/home/julien/.cache/rebar3/bin:$PATH
