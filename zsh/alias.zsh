@@ -31,6 +31,12 @@ alias n="nvim ."
 alias chdot="~/.dotfiles && gl & $EDITOR . &"
 
 # Utils
+function tf {
+    for f in "$@"; do
+        mkdir -p "$(dirname "$f")" && touch "$f"
+    done
+}
+
 alias podinstall="cd ios && bundle exec pod install && cd .."
 alias tct="tiny-care-terminal"
 alias sshpi="ssh pi@192.168.1.36"
