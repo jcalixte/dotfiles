@@ -1,4 +1,5 @@
 alias c='code .'
+alias ze='zed .'
 alias v='vim .'
 alias lsc='ls -lah | lolcat'
 alias gbr="git branch --merged | grep -v "master" | xargs git branch -D"
