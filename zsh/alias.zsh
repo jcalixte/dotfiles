@@ -44,7 +44,7 @@ alias sshpi="ssh pi@192.168.1.36"
 
 # pnpm commands
 alias p='pnpm'
-alias pi='p i'
+alias pin='p i'
 alias pc='p commit'
 alias pu='p uninstall'
 alias px="pnpx"
