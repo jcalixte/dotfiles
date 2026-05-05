@@ -24,7 +24,7 @@
       "Bash(git -C /Users/julien/jclab/litenote-jetstream log --all --full-history -- server.ts)",
       "Bash(deno check:*)"
     ],
-    "defaultMode": "default"
+    "defaultMode": "auto"
   },
   "hooks": {
     "Notification": [
@@ -164,5 +164,7 @@
   },
   "syntaxHighlightingDisabled": false,
   "autoUpdatesChannel": "stable",
-  "minimumVersion": "2.1.84"
+  "minimumVersion": "2.1.84",
+  "skipAutoPermissionPrompt": true,
+  "model": "opus[1m]"
 }
