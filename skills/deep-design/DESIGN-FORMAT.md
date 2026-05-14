@@ -68,12 +68,12 @@ functions deserve the most attention and why.
 ## 5. Roof — Function × Function tradeoffs   _(optional)_
 
 Where pushing one function pushes another the wrong way (or reinforces it).
-Symbols: `++` strong reinforcement, `+` mild, `–` mild conflict, `– –` strong conflict.
+Symbols (single-character, classical QFD): `◎` strong reinforcement, `○` mild reinforcement, `×` mild conflict, `⊗` strong conflict.
 
 |        | F1 | F2 | F3 |
-|--------|----|----|----|
-| **F1** | —  | +  | –  |
-| **F2** |    | —  | ++ |
+|--------|:--:|:--:|:--:|
+| **F1** | —  | ○  | ×  |
+| **F2** |    | —  | ◎  |
 | **F3** |    |    | —  |
 
 **Conflicts that actually shape the design:** bullets on the conflicts that matter,
