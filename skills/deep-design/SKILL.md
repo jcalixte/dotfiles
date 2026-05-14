@@ -1,6 +1,6 @@
 ---
 name: deep-design
-description: Deep thinking session that challenges your plan against the existing domain model, sharpens terminology, and — when scope warrants — runs a goal-driven QFD cascade (Goal → Function → How → Component, with critical performances and explicit tradeoffs). Updates documentation (CONTEXT.md, DESIGN.md, ADRs) inline as decisions crystallise. Use when user wants to stress-test a plan against their project's language, design tree, and documented decisions.
+description: Deep thinking session that builds the project's ubiquitous language, challenges your plan against the existing domain model, sharpens terminology, and — when scope warrants — runs a goal-driven QFD cascade (Goal → Function → How → Component, with critical performances and explicit tradeoffs). Updates documentation (CONTEXT.md, DESIGN.md, ADRs) inline as decisions crystallise. Use when user wants to stress-test a plan against their project's language, design tree, and documented decisions.
 ---
 
 <what-to-do>
@@ -87,6 +87,12 @@ When the session is non-trivial in scope, run the QFD cascade. This translates w
 Update `DESIGN.md` inline as each level resolves. Sections are produced lazily — do not pre-populate empty sections.
 
 ## During the session
+
+### Ubiquitous language
+
+`CONTEXT.md` is the project's **ubiquitous language** — the shared vocabulary that should appear verbatim in conversation, code, tests, commit messages, and docs. The behaviours below all serve this principle: surfacing gaps between how the team speaks and how the code is named, then closing them by renaming the code, renaming the term, or recording the discarded word as an alias-to-avoid.
+
+A useful smell: if you find yourself "translating" between what was said and what the code calls it, the language has drifted. Stop and resolve it.
 
 ### Challenge against the glossary
 
