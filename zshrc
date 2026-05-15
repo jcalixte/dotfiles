@@ -167,3 +167,8 @@ gcu() {
   git commit -m "$1"
   git push
 }
+
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:/Users/julien/.lmstudio/bin"
+# End of LM Studio CLI section
+

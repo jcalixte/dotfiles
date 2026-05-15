@@ -7,3 +7,8 @@ export PATH="$PATH:$HOME/.rvm/bin"
 . "$HOME/.cargo/env"
 . "/Users/julien/.deno/env"
 . "/home/julien/.deno/env"
+
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:/Users/julien/.lmstudio/bin"
+# End of LM Studio CLI section
+

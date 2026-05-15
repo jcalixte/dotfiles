@@ -13,3 +13,8 @@ fi
 . "/Users/julien/.deno/env"
 . "/home/julien/.deno/env"
 source /home/julien/.local/share/bash-completion/completions/deno.bash
+
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:/Users/julien/.lmstudio/bin"
+# End of LM Studio CLI section
+
