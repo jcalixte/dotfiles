@@ -325,7 +325,8 @@ imp.%   │ P │                  │        │
 ```tex
 \foreach \r/\t in {1/Easy onboarding, 2/Reliability, 3/Fast UI,
                    4/Affordable,      5/Future-proof}
-  \node[anchor=west, font=\scriptsize, text width=\qfdWhatW cm]
+  \node[anchor=west, font=\scriptsize,
+        text width={\qfdWhatW - 0.2}cm, align=left]
     at ({\qfdLeftEdge + 0.1}, {-\r + 0.5}) {\t};
 
 \foreach \r/\imp in {1/25, 2/30, 3/15, 4/20, 5/10}
@@ -452,6 +453,7 @@ Skip the perception zone (`\qfdshowcompetitivefalse`) unless a competitor benchm
 
 ## Gotchas
 
+- **WHATs text overflows the column.** With `anchor=west` placed at `\qfdLeftEdge + 0.1`, a `text width=\qfdWhatW cm` box ends `0.1cm` past the cell's right edge and bleeds into the Importance column. Use `text width={\qfdWhatW - 0.2}cm` so the box has clearance on both sides.
 - **`<` and `>` in text mode become `¡` and `¿`.** Use `$<$`, `$>$`, `$-$` or `\textless` / `\textgreater` / `\textendash` inside node text.
 - **Only bundled TikZ libraries work.** `arrows.meta`, `positioning`, `shapes.geometric`, `shapes.misc`, `calc`, `fit`, `backgrounds` are in. Arbitrary `\usepackage{…}` is not.
 - **No global preamble.** Every diagram has to include the preamble in its own fence today. If you reuse this often, ask for a project-level preamble option.
