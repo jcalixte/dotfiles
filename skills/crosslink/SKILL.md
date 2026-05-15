@@ -1,6 +1,6 @@
 ---
 name: crosslink
-description: Crosslink markdown files in a folder so related notes reference each other. With an entrypoint argument (e.g. `/crosslink README.md`), only adds links from that entrypoint to the other files — one level of linking. Without an argument, crosslinks across all files in the folder (every file may link to others); ask the user before starting this fuller pass, and default the entrypoint to README.md if one exists.
+description: Crosslink markdown files in a folder so related notes reference each other. With an entrypoint argument (e.g. `/crosslink README.md`), adds links from the entrypoint to related files AND backlinks from each of those files to the entrypoint — bidirectional, but only touching files that connect to the entrypoint. Without an argument, crosslinks across all files in the folder (every file may link to others); ask the user before starting this fuller pass, and default the entrypoint to README.md if one exists.
 ---
 
 # Crosslink markdown files
@@ -11,7 +11,7 @@ Add wiki-style or markdown links between related notes in a folder so the knowle
 
 The argument is either:
 
-- **An entrypoint file** (e.g. `README.md`, `index.md`, `notes/overview.md`) — work in the folder that contains this file. Only ONE level of linking is required: add links *from the entrypoint* to other relevant files in the same folder. Do not touch the other files.
+- **An entrypoint file** (e.g. `README.md`, `index.md`, `notes/overview.md`) — work in the folder that contains this file. Add links *from the entrypoint* to other relevant files in the same folder, AND add a backlink *from each of those linked files back to the entrypoint*. Files that are not connected to the entrypoint are left untouched.
 - **Nothing** — before doing anything, ask the user:
   1. Which folder to crosslink (default: current working directory).
   2. Confirm they want the full pass (every file may be modified to link to others), not just an entrypoint pass. If they want the lighter pass, ask for the entrypoint (default: `README.md` if it exists in the folder).
@@ -32,7 +32,7 @@ Resolve relative dates and folders against the current working directory.
    Match the existing style. If the folder has no links yet, prefer markdown links (`[label](file.md)`) unless the user specifies otherwise.
 
 4. **Add links.**
-   - **Entrypoint mode:** edit ONLY the entrypoint. Add a links section (or weave links into existing prose) pointing to the other files in a sensible order — usually grouped by topic, or in reading order if a learning path is implied. Each link should have a one-line description of *why* a reader would follow it, not just the filename.
+   - **Entrypoint mode:** first, edit the entrypoint to add a links section (or weave links into existing prose) pointing to related files in a sensible order — usually grouped by topic, or in reading order if a learning path is implied. Each link should have a one-line description of *why* a reader would follow it, not just the filename. Then, for each file you linked to from the entrypoint, add a backlink in that file pointing back to the entrypoint — place it inline where the entrypoint's topic is most relevant, or under a "See also" / "Related" section at the bottom (match the file's existing convention). Files you did not link to from the entrypoint stay untouched.
    - **Full mode:** for each file, add links to the 2–5 most strongly related other files. Place the link inline where the related concept first appears in the text, OR add a "See also" / "Related" section at the bottom — match the existing convention in the folder.
 
 5. **Avoid noise.**
