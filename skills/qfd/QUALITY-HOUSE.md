@@ -356,7 +356,9 @@ imp.%   │ P │                  │        │
 \node[font=\scriptsize] at (C-2-4) {$-$};     % negative
 ```
 
-**Perception zone** — three alternatives, score per WHAT row:
+**Perception zone** — three alternatives, score per WHAT row, with a profile line per alternative so the shape across WHATs is readable at a glance.
+
+Three passes: (1) stash each score as a named coordinate, (2) draw the profile lines (which inherit the per-alternative colour and dash pattern from `qfdaltNln`), (3) place markers on top so dots sit on, not under, the line endpoints.
 
 ```tex
 \foreach \r/\sone/\stwo/\sthree in
@@ -364,11 +366,25 @@ imp.%   │ P │                  │        │
   \pgfmathsetmacro{\xone}{\qfdNH + (\sone + 0.5)*\qfdCmpW/6}
   \pgfmathsetmacro{\xtwo}{\qfdNH + (\stwo + 0.5)*\qfdCmpW/6}
   \pgfmathsetmacro{\xthree}{\qfdNH + (\sthree + 0.5)*\qfdCmpW/6}
-  \node[qfdalt1mk] at (\xone,   {-\r + 0.5}) {};
-  \node[qfdalt2mk] at (\xtwo,   {-\r + 0.5}) {};
-  \node[qfdalt3mk] at (\xthree, {-\r + 0.5}) {};
+  \coordinate (p1-\r) at (\xone,   {-\r + 0.5});
+  \coordinate (p2-\r) at (\xtwo,   {-\r + 0.5});
+  \coordinate (p3-\r) at (\xthree, {-\r + 0.5});
+}
+
+% Profile lines per alternative — same colour/dash as the legend lines.
+\draw[qfdalt1ln] (p1-1) \foreach \r in {2,...,\qfdNW} { -- (p1-\r) };
+\draw[qfdalt2ln] (p2-1) \foreach \r in {2,...,\qfdNW} { -- (p2-\r) };
+\draw[qfdalt3ln] (p3-1) \foreach \r in {2,...,\qfdNW} { -- (p3-\r) };
+
+% Markers on top of the lines.
+\foreach \r in {1,...,\qfdNW} {
+  \node[qfdalt1mk] at (p1-\r) {};
+  \node[qfdalt2mk] at (p2-\r) {};
+  \node[qfdalt3mk] at (p3-\r) {};
 }
 ```
+
+Skip the `\draw[qfdaltNln]` block if you want the markers without profile lines — useful when one or two rows are extreme outliers and the lines would zig-zag distractingly.
 
 **Basement** — per HOW column: target / difficulty (1–5) / absolute weight / relative weight %.
 
