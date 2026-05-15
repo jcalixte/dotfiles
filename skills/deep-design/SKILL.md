@@ -1,6 +1,6 @@
 ---
 name: deep-design
-description: Deep thinking session that builds the project's ubiquitous language, challenges your plan against the existing domain model, sharpens terminology, and — when scope warrants — runs a goal-driven QFD cascade (Goal → Function → How → Component, with critical performances and explicit tradeoffs). Updates documentation (CONTEXT.md, DESIGN.md, ADRs) inline as decisions crystallise. Use when user wants to stress-test a plan against their project's language, design tree, and documented decisions.
+description: Deep thinking session that builds the project's ubiquitous language, challenges your plan against the existing domain model, and sharpens terminology. Updates CONTEXT.md (and ADRs when warranted) inline as decisions crystallise. Use when stress-testing terminology against the existing glossary. For goal-driven design decomposition (Goal → Function → How → Component, with critical performance budget and explicit tradeoffs), run `/qfd` instead.
 ---
 
 <what-to-do>
@@ -52,39 +52,11 @@ If a `CONTEXT-MAP.md` exists at the root, the repo has multiple contexts. The ma
 │       └── docs/adr/
 ```
 
-Create files lazily — only when you have something to write. If no `CONTEXT.md` exists, create one when the first term is resolved. If no `DESIGN.md` exists, create one when the first Goal is resolved during a QFD cascade. If no `docs/adr/` exists, create it when the first ADR is needed.
+Create files lazily — only when you have something to write. If no `CONTEXT.md` exists, create one when the first term is resolved. If no `docs/adr/` exists, create it when the first ADR is needed.
 
-## Goal-driven cascade (QFD)
+## When to escalate to `/qfd`
 
-When the session is non-trivial in scope, run the QFD cascade. This translates what the system must _be_ (user-facing goals) into what it must _do_ (functions), what we must _build_ (components), and the trade-offs we explicitly took. Output goes into `DESIGN.md` — see [DESIGN-FORMAT.md](./DESIGN-FORMAT.md).
-
-**Trigger the cascade when:**
-
-- A new feature or capability is being designed
-- An architectural shift is on the table
-- A cross-cutting concern spans multiple components
-- The user explicitly says "start from the goal" / "design from scratch"
-
-**Skip the cascade when:**
-
-- The session is terminology cleanup only
-- A single isolated decision (one ADR worth)
-- A localised refactor with no user-visible behaviour change
-
-**Interview flow** — one question at a time, codebase-first when the answer is derivable from code. Interleave with the language-sharpening behaviour below; the cascade does not replace it.
-
-1. **Goals (WHATs).** "From the user's POV, what outcome are we delivering? How important is it (1–10)? Where is it specified?"
-2. **Functions (HOWs).** "What must the system *do* to deliver G1? Each as a verb with a measurable target and a direction (↑↓→)." Probe for completeness — missing functions are the common failure mode.
-3. **How.** "For F1, what are the candidate approaches? List them before picking."
-4. **Components.** "Which How are we choosing? What concrete components realise it?"
-5. **Importance** (when ≥2 goals and ≥3 functions). "Which functions strongly/weakly advance which goals? Score 9 / 3 / 1." Call out the upkeep cost of the matrix before producing it; offer a tree-only variant when scope is small.
-6. **Conflicts.** "Does pushing F1 push another function the wrong way? Where?" Captures the roof — function-vs-function tensions.
-7. **Critical performance budget.** "Rank what we just produced. For each top item, where do we watch it, and what's the fallback if we miss it?" A target without a fallback is a wish.
-8. **Tradeoffs.** Every time a How is chosen over another, record `Got / Paid`. If the trade is hard-to-reverse, also offer an ADR.
-9. **Tensions.** "Which conflicts are we *not* resolving now? Under what condition would we?"
-10. **Inconsistencies.** Surface and record any discrepancies noticed between current claims and the code / existing docs. This is where the cascade earns its keep.
-
-Update `DESIGN.md` inline as each level resolves. Sections are produced lazily — do not pre-populate empty sections.
+This skill stops at language and decisions. When the session moves into goal-driven design — a new feature, an architectural shift, a cross-cutting concern, or any non-trivial change whose goals haven't been explicitly decomposed — run `/qfd`. It shares this skill's language discipline, then drives a Goal → Function → How → Component decomposition into `DESIGN.md`.
 
 ## During the session
 

@@ -28,7 +28,7 @@ Scan `docs/adr/` for the highest existing number and increment by one.
 
 ## Relationship to `DESIGN.md`
 
-When a `DESIGN.md` exists (see [DESIGN-FORMAT.md](./DESIGN-FORMAT.md)), its tradeoff rows and component-anchor cells may reference an ADR by ID. The ADR remains the authoritative record of the decision; `DESIGN.md` is the index that shows how the decision fits into the goal-driven cascade.
+When a `DESIGN.md` exists (see [DESIGN-FORMAT.md](../qfd/DESIGN-FORMAT.md)), its tradeoff rows and component-anchor cells may reference an ADR by ID. The ADR remains the authoritative record of the decision; `DESIGN.md` is the index that shows how the decision fits into the goal-driven cascade.
 
 ## When to offer an ADR
 
