@@ -90,6 +90,15 @@
             "command": "python3 ~/.claude/hooks/claude-island-state.py"
           }
         ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "rtk hook claude"
+          }
+        ]
       }
     ],
     "SessionEnd": [
@@ -152,13 +161,20 @@
     "clangd-lsp@claude-plugins-official": true,
     "rust-analyzer-lsp@claude-plugins-official": true,
     "typescript-lsp@claude-plugins-official": true,
-    "superpowers@claude-plugins-official": true
+    "superpowers@claude-plugins-official": true,
+    "remanso-skills@remanso-local": true
   },
   "extraKnownMarketplaces": {
     "addy-agent-skills": {
       "source": {
         "source": "github",
         "repo": "addyosmani/agent-skills"
+      }
+    },
+    "remanso-local": {
+      "source": {
+        "source": "directory",
+        "path": "/home/julien/jclab/remanso"
       }
     }
   },
