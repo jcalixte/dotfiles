@@ -1,3 +1,5 @@
+# ZSH_THEME="amuse"
+
 # Vite+ bin (https://viteplus.dev)
 . "$HOME/.vite-plus/env"
 
@@ -20,11 +22,7 @@ fi
 alias chgho="nvim ~/.config/ghostty/config"
 alias f=yazi
 
-# From https://raw.githubusercontent.com/dreamsofautonomy/zen-omp/main/zen.toml
-eval "$(oh-my-posh init zsh --config $HOME/.config/ohmyposh/zen.toml)"
-
 . "/Users/julien/.deno/env"
-
 
 # Images
 splitimg() {
