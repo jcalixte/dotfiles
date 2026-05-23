@@ -5,9 +5,6 @@
 
 export JAVA_HOME=$(/usr/libexec/java_home -v 17)
 
-# Added by Antigravity
-export PATH="/Users/julien/.antigravity/antigravity/bin:$PATH"
-
 export EDITOR="zed"
 
 # Claude Code
