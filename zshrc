@@ -162,6 +162,9 @@ eval "$(zoxide init zsh)"
 # Maestro
 export PATH=$PATH:$HOME/.maestro/bin
 
+# Erlang
+export PATH="/opt/homebrew/opt/erlang/bin:$PATH"
+
 # Git
 gcu() {
   git add --all
