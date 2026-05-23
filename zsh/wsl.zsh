@@ -1,3 +1,5 @@
+ZSH_THEME="amuse"
+
 # Add deno completions to search path
 if [[ ":$FPATH:" != *":/home/julien/.zsh/completions:"* ]]; then export FPATH="/home/julien/.zsh/completions:$FPATH"; fi
 
