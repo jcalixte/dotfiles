@@ -14,11 +14,7 @@
     ~/.zshrc: zshrc
     ~/CLAUDE.md: claude/CLAUDE.md
     ~/.claude/settings.json: claude/settings.json
-    ~/.claude/skills/:
-      path: skills/*
-      glob: true
-      create: true
-      ignore-missing: true
+    ~/.claude/skills: skills
     ~/bin:
       path: bin/
       create: true
