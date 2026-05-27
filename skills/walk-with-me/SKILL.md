@@ -1,5 +1,5 @@
 ---
-name: deep-design
+name: walk-with-me
 description: Deep thinking session that builds the project's ubiquitous language, challenges your plan against the existing domain model, and sharpens terminology. Updates CONTEXT.md (and ADRs when warranted) inline as decisions crystallise. Use when stress-testing terminology against the existing glossary. For goal-driven design decomposition (Goal → Function → How → Component, with critical performance budget and explicit tradeoffs), run `/qfd` instead.
 ---
 

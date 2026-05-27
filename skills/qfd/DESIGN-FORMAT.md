@@ -1,6 +1,6 @@
 # DESIGN.md Format
 
-`DESIGN.md` is the **goal-driven design artifact** produced by the `deep-design` skill via a QFD (Quality Function Deployment) cascade. It translates what the system must _be_ (user-facing goals) into what it must _do_ (engineering functions), what we must _build_ (components), and the trade-offs we explicitly took.
+`DESIGN.md` is the **goal-driven design artifact** produced by the `walk-with-me` skill via a QFD (Quality Function Deployment) cascade. It translates what the system must _be_ (user-facing goals) into what it must _do_ (engineering functions), what we must _build_ (components), and the trade-offs we explicitly took.
 
 Where it lives mirrors `CONTEXT.md`:
 
@@ -125,7 +125,7 @@ deferrals, each with the trigger that would force a decision.
 
 Discrepancies surfaced during the session — between docs, between code and
 docs, between code and stated intent — and how they were resolved. This is
-the audit trail of what the deep-design session actually caught.
+the audit trail of what the walk-with-me session actually caught.
 
 - **{discrepancy}.** {resolution}.
 
