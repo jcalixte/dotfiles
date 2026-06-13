@@ -31,9 +31,30 @@ Resolve relative dates and folders against the current working directory.
    
    Match the existing style. If the folder has no links yet, prefer markdown links (`[label](file.md)`) unless the user specifies otherwise.
 
-4. **Add links.**
-   - **Entrypoint mode:** first, edit the entrypoint to add a links section (or weave links into existing prose) pointing to related files in a sensible order — usually grouped by topic, or in reading order if a learning path is implied. Each link should have a one-line description of *why* a reader would follow it, not just the filename. Then, for each file you linked to from the entrypoint, add a backlink in that file pointing back to the entrypoint — place it inline where the entrypoint's topic is most relevant, or under a "See also" / "Related" section at the bottom (match the file's existing convention). Files you did not link to from the entrypoint stay untouched.
-   - **Full mode:** for each file, add links to the 2–5 most strongly related other files. Place the link inline where the related concept first appears in the text, OR add a "See also" / "Related" section at the bottom — match the existing convention in the folder.
+4. **Add links — inline blending is the strong default.** A link should *be* a noun phrase the sentence already needs, not a pointer appended to it. The text should still read as a normal sentence if you removed the link syntax. Save "See also" lists for the rare case where no natural anchor exists anywhere in the text.
+
+   **Hierarchy of placement (try in order, stop at the first that works):**
+   1. **The concept is already named in the text.** Wrap that noun phrase in the link. Often zero other words change.
+      - Bad: `Build a culture of stopping to fix problems (jidoka). See [jidoka](tps/jidoka.pub.md).`
+      - Good: `Build a culture of stopping to fix problems ([_jidoka_](tps/jidoka.pub.md)).`
+   2. **The concept fits naturally into an existing sentence.** Reword *lightly* so the link sits on a real noun phrase. Light rewording is allowed (and encouraged) when it produces a sentence that reads better than the original — but the meaning must not shift.
+      - Bad: `Use visual control so no problems are hidden. Voir [kanban](kanban.md), [andon](andon.md).`
+      - Good: `Use visual control — through a [kanban](kanban.md) board or an [andon](andon.md) signal — so no problems are hidden.`
+   3. **A short follow-up sentence reads naturally.** If neither of the above fits, add one sentence that genuinely belongs in the prose (a clarification, an example, a contrast), with the link inside it. The sentence must stand on its own as content, not as a pointer.
+      - Bad: `... reduce the lead time. See [value stream mapping](value-stream-mapping.md).`
+      - Good: `... reduce the lead time. A [value stream map](value-stream-mapping.md) makes the wasted time visible step by step.`
+   4. **Appended list — last resort.** Only if the file has no natural anchor anywhere (very short stubs, pure outlines), add to an existing references/see-also section, or create one if none exists.
+
+   **Anti-patterns — do not write these:**
+   - `See [X](x.md).` / `Voir [X](x.md).` as a standalone sentence.
+   - `→ [X](x.md)` arrows tacked onto the end of a line.
+   - "Voir aussi" / "See also" blocks at the bottom when the concept is already named in the body.
+   - Parenthetical pointers like `(see [X](x.md))` when the concept itself could carry the link.
+
+   **Entrypoint mode** vs **full mode** affects *which* files get linked, not *how* you link. Both modes follow the placement hierarchy above.
+
+   - **Entrypoint mode:** weave links from the entrypoint to related files into the existing prose using the hierarchy above. The link goes on the natural concept name; if the entrypoint is a structured list (e.g. principles, glossary, table of contents), the link goes on a key noun in each item rather than on a "see X" suffix. Then add backlinks the same way in each linked file. Files you did not link to from the entrypoint stay untouched.
+   - **Full mode:** for each file, add links to the 2–5 most strongly related other files, placed by the same hierarchy.
 
 5. **Avoid noise.**
    - Do not link a file to itself.
@@ -52,7 +73,8 @@ Match the language of the notes. If the notes are in French, link labels and any
 
 ## Do not
 
-- Do not rewrite or reformat the prose. This skill adds links; it does not edit content.
+- Do not restructure or rewrite content. Light rewording in service of natural link placement is allowed (see step 4); broader edits to prose, structure, or argument are not.
 - Do not create new files.
 - Do not modify frontmatter.
 - Do not add links to external URLs — this skill is for internal crosslinking only.
+- Do not introduce "Voir [X]" / "See [X]" sentences. The link belongs on the concept name, not on a meta-pointer.
