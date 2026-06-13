@@ -26,8 +26,8 @@ function new-note() {
     echo "Opening existing note: ${latest_note}"
   fi
 
-  $EDITOR -n "${NOTES_DIR}"
-  $EDITOR "${latest_note}"
+  $EDITOR -a -n "${NOTES_DIR}"
+  $EDITOR -a "${latest_note}"
 }
 
 # Open the oldest fleeting note in _inbox directory
@@ -42,8 +42,8 @@ function open-oldest-note() {
   local oldest_note=$(ls -1 ${INBOX_DIR}/*.md | sort | head -n 1)
 
   echo "Opening oldest note: ${oldest_note}"
-  $EDITOR -n "${NOTES_DIR}"
-  $EDITOR "${oldest_note}"
+  $EDITOR -a -n "${NOTES_DIR}"
+  $EDITOR -a "${oldest_note}"
 }
 
 # Git quick commit and push with timestamp
@@ -54,9 +54,9 @@ function git-commit-timestamp() {
   if git diff --cached --exit-code > /dev/null; then
     return 0
   fi
-  
+
   git commit -m "${timestamp}"
-  
+
   # Try to push, if it fails try to pull and push again
   if ! git push; then
     echo "⚠️  Push failed, pulling changes first..."
@@ -110,29 +110,29 @@ function _extract_markdown_title() {
 function _extract_markdown_links() {
   local file="$1"
   local base_dir="$(dirname "$file")"
-  
+
   if [[ ! -f "$file" ]]; then
     return 1
   fi
-  
+
   # Extract all markdown links, excluding YouTube links and external URLs
-  grep -oE '\[[^]]*\]\([^)]*\.md[^)]*\)' "$file" 2>/dev/null | while read -r link; do    
+  grep -oE '\[[^]]*\]\([^)]*\.md[^)]*\)' "$file" 2>/dev/null | while read -r link; do
     # Extract the URL part from [text](url)
     local url=$(echo "$link" | sed -n 's/.*\](\([^)]*\)).*/\1/p')
-    
+
     # Skip external URLs (http/https)
     if [[ "$url" =~ ^https?:// ]]; then
       continue
     fi
-    
+
     # Remove anchor (#section) if present
     url=$(echo "$url" | sed 's/#.*//')
-    
+
     # Skip empty URLs
     if [[ -z "$url" ]]; then
       continue
     fi
-    
+
     # Resolve relative path
     local resolved_path
     if [[ "$url" = /* ]]; then
@@ -142,7 +142,7 @@ function _extract_markdown_links() {
       # Relative path - resolve it relative to the current file's directory
       resolved_path="$(cd "$base_dir" && realpath "$url" 2>/dev/null)"
     fi
-    
+
     # Only output if the resolved path exists and is a .md file
     if [[ -n "$resolved_path" && -f "$resolved_path" && "$resolved_path" == *.md ]]; then
       echo "$resolved_path"
@@ -156,19 +156,19 @@ function _parse_markdown_tree() {
   local level="$2"
   local is_last="$3"
   local prefix="$4"
-  
+
   # Get absolute path for tracking visited files
   local abs_path="$(realpath "$current_file" 2>/dev/null)"
   if [[ -z "$abs_path" ]]; then
     abs_path="$current_file"
   fi
-  
+
   # Check if file exists
   if [[ ! -f "$current_file" ]]; then
     echo "${prefix}├── $(basename "$current_file") (🕳️)"
     return 1
   fi
-  
+
   # Check if already visited (prevent infinite loops)
   if [[ -n "${_notes_visited_files[$abs_path]}" ]]; then
     local title=$(_extract_markdown_title "$current_file")
@@ -179,17 +179,17 @@ function _parse_markdown_tree() {
     echo "${prefix}├── $display_name (➰)"
     return 0
   fi
-  
+
   # Mark as visited
   _notes_visited_files[$abs_path]=1
-  
+
   # Extract title and display current file
   local title=$(_extract_markdown_title "$current_file")
   local display_name="$(basename "$current_file")"
   if [[ -n "$title" ]]; then
     display_name="$display_name | $title"
   fi
-  
+
   # Choose tree character based on whether this is the last item
   local tree_char="├──"
   local next_prefix="$prefix│   "
@@ -197,15 +197,15 @@ function _parse_markdown_tree() {
     tree_char="└──"
     next_prefix="$prefix    "
   fi
-  
+
   echo "${prefix}${tree_char} $display_name"
-  
+
   # Extract links from current file
   local links=()
   while IFS= read -r link; do
     links+=("$link")
   done < <(_extract_markdown_links "$current_file")
-  
+
   # Process each link recursively
   local total_links=${#links[@]}
   local i=1
@@ -214,7 +214,7 @@ function _parse_markdown_tree() {
     if [[ $i -eq $total_links ]]; then
       is_last_link="true"
     fi
-    
+
     _parse_markdown_tree "$link" $((level + 1)) "$is_last_link" "$next_prefix"
     ((i++))
   done
@@ -223,22 +223,22 @@ function _parse_markdown_tree() {
 # Main function to display notes tree starting from README.md
 function notes-tree() {
   local start_file="${NOTES_DIR}/README.md"
-  
+
   # Check if README.md exists
   if [[ ! -f "$start_file" ]]; then
     echo "❌ Fichier README.md introuvable dans ${NOTES_DIR}/"
     return 1
   fi
-  
+
   # Clear visited files tracking
   _notes_visited_files=()
-  
+
   echo "📝 Arbre des notes markdown depuis README.md"
   echo ""
-  
+
   # Start recursive parsing
   _parse_markdown_tree "$start_file" 0 "true" ""
-  
+
   echo ""
   echo "✔ Arbre généré avec succès"
 

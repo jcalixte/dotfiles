@@ -131,6 +131,11 @@
     "body": ["[${1}](${2})"],
     "description": "URL"
   },
+  "Link": {
+    "prefix": "link",
+    "body": ["[${1}](${2})"],
+    "description": "URL"
+  },
   "Flèche": {
     "prefix": "fleche",
     "body": ["→"],

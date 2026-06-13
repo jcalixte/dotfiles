@@ -7,6 +7,7 @@ alias chzsh="$EDITOR ~/.zshrc"
 alias srczsh="source ~/.zshrc"
 alias ide="tmux"
 alias vim="nvim"
+alias todo="tuxedo ~/jcnote/notes/todo.txt"
 
 alias signal='gurk'
 
