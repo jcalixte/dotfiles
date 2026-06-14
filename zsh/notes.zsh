@@ -6,6 +6,7 @@
 # Fixed notes directory path
 NOTES_DIR="$HOME/jcnote/notes"
 INBOX_DIR="$NOTES_DIR/_inbox"
+JOURNAL_DIR="$NOTES_DIR/personnel/journal"
 
 # Create a new fleeting note for today
 # Format: YYYY-MM-DD.md with title DD/MM/YYYY
@@ -26,8 +27,7 @@ function new-note() {
     echo "Opening existing note: ${latest_note}"
   fi
 
-  $EDITOR -a -n "${NOTES_DIR}"
-  $EDITOR -a "${latest_note}"
+  _open_in_editor "${latest_note}"
 }
 
 # Open the oldest fleeting note in _inbox directory
@@ -42,8 +42,7 @@ function open-oldest-note() {
   local oldest_note=$(ls -1 ${INBOX_DIR}/*.md | sort | head -n 1)
 
   echo "Opening oldest note: ${oldest_note}"
-  $EDITOR -a -n "${NOTES_DIR}"
-  $EDITOR -a "${oldest_note}"
+  _open_in_editor "${oldest_note}"
 }
 
 # Git quick commit and push with timestamp
@@ -82,6 +81,11 @@ function git-commit-timestamp-watch() {
     git-commit-timestamp
     sleep 120
   done
+}
+
+function _open_in_editor() {
+  $EDITOR -a -n "${NOTES_DIR}"
+  $EDITOR -a "$1"
 }
 
 # Notes Tree Display
@@ -246,8 +250,32 @@ function notes-tree() {
   _notes_visited_files=()
 }
 
+# Create a new journal note for today
+# Format: YYYY-MM-DD.md with title "Entrée du DD/MM/YYYY", linked from journal README
+function new-journal-note() {
+  local date_filename=$(date +"%Y-%m-%d")
+  local date_title=$(date +"%d/%m/%Y")
+  local note_file="${JOURNAL_DIR}/${date_filename}.md"
+  local readme="${JOURNAL_DIR}/README.md"
+
+  mkdir -p "${JOURNAL_DIR}"
+
+  if [[ ! -f "${note_file}" ]]; then
+    printf "# Entrée du %s\n" "${date_title}" > "${note_file}"
+    echo "Created new journal note: ${note_file}"
+
+    # Append link to README, stripping trailing newlines first via command substitution
+    printf '%s\n- [Entrée du %s](./%s.md)\n' "$(<"${readme}")" "${date_title}" "${date_filename}" > "${readme}"
+  else
+    echo "Opening existing journal note: ${note_file}"
+  fi
+
+  _open_in_editor "${note_file}"
+}
+
 # Create aliases for easier access
 alias nn="new-note"
+alias njn="new-journal-note"
 alias on="open-oldest-note"
 alias gct="git-commit-timestamp"
 alias gctw="git-commit-timestamp-watch"
