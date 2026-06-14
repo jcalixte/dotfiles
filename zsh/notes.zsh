@@ -273,6 +273,23 @@ function new-journal-note() {
   _open_in_editor "${note_file}"
 }
 
+# Run tuxedo on the notes todo.txt with gctw committing in the background
+function todo() {
+  cd "$NOTES_DIR" || return 1
+  gl
+
+  git-commit-timestamp-watch >> /tmp/gctw-notes.log 2>&1 &
+  local gctw_pid=$!
+  trap "kill $gctw_pid 2>/dev/null" INT TERM EXIT
+
+  tuxedo "$NOTES_DIR/todo.txt"
+
+  kill $gctw_pid 2>/dev/null
+  trap - INT TERM EXIT
+  git-commit-timestamp
+}
+
+
 # Create aliases for easier access
 alias nn="new-note"
 alias njn="new-journal-note"

@@ -8,7 +8,6 @@ alias srczsh="source ~/.zshrc"
 alias ide="tmux"
 alias vim="nvim"
 alias tux="tuxedo ~/jcnote/notes/todo.txt"
-alias todo="cd ~/jcnote/notes && gl && tux"
 
 alias signal='gurk'
 
