@@ -1,13 +1,13 @@
 ---
 name: apoena-new
-description: Use when the user wants to bootstrap a new *.apoena.dev app on Coolify — scaffolds a Vite + Vue + DaisyUI SPA (optionally with a Gleam backend and SQLite), creates a public Gitea repo on git.apoena.dev, and prints the Coolify deploy checklist.
+description: Use when the user wants to bootstrap a new *.apoena.dev app on Coolify — scaffolds a Vite + Vue + DaisyUI SPA (optionally with a Gleam backend and SQLite), creates a public Gitea repo on git.apoena.dev, and provisions the Coolify app via API (falling back to a printable deploy checklist).
 ---
 
 <what-to-do>
 
 Walk the user through bootstrapping a new `*.apoena.dev` app end-to-end. Ask the inputs one at a time, waiting for the answer before moving on. Do not assume defaults silently — show the default in the question and let the user override.
 
-Then scaffold the code, create the Gitea repo, push, and print the Coolify checklist. **Do NOT log into or call Coolify.** Hand off the checklist for the user to paste into the UI at `https://platform.apoena.dev`.
+Then scaffold the code, create the Gitea repo, push, and provision the Coolify app via its API (Step 8) when `$COOLIFY_API_TOKEN` is available — otherwise print the checklist (Step 9) for the user to paste into the UI. Calling the Coolify **API** is expected and fine; do NOT try to drive the Coolify **web UI** / a browser.
 
 ## Step 1 — Gather inputs
 
@@ -16,10 +16,10 @@ Ask in this order:
 1. **App name** (kebab-case, lowercase). Used for the local folder, the Gitea repo, and the subdomain prefix. Example: `qrcode`.
 2. **Backend?** (default: no). If yes, the stack is Gleam (`wisp` + `mist`). Skill does not support other backends — if the user wants something else, stop and ask them to scaffold the backend manually.
 3. **SQLite?** Default: yes if backend was chosen, no if SPA-only. (A SPA can still use SQLite via the backend; offering it for SPA-only means "set up the volume now even though there's nothing using it yet" — discourage that.)
-4. **Local scaffold path.** Default: `$PWD/<app-name>`.
+4. **Local scaffold path.** Default: `$PWD/<app-name>`. **If the current directory is already named `<app-name>` (or already holds the project's design docs), scaffold into the current directory instead of a nested `<app-name>/<app-name>` — confirm this with the user.**
 5. **Subdomain.** Default: `<app-name>.apoena.dev`. Confirm.
 6. **Primary color** (hex, e.g. `#570DF8`). Default: `#570DF8` (DaisyUI default). Used both as the Tailwind v4 `--color-primary` and as the favicon stroke color.
-7. **Favicon icon name** from Tabler (`https://tabler.io/icons`). Default: `circle`. Use the exact slug shown on the Tabler page (e.g. `bolt`, `paw`, `qrcode`). Outline variant only.
+7. **Favicon icon name** from Tabler (`https://tabler.io/icons`). Default: `circle`. Use the exact slug shown on the Tabler page (e.g. `bolt`, `paw`, `qrcode`). Outline variant only. Pre-verify it resolves (HTTP 200) before scaffolding so you don't discover a 404 late.
 
 ## Step 2 — Verify prerequisites
 
@@ -33,6 +33,8 @@ Run these checks. If any fail, print the missing tool + remediation and STOP.
 | `docker` (backend only) | `docker --version` | install OrbStack / Docker Desktop |
 | `gleam` (backend only) | `gleam --version` (≥ 1.0) | `brew install gleam erlang rebar3` |
 
+> **The Gitea login may be named anything** (not necessarily `apoena`) and need not be tea's default. Identify it by URL in `tea login list`; capture its **NAME** (for `--login` in Step 7) and confirm the SSH host/port is `git.apoena.dev:22222`. Do not assume the login name is `apoena` anywhere downstream.
+
 ## Step 3 — Scaffold the frontend
 
 ```bash
@@ -44,19 +46,30 @@ pnpm add -D tailwindcss @tailwindcss/vite
 pnpm add daisyui@latest
 ```
 
+**If the target directory already exists and is non-empty** (e.g. it already holds design docs, or the chosen path equals the current folder), `npm create vite` becomes interactive and would clobber files. Instead scaffold into a scratch dir and copy in, preserving everything that already exists:
+
+```bash
+npm create vite@latest /tmp/<app-name>-scaffold -- --template vue-ts
+rm -f /tmp/<app-name>-scaffold/README.md      # never clobber an existing README
+cp -R /tmp/<app-name>-scaffold/. <project-dir>/   # trailing /. includes dotfiles; only README would collide
+cd <project-dir> && pnpm install && pnpm add -D tailwindcss @tailwindcss/vite && pnpm add daisyui@latest
+```
+Set `"name"` in `package.json` to `<app-name>` (the scaffold names it after the temp dir). If an informative `README.md` already exists, keep it and **skip Step 6**.
+
 Then write/patch these files (templates in `templates/`):
 
 - `vite.config.ts` — add `@tailwindcss/vite` plugin, and (if backend) the `/api` dev proxy to `http://localhost:8000`.
-- `src/style.css` — copy `templates/tailwind-style.css` then substitute `{{PRIMARY_COLOR}}` with the user's hex.
-- `src/App.vue` — replace boilerplate with a minimal DaisyUI landing card showing the app name. Drop `src/components/HelloWorld.vue`.
+- `src/style.css` — copy `templates/tailwind-style.css` then substitute `{{PRIMARY_COLOR}}` with the user's hex. **Keep the font `@import url(...)` as the first line** (the template already orders it correctly — do not move it below `@import "tailwindcss"` or the font silently won't load in the build).
+- `src/App.vue` — replace boilerplate with a minimal DaisyUI landing card showing the app name. Delete `src/components/HelloWorld.vue` (and the now-empty `src/components/`).
 - `src/assets/icons/` — create the folder and copy `templates/icons-readme.md` to `src/assets/icons/README.md`. This is the reusable in-app icon folder; the user drops Tabler SVGs here as needed.
-- `public/favicon.svg` — fetch `https://raw.githubusercontent.com/tabler/tabler-icons/main/icons/outline/<favicon-icon>.svg`, then `sed` replace `currentColor` with the primary-color hex. Write to `public/favicon.svg`. If the curl 404s, ask the user for a different icon name and retry. Delete `public/vite.svg`.
-- `index.html` — replace the `<link rel="icon" ...>` line with `<link rel="icon" type="image/svg+xml" href="/favicon.svg" />`. Update `<title>` to the app name.
+- `public/favicon.svg` — fetch `https://raw.githubusercontent.com/tabler/tabler-icons/main/icons/outline/<favicon-icon>.svg`, then `sed` replace `currentColor` with the primary-color hex, and **overwrite** `public/favicon.svg` (the modern `vue-ts` template already ships one). If the curl 404s, ask the user for a different icon name and retry.
+- **Remove the modern template's demo cruft** — recent `vue-ts` ships `src/assets/{vite.svg,vue.svg,hero.png}` and `public/icons.svg` (there is no longer a `public/vite.svg`). `rm -f` them since the new `App.vue` doesn't reference them.
+- `index.html` — the modern template **already** has `<link rel="icon" type="image/svg+xml" href="/favicon.svg" />`, so usually only the `<title>` needs updating to the app name (fix the icon link only if it differs).
 - `Dockerfile` — copy `templates/Dockerfile.spa`.
 - `nginx.conf` — copy `templates/nginx.conf`.
 - `.dockerignore` — at minimum `node_modules`, `dist`, `.git`.
 
-Verify `pnpm dev` boots (start it, curl `http://localhost:5173`, kill it).
+Verify it builds two ways: (1) `pnpm dev` boots — start it, curl `http://localhost:5173` (use `curl --retry … --retry-connrefused` instead of a foreground `sleep` to wait for boot), then kill it; (2) **`pnpm build` succeeds with no warnings** — this is exactly what Coolify runs (`vue-tsc -b && vite build`) and catches type errors the dev server won't. A `@import must precede all rules` warning means the font import in `src/style.css` is misordered.
 
 ## Step 4 — Scaffold the backend (if selected)
 
@@ -82,7 +95,7 @@ If no backend, do NOT create a `docker-compose.yml` — Coolify will use the Doc
 
 ## Step 6 — README
 
-Write a short `README.md`:
+Skip this step if an informative `README.md` already exists (see Step 3). Otherwise write a short `README.md`:
 
 ```markdown
 # <app-name>
@@ -107,11 +120,14 @@ Pushes to `main` are picked up by Coolify at https://platform.apoena.dev.
 ```bash
 git init -b main
 git add -A
+git status --short    # sanity-check node_modules/dist are NOT staged before committing
 git commit -m "chore: initial scaffold"
-tea repos create --owner julien --name <app-name> --description "<app-name>.apoena.dev" --init=false
+tea repos create --login <login-name> --name <app-name> --description "<app-name>.apoena.dev" --init=false
 git remote add origin ssh://git@git.apoena.dev:22222/julien/<app-name>.git
 git push -u origin main
 ```
+
+**Do not pass `--owner julien` to `tea repos create`** — `--owner` is for *organizations*, and passing a user account fails with `Error: GetOrgByName`. Omitting `--owner` creates the repo under the authenticated user. Pass `--login <login-name>` (the NAME from Step 2) since the git.apoena.dev login may not be tea's default.
 
 **Do not add `Co-authored-by` to the commit** (per `~/CLAUDE.md`).
 
@@ -119,16 +135,9 @@ If `tea repos create` fails because the repo already exists, ask the user whethe
 
 ## Step 8 — Provision in Coolify (automated)
 
-If `$COOLIFY_API_TOKEN` is unset, skip this step and jump to Step 9. The token lives in the user's `~/.private.zsh`; if it isn't loaded in the current shell, tell them to `source ~/.private.zsh` (or open a new terminal) and re-run the skill — do NOT prompt for it inline.
+If `$COOLIFY_API_TOKEN` is unset, skip this step and jump to Step 9. Both `$COOLIFY_API_TOKEN` and `$TEA_TOKEN` (the Gitea PAT) are exported from the user's `~/.dotfiles/zsh/private.zsh`; if either isn't loaded in the current shell (e.g. it was added after the session started), tell the user to `source ~/.dotfiles/zsh/private.zsh` (or open a new terminal) and re-run the skill — do NOT prompt for either inline.
 
-Read the Gitea PAT from `~/.config/tea/config.yml`:
-
-```bash
-GITEA_TOKEN=$(yq '.logins[] | select(.name == "apoena") | .token' ~/.config/tea/config.yml 2>/dev/null \
-  || awk '/name: apoena/,/token:/ { if ($1 == "token:") {print $2; exit} }' ~/.config/tea/config.yml)
-```
-
-If `GITEA_TOKEN` is empty, fall through to Step 9 (manual checklist) and tell the user why.
+The Gitea PAT is the env var **`$TEA_TOKEN`** (see above). Do NOT parse the tea config file or search the filesystem for a token — the sandbox blocks credential hunting, and the env var is simpler and authoritative. If `$TEA_TOKEN` is unavailable, that's fine: still do 8a–8c and 8e, **skip only 8d**, and hand the user the manual webhook URL + secret to paste (see 8d).
 
 **Coolify API base:** `https://platform.apoena.dev/api/v1`. Auth: `Authorization: Bearer $COOLIFY_API_TOKEN`.
 
@@ -141,16 +150,26 @@ curl -fsSL -H "Authorization: Bearer $COOLIFY_API_TOKEN" https://platform.apoena
 
 If exactly one project and one server exist → use them. If multiple → print the lists and ask the user to pick one of each. Cache the chosen UUIDs to `~/.config/apoena/coolify.env` (`PROJECT_UUID=…\nSERVER_UUID=…`) so future runs skip the prompt; source the file first if it exists.
 
-### 8b. Create the application
+### 8b. Create the application — then FIX the git URL
 
 ```bash
 WEBHOOK_SECRET=$(openssl rand -hex 32)
 BUILD_PACK=$([ -f docker-compose.yml ] && echo dockercompose || echo dockerfile)
 
-APP_UUID=$(curl -fsSL -X POST https://platform.apoena.dev/api/v1/applications/public   -H "Authorization: Bearer $COOLIFY_API_TOKEN"   -H "Content-Type: application/json"   -d "$(jq -n --arg p "$PROJECT_UUID" --arg s "$SERVER_UUID"           --arg name "<app-name>" --arg repo "https://git.apoena.dev/julien/<app-name>"           --arg domain "https://<subdomain>" --arg bp "$BUILD_PACK"           '{project_uuid:$p, server_uuid:$s, environment_name:"production",            git_repository:$repo, git_branch:"main",            build_pack:$bp, ports_exposes:"80",            name:$name, domains:$domain, instant_deploy:false}')"   | jq -r '.uuid')
+APP_UUID=$(curl -sS -X POST https://platform.apoena.dev/api/v1/applications/public   -H "Authorization: Bearer $COOLIFY_API_TOKEN"   -H "Content-Type: application/json"   -d "$(jq -n --arg p "$PROJECT_UUID" --arg s "$SERVER_UUID"           --arg name "<app-name>" --arg repo "https://git.apoena.dev/julien/<app-name>"           --arg domain "https://<subdomain>" --arg bp "$BUILD_PACK"           '{project_uuid:$p, server_uuid:$s, environment_name:"production",            git_repository:$repo, git_branch:"main",            build_pack:$bp, ports_exposes:"80",            name:$name, domains:$domain, instant_deploy:false}')"   | jq -r '.uuid')
 ```
 
 If the response has no `uuid` or curl fails → print the error body, then fall through to Step 9.
+
+**CRITICAL — fix `git_repository` after create.** The `applications/public` endpoint only fully parses github.com / gitlab.com / bitbucket URLs. For a self-hosted **Gitea** host it stores `git_repository` as the bare `julien/<app-name>`, and the deploy then fails instantly with `'julien/<app-name>' does not appear to be a git repository` (git treats it as a local path). PATCH it to the full clone URL and verify it persisted:
+
+```bash
+curl -fsSL -X PATCH https://platform.apoena.dev/api/v1/applications/$APP_UUID   -H "Authorization: Bearer $COOLIFY_API_TOKEN" -H "Content-Type: application/json"   -d "$(jq -n '{git_repository:"https://git.apoena.dev/julien/<app-name>.git", git_branch:"main"}')"
+# verify — must print the full URL, not "julien/<app-name>":
+curl -fsSL -H "Authorization: Bearer $COOLIFY_API_TOKEN" https://platform.apoena.dev/api/v1/applications/$APP_UUID | jq '.git_repository'
+```
+
+The repo is public, so the HTTPS clone needs no key — sanity-check with `git ls-remote https://git.apoena.dev/julien/<app-name>.git refs/heads/main`.
 
 ### 8c. Set the Gitea webhook secret on the Coolify app
 
@@ -160,21 +179,38 @@ curl -fsSL -X PATCH https://platform.apoena.dev/api/v1/applications/$APP_UUID   
 
 ### 8d. Create the Gitea webhook
 
+**Only if `$TEA_TOKEN` is available.** If it's empty, skip this and tell the user to add the webhook manually — give them the target URL and the `$WEBHOOK_SECRET` (the Coolify side is already configured by 8c), pointing them at `https://git.apoena.dev/julien/<app-name>/settings/hooks`.
+
 Coolify routes Gitea webhooks via a single shared endpoint: `https://platform.apoena.dev/webhooks/source/gitea/events/manual`. The app is matched by the repository URL in the payload, so no per-app UUID is needed in the webhook URL.
 
 ```bash
-curl -fsSL -X POST https://git.apoena.dev/api/v1/repos/julien/<app-name>/hooks   -H "Authorization: token $GITEA_TOKEN"   -H "Content-Type: application/json"   -d "$(jq -n --arg secret "$WEBHOOK_SECRET"           '{type:"gitea", active:true, events:["push"],            config:{url:"https://platform.apoena.dev/webhooks/source/gitea/events/manual",                    content_type:"json", secret:$secret}}')"
+curl -fsSL -X POST https://git.apoena.dev/api/v1/repos/julien/<app-name>/hooks   -H "Authorization: token $TEA_TOKEN"   -H "Content-Type: application/json"   -d "$(jq -n --arg secret "$WEBHOOK_SECRET"           '{type:"gitea", active:true, events:["push"],            config:{url:"https://platform.apoena.dev/webhooks/source/gitea/events/manual",                    content_type:"json", secret:$secret}}')"
 ```
 
 If non-2xx → print the response and tell the user the app exists in Coolify but the webhook needs to be added manually (give them the URL + secret to paste).
 
-### 8e. Trigger initial deploy
+### 8e. Trigger initial deploy — and verify it succeeds
 
 ```bash
-curl -fsSL -X POST "https://platform.apoena.dev/api/v1/deploy?uuid=$APP_UUID&force=false"   -H "Authorization: Bearer $COOLIFY_API_TOKEN"
+DUUID=$(curl -fsSL -X POST "https://platform.apoena.dev/api/v1/deploy?uuid=$APP_UUID&force=false"   -H "Authorization: Bearer $COOLIFY_API_TOKEN" | jq -r '.deployments[0].deployment_uuid')
 ```
 
-Tell the user: "App created and deploying. Tail logs at https://platform.apoena.dev/project/$PROJECT_UUID/application/$APP_UUID."
+Don't just fire-and-forget — **poll the deployment to a terminal state** (run the poll loop as a background command so its `sleep` is allowed), then confirm the live site:
+
+```bash
+for i in $(seq 1 90); do
+  ST=$(curl -sS -H "Authorization: Bearer $COOLIFY_API_TOKEN" "https://platform.apoena.dev/api/v1/deployments/$DUUID" | jq -r '.status')
+  case "$ST" in finished|failed|error|cancelled) break ;; esac
+  sleep 5
+done
+echo "deploy: $ST"
+# on failure, decode logs to diagnose (git-URL truncation from 8b is the most common cause):
+#   curl ... /deployments/$DUUID | jq -r '.logs | fromjson | .[] | "[\(.type)] \(.output)"' | tail -20
+# on success, verify HTTPS + cert:
+curl -sS -o /dev/null -w "HTTP %{http_code} TLS %{ssl_verify_result}\n" --retry 6 --retry-all-errors https://<subdomain>/
+```
+
+Tell the user the result and: "Tail logs at https://platform.apoena.dev/project/$PROJECT_UUID/application/$APP_UUID."
 
 Skip to Step 10.
 
@@ -188,23 +224,25 @@ Summarise in two lines:
 - Local path: `<absolute-path>`
 - Repo: `https://git.apoena.dev/julien/<app-name>`
 
+If deployed via Step 8, also give the live URL `https://<subdomain>` and note any pending manual step (e.g. the Gitea webhook if 8d was skipped).
+
 </what-to-do>
 
 <supporting-info>
 
 ## Stack rationale
 
-- **Vite + Vue 3 + TypeScript** — matches `skills/web-dev/SKILL.md` ("Always use the most modern HTML, CSS, and JS"). `--template vue-ts` is the official Vite scaffold.
+- **Vite + Vue 3 + TypeScript** — matches `skills/web-dev/SKILL.md` ("Always use the most modern HTML, CSS, and JS"). `--template vue-ts` is the official Vite scaffold. Note: the modern `vue-ts` template ships demo assets (`src/assets/{vite.svg,vue.svg,hero.png}`, `public/icons.svg`, and its own `public/favicon.svg`) — clear the unused ones during scaffold.
 - **Tailwind v4 via `@tailwindcss/vite`** — v4 dropped the `postcss` + `tailwind.config.js` ceremony; everything is configured in CSS via `@import "tailwindcss"` and `@plugin "daisyui"`.
 - **DaisyUI** — Tailwind component library, registered as a Tailwind v4 plugin in the stylesheet (no JS import).
-- **Fonts via `fonts.coollabs.io`** — privacy-friendly Google Fonts mirror (run by the Coolify team). The CSS `@import`s `Inter` from `https://fonts.coollabs.io/css2?...` and sets it as `--font-sans` in the Tailwind v4 `@theme` block. To swap fonts, edit `src/style.css` — change the `@import url(...)` family and the `--font-sans` value.
+- **Fonts via `fonts.coollabs.io`** — privacy-friendly Google Fonts mirror (run by the Coolify team). The CSS `@import`s the font from `https://fonts.coollabs.io/css2?...` and sets it as `--font-sans` in the Tailwind v4 `@theme` block. **The font `@import url(...)` MUST be the first line, before `@import "tailwindcss"`** — Tailwind inlines its own import into real rules, and per the CSS spec `@import` must precede all other rules, so a font import placed second is dropped by the build (with a warning) and never loads. To swap fonts, edit `src/style.css` — change the `@import url(...)` family and the `--font-sans` value (and `--font-mono` if you want a mono font like Fira Code applied app-wide).
 - **Nginx-alpine for SPA serving** — tiny image, SPA fallback via `try_files`. Coolify expects port 80 by default for SPAs.
 - **Gleam wisp + mist** — wisp is the request framework, mist the HTTP server. Standard combo.
 - **SQLite via `sqlight`** — Gleam binding to SQLite. File lives in `data/app.db`, mounted as a Coolify persistent volume.
 
 ## Coolify conventions on platform.apoena.dev
 
-- Apps deploy from public Gitea repos (Coolify polls the branch).
+- Apps deploy from public Gitea repos. **The `applications/public` API truncates non-GitHub git URLs to `owner/repo`** — you must PATCH `git_repository` to the full `https://git.apoena.dev/julien/<app>.git` URL after create, or the first deploy fails at the git-clone step (see Step 8b).
 - The "Dockerfile" build pack is used for SPA-only apps (single `Dockerfile` at the repo root).
 - The "Docker Compose" build pack is used when `docker-compose.yml` exists.
 - Domains are configured per-resource as `https://<subdomain>` — Coolify provisions Let's Encrypt automatically as long as the DNS A/AAAA record for `<subdomain>.apoena.dev` already points at the Coolify host.
@@ -212,7 +250,7 @@ Summarise in two lines:
 
 ## DNS reminder
 
-The skill does NOT configure DNS. If `<subdomain>.apoena.dev` does not already resolve to the Coolify host, the Let's Encrypt step inside Coolify will fail. Tell the user to add the record (wildcard `*.apoena.dev` may already cover it — check `dig +short <subdomain>.apoena.dev` before deploying).
+The skill does NOT configure DNS. If `<subdomain>.apoena.dev` does not already resolve to the Coolify host, the Let's Encrypt step inside Coolify will fail. Tell the user to add the record (wildcard `*.apoena.dev` may already cover it — check `dig +short <subdomain>.apoena.dev` against `dig +short platform.apoena.dev` before deploying).
 
 ## When the user wants a different stack
 
@@ -220,13 +258,13 @@ Skill is opinionated for Vite/Vue/DaisyUI ± Gleam. If the user says "actually I
 
 ## Tabler icons + favicon
 
-- The favicon is fetched from `https://raw.githubusercontent.com/tabler/tabler-icons/main/icons/outline/<name>.svg` at scaffold time, recoloured to the user's primary hex (Tabler outline icons use `stroke="currentColor"` → `sed` replace), and written to `public/favicon.svg`.
+- The favicon is fetched from `https://raw.githubusercontent.com/tabler/tabler-icons/main/icons/outline/<name>.svg` at scaffold time, recoloured to the user's primary hex (Tabler outline icons use `stroke="currentColor"` → `sed` replace), and written to `public/favicon.svg` (overwriting the template's default).
 - In-app icons live in `src/assets/icons/` — the user drops more Tabler SVGs there as needed. Pattern in Vue: `<img src="@/assets/icons/foo.svg" alt="" class="size-5" />` for static colour, or paste the SVG inline as a Vue component if it needs to follow `currentColor`.
 - Primary color is wired into `src/style.css` via `@plugin "daisyui/theme" { name: "light"; default: true; --color-primary: <hex>; }`. This overrides only `--color-primary` on DaisyUI's built-in light theme — all other colors inherit — and the override propagates to both Tailwind utilities (`bg-primary`, `text-primary`) and DaisyUI components (`btn-primary`, `badge-primary`, etc.). Setting it in `@theme` alone would only cover Tailwind utilities, not DaisyUI components.
 
 ## Coolify automation requirements
 
-Step 8 runs only if `$COOLIFY_API_TOKEN` is set (expected in `~/.private.zsh`). The Gitea PAT is read from `~/.config/tea/config.yml` (the one `tea login add` already wrote). The Gitea webhook URL is the same for every Coolify app on this instance — `https://platform.apoena.dev/webhooks/source/gitea/events/manual` — and is hardcoded in the skill; Coolify matches the app by repo URL in the payload.
+Step 8 runs only if `$COOLIFY_API_TOKEN` is set. Both `$COOLIFY_API_TOKEN` and `$TEA_TOKEN` (the Gitea PAT used for webhook creation in 8d) are exported from `~/.dotfiles/zsh/private.zsh`. Use the env vars directly — do **not** parse the tea config file or run a recursive filesystem `find` for a token (the sandbox blocks credential hunting). If `$TEA_TOKEN` is missing from the current shell, have the user `source ~/.dotfiles/zsh/private.zsh` (or open a new terminal) and re-run; if it stays unavailable, skip the webhook (8d) and hand off manual instructions. The Gitea webhook URL is the same for every Coolify app on this instance — `https://platform.apoena.dev/webhooks/source/gitea/events/manual` — and is hardcoded in the skill; Coolify matches the app by repo URL in the payload.
 
 Cached state lives in `~/.config/apoena/coolify.env` — `PROJECT_UUID` and `SERVER_UUID` after the one-time discovery prompt.
 
@@ -238,7 +276,7 @@ If anything in Step 8 fails (missing token, API error, repo URL mismatch in Cool
 - `templates/Dockerfile.gleam` — Gleam build → erlang runtime, port 8000.
 - `templates/nginx.conf` — SPA fallback.
 - `templates/docker-compose.yml` — web + api + sqlite-volume template.
-- `templates/tailwind-style.css` — Tailwind v4 + DaisyUI import, with `{{PRIMARY_COLOR}}` placeholder.
+- `templates/tailwind-style.css` — Tailwind v4 + DaisyUI import (font import ordered first), with `{{PRIMARY_COLOR}}` placeholder.
 - `templates/icons-readme.md` — README dropped into `src/assets/icons/` to document the icon folder.
 - `coolify-checklist.md` — printable per-app checklist with `{{PLACEHOLDERS}}`.
 

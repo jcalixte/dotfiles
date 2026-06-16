@@ -118,8 +118,9 @@
     }
   },
   "syntaxHighlightingDisabled": false,
+  "effortLevel": "xhigh",
   "autoUpdatesChannel": "stable",
   "minimumVersion": "2.1.84",
-  "skipAutoPermissionPrompt": true,
-  "skipWorkflowUsageWarning": true
+  "skipWorkflowUsageWarning": true,
+  "skipAutoPermissionPrompt": true
 }
