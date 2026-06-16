@@ -18,6 +18,8 @@ Ask in this order:
 3. **SQLite?** Default: yes if backend was chosen, no if SPA-only. (A SPA can still use SQLite via the backend; offering it for SPA-only means "set up the volume now even though there's nothing using it yet" — discourage that.)
 4. **Local scaffold path.** Default: `$PWD/<app-name>`.
 5. **Subdomain.** Default: `<app-name>.apoena.dev`. Confirm.
+6. **Primary color** (hex, e.g. `#570DF8`). Default: `#570DF8` (DaisyUI default). Used both as the Tailwind v4 `--color-primary` and as the favicon stroke color.
+7. **Favicon icon name** from Tabler (`https://tabler.io/icons`). Default: `circle`. Use the exact slug shown on the Tabler page (e.g. `bolt`, `paw`, `qrcode`). Outline variant only.
 
 ## Step 2 — Verify prerequisites
 
@@ -45,8 +47,11 @@ pnpm add daisyui@latest
 Then write/patch these files (templates in `templates/`):
 
 - `vite.config.ts` — add `@tailwindcss/vite` plugin, and (if backend) the `/api` dev proxy to `http://localhost:8000`.
-- `src/style.css` — overwrite with `templates/tailwind-style.css`.
+- `src/style.css` — copy `templates/tailwind-style.css` then substitute `{{PRIMARY_COLOR}}` with the user's hex.
 - `src/App.vue` — replace boilerplate with a minimal DaisyUI landing card showing the app name. Drop `src/components/HelloWorld.vue`.
+- `src/assets/icons/` — create the folder and copy `templates/icons-readme.md` to `src/assets/icons/README.md`. This is the reusable in-app icon folder; the user drops Tabler SVGs here as needed.
+- `public/favicon.svg` — fetch `https://raw.githubusercontent.com/tabler/tabler-icons/main/icons/outline/<favicon-icon>.svg`, then `sed` replace `currentColor` with the primary-color hex. Write to `public/favicon.svg`. If the curl 404s, ask the user for a different icon name and retry. Delete `public/vite.svg`.
+- `index.html` — replace the `<link rel="icon" ...>` line with `<link rel="icon" type="image/svg+xml" href="/favicon.svg" />`. Update `<title>` to the app name.
 - `Dockerfile` — copy `templates/Dockerfile.spa`.
 - `nginx.conf` — copy `templates/nginx.conf`.
 - `.dockerignore` — at minimum `node_modules`, `dist`, `.git`.
@@ -152,13 +157,20 @@ The skill does NOT configure DNS. If `<subdomain>.apoena.dev` does not already r
 
 Skill is opinionated for Vite/Vue/DaisyUI ± Gleam. If the user says "actually I want Svelte" or "Rust backend": stop, name what's different, and ask whether to (a) adapt manually after this skill runs the Gitea+Coolify parts, or (b) abort the skill entirely and do it by hand.
 
+## Tabler icons + favicon
+
+- The favicon is fetched from `https://raw.githubusercontent.com/tabler/tabler-icons/main/icons/outline/<name>.svg` at scaffold time, recoloured to the user's primary hex (Tabler outline icons use `stroke="currentColor"` → `sed` replace), and written to `public/favicon.svg`.
+- In-app icons live in `src/assets/icons/` — the user drops more Tabler SVGs there as needed. Pattern in Vue: `<img src="@/assets/icons/foo.svg" alt="" class="size-5" />` for static colour, or paste the SVG inline as a Vue component if it needs to follow `currentColor`.
+- Primary color is wired into `src/style.css` as `--color-primary` inside the Tailwind v4 `@theme` block, so DaisyUI's `bg-primary`, `text-primary`, etc. pick it up automatically.
+
 ## Files in this skill
 
 - `templates/Dockerfile.spa` — Vite build → nginx serve, port 80.
 - `templates/Dockerfile.gleam` — Gleam build → erlang runtime, port 8000.
 - `templates/nginx.conf` — SPA fallback.
 - `templates/docker-compose.yml` — web + api + sqlite-volume template.
-- `templates/tailwind-style.css` — Tailwind v4 + DaisyUI import.
+- `templates/tailwind-style.css` — Tailwind v4 + DaisyUI import, with `{{PRIMARY_COLOR}}` placeholder.
+- `templates/icons-readme.md` — README dropped into `src/assets/icons/` to document the icon folder.
 - `coolify-checklist.md` — printable per-app checklist with `{{PLACEHOLDERS}}`.
 
 </supporting-info>

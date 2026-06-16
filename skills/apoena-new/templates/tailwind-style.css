@@ -4,4 +4,5 @@
 
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --color-primary: {{PRIMARY_COLOR}};
 }
