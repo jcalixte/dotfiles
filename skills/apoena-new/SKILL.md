@@ -222,7 +222,7 @@ Skill is opinionated for Vite/Vue/DaisyUI ± Gleam. If the user says "actually I
 
 - The favicon is fetched from `https://raw.githubusercontent.com/tabler/tabler-icons/main/icons/outline/<name>.svg` at scaffold time, recoloured to the user's primary hex (Tabler outline icons use `stroke="currentColor"` → `sed` replace), and written to `public/favicon.svg`.
 - In-app icons live in `src/assets/icons/` — the user drops more Tabler SVGs there as needed. Pattern in Vue: `<img src="@/assets/icons/foo.svg" alt="" class="size-5" />` for static colour, or paste the SVG inline as a Vue component if it needs to follow `currentColor`.
-- Primary color is wired into `src/style.css` as `--color-primary` inside the Tailwind v4 `@theme` block, so DaisyUI's `bg-primary`, `text-primary`, etc. pick it up automatically.
+- Primary color is wired into `src/style.css` via `@plugin "daisyui/theme" { name: "light"; default: true; --color-primary: <hex>; }`. This overrides only `--color-primary` on DaisyUI's built-in light theme — all other colors inherit — and the override propagates to both Tailwind utilities (`bg-primary`, `text-primary`) and DaisyUI components (`btn-primary`, `badge-primary`, etc.). Setting it in `@theme` alone would only cover Tailwind utilities, not DaisyUI components.
 
 ## Coolify automation requirements
 
