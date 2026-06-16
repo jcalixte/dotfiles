@@ -117,11 +117,72 @@ git push -u origin main
 
 If `tea repos create` fails because the repo already exists, ask the user whether to push to the existing one or pick a new name.
 
-## Step 8 — Print the Coolify checklist
+## Step 8 — Provision in Coolify (automated)
 
-Read `coolify-checklist.md` and substitute the placeholders, then print it to the user. Tell them: "Open https://platform.apoena.dev and paste these values into a new Application. I'll wait — let me know if any field is unclear."
+If `$COOLIFY_API_TOKEN` is unset, skip this step and jump to Step 9. The token lives in the user's `~/.private.zsh`; if it isn't loaded in the current shell, tell them to `source ~/.private.zsh` (or open a new terminal) and re-run the skill — do NOT prompt for it inline.
 
-## Step 9 — Done
+Read the Gitea PAT from `~/.config/tea/config.yml`:
+
+```bash
+GITEA_TOKEN=$(yq '.logins[] | select(.name == "apoena") | .token' ~/.config/tea/config.yml 2>/dev/null \
+  || awk '/name: apoena/,/token:/ { if ($1 == "token:") {print $2; exit} }' ~/.config/tea/config.yml)
+```
+
+If `GITEA_TOKEN` is empty, fall through to Step 9 (manual checklist) and tell the user why.
+
+**Coolify API base:** `https://platform.apoena.dev/api/v1`. Auth: `Authorization: Bearer $COOLIFY_API_TOKEN`.
+
+### 8a. Discover project + server UUIDs
+
+```bash
+curl -fsSL -H "Authorization: Bearer $COOLIFY_API_TOKEN" https://platform.apoena.dev/api/v1/projects   | jq '.[] | {uuid, name}'
+curl -fsSL -H "Authorization: Bearer $COOLIFY_API_TOKEN" https://platform.apoena.dev/api/v1/servers   | jq '.[] | {uuid, name}'
+```
+
+If exactly one project and one server exist → use them. If multiple → print the lists and ask the user to pick one of each. Cache the chosen UUIDs to `~/.config/apoena/coolify.env` (`PROJECT_UUID=…\nSERVER_UUID=…`) so future runs skip the prompt; source the file first if it exists.
+
+### 8b. Create the application
+
+```bash
+WEBHOOK_SECRET=$(openssl rand -hex 32)
+BUILD_PACK=$([ -f docker-compose.yml ] && echo dockercompose || echo dockerfile)
+
+APP_UUID=$(curl -fsSL -X POST https://platform.apoena.dev/api/v1/applications/public   -H "Authorization: Bearer $COOLIFY_API_TOKEN"   -H "Content-Type: application/json"   -d "$(jq -n --arg p "$PROJECT_UUID" --arg s "$SERVER_UUID"           --arg name "<app-name>" --arg repo "https://git.apoena.dev/julien/<app-name>"           --arg domain "https://<subdomain>" --arg bp "$BUILD_PACK"           '{project_uuid:$p, server_uuid:$s, environment_name:"production",            git_repository:$repo, git_branch:"main",            build_pack:$bp, ports_exposes:"80",            name:$name, domains:$domain, instant_deploy:false}')"   | jq -r '.uuid')
+```
+
+If the response has no `uuid` or curl fails → print the error body, then fall through to Step 9.
+
+### 8c. Set the Gitea webhook secret on the Coolify app
+
+```bash
+curl -fsSL -X PATCH https://platform.apoena.dev/api/v1/applications/$APP_UUID   -H "Authorization: Bearer $COOLIFY_API_TOKEN"   -H "Content-Type: application/json"   -d "$(jq -n --arg s "$WEBHOOK_SECRET" '{manual_webhook_secret_gitea:$s}')"
+```
+
+### 8d. Create the Gitea webhook
+
+Coolify routes Gitea webhooks via a single shared endpoint: `https://platform.apoena.dev/webhooks/source/gitea/events/manual`. The app is matched by the repository URL in the payload, so no per-app UUID is needed in the webhook URL.
+
+```bash
+curl -fsSL -X POST https://git.apoena.dev/api/v1/repos/julien/<app-name>/hooks   -H "Authorization: token $GITEA_TOKEN"   -H "Content-Type: application/json"   -d "$(jq -n --arg secret "$WEBHOOK_SECRET"           '{type:"gitea", active:true, events:["push"],            config:{url:"https://platform.apoena.dev/webhooks/source/gitea/events/manual",                    content_type:"json", secret:$secret}}')"
+```
+
+If non-2xx → print the response and tell the user the app exists in Coolify but the webhook needs to be added manually (give them the URL + secret to paste).
+
+### 8e. Trigger initial deploy
+
+```bash
+curl -fsSL -X POST "https://platform.apoena.dev/api/v1/deploy?uuid=$APP_UUID&force=false"   -H "Authorization: Bearer $COOLIFY_API_TOKEN"
+```
+
+Tell the user: "App created and deploying. Tail logs at https://platform.apoena.dev/project/$PROJECT_UUID/application/$APP_UUID."
+
+Skip to Step 10.
+
+## Step 9 — Print the Coolify checklist (fallback)
+
+Reached only if Step 8 was skipped or any sub-step failed. Read `coolify-checklist.md` and substitute the placeholders, then print it to the user. Tell them: "Open https://platform.apoena.dev and paste these values into a new Application. I'll wait — let me know if any field is unclear."
+
+## Step 10 — Done
 
 Summarise in two lines:
 - Local path: `<absolute-path>`
@@ -162,6 +223,14 @@ Skill is opinionated for Vite/Vue/DaisyUI ± Gleam. If the user says "actually I
 - The favicon is fetched from `https://raw.githubusercontent.com/tabler/tabler-icons/main/icons/outline/<name>.svg` at scaffold time, recoloured to the user's primary hex (Tabler outline icons use `stroke="currentColor"` → `sed` replace), and written to `public/favicon.svg`.
 - In-app icons live in `src/assets/icons/` — the user drops more Tabler SVGs there as needed. Pattern in Vue: `<img src="@/assets/icons/foo.svg" alt="" class="size-5" />` for static colour, or paste the SVG inline as a Vue component if it needs to follow `currentColor`.
 - Primary color is wired into `src/style.css` as `--color-primary` inside the Tailwind v4 `@theme` block, so DaisyUI's `bg-primary`, `text-primary`, etc. pick it up automatically.
+
+## Coolify automation requirements
+
+Step 8 runs only if `$COOLIFY_API_TOKEN` is set (expected in `~/.private.zsh`). The Gitea PAT is read from `~/.config/tea/config.yml` (the one `tea login add` already wrote). The Gitea webhook URL is the same for every Coolify app on this instance — `https://platform.apoena.dev/webhooks/source/gitea/events/manual` — and is hardcoded in the skill; Coolify matches the app by repo URL in the payload.
+
+Cached state lives in `~/.config/apoena/coolify.env` — `PROJECT_UUID` and `SERVER_UUID` after the one-time discovery prompt.
+
+If anything in Step 8 fails (missing token, API error, repo URL mismatch in Coolify), the skill falls through to Step 9 — the original manual checklist — and the user finishes in the Coolify UI.
 
 ## Files in this skill
 
