@@ -18,8 +18,6 @@ else
   source ~/.dotfiles/zsh/wsl.zsh
 fi
 
-source ~/.dotfiles/zsh/notes.zsh
-
 # ruby
 if [ -x "$(command -v rbenv)" ]; then
   eval "$(rbenv init - zsh)"
@@ -102,6 +100,8 @@ plugins=(
 
 source $ZSH/oh-my-zsh.sh
 autoload zmv
+
+source ~/.dotfiles/zsh/notes.zsh
 
 # autoload -U promptinit; promptinit
 # prompt pure
