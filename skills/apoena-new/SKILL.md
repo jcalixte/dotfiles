@@ -78,6 +78,7 @@ Then write/patch these files (templates in `templates/`):
   }
   ```
   Add four scripts to `package.json`: `"lint": "oxlint"`, `"lint:fix": "oxlint --fix"`, `"fmt": "oxfmt"`, `"fmt:check": "oxfmt --check"`. **Coverage caveat:** oxlint lints the `<script>` blocks of `.vue` files but not `<template>`, and oxfmt's `.vue` support is partial — so the Vue markup layer isn't checked. oxfmt does **not** touch `src/style.css` (it formats JS/TS/Vue, not CSS), so the font `@import` ordering there is unaffected.
+- **Zed format-on-save** — copy `templates/zed-settings.json` to `.zed/settings.json`. Without it, Zed formats `.ts`/`.vue` on save with its built-in (Prettier-style) formatter, which **adds semicolons** and fights the `semi: false` in `.oxfmtrc.json`. The config points Zed's on-save formatter at the project-local `./node_modules/.bin/oxfmt` (via `--stdin-filepath`, so it honours `.oxfmtrc.json`), for TypeScript/JavaScript/Vue only — CSS/JSON/Markdown keep Zed's defaults. Use the direct binary path, not `pnpm exec oxfmt`: both need cwd at the project root, but the wrapper adds ~300ms on every save. `.zed/` is committed (not git-ignored) so any Zed user on the repo gets consistent saves.
 
 Verify it builds, lints, and is formatted: (1) `pnpm dev` boots — start it, curl `http://localhost:5173` (use `curl --retry … --retry-connrefused` instead of a foreground `sleep` to wait for boot), then kill it; (2) **`pnpm build` succeeds with no warnings** — this is exactly what Coolify runs (`vue-tsc -b && vite build`) and catches type errors the dev server won't. A `@import must precede all rules` warning means the font import in `src/style.css` is misordered; (3) run `pnpm fmt` to format the generated code, then `pnpm lint` — both should pass clean on a fresh scaffold (fix anything oxlint flags before committing).
 
@@ -291,6 +292,7 @@ If anything in Step 8 fails (missing token, API error, repo URL mismatch in Cool
 - `templates/docker-compose.yml` — web + api + sqlite-volume template.
 - `templates/tailwind-style.css` — Tailwind v4 + DaisyUI import (font import ordered first), with `{{PRIMARY_COLOR}}` placeholder.
 - `templates/icons-readme.md` — README dropped into `src/assets/icons/` to document the icon folder.
+- `templates/zed-settings.json` — copied verbatim to `.zed/settings.json`; points Zed's format-on-save at project-local oxfmt for TS/JS/Vue so editor saves match `.oxfmtrc.json` (no semicolons).
 - `coolify-checklist.md` — printable per-app checklist with `{{PLACEHOLDERS}}`.
 
 </supporting-info>
