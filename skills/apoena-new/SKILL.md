@@ -44,6 +44,7 @@ cd <app-name>
 pnpm install
 pnpm add -D tailwindcss @tailwindcss/vite
 pnpm add daisyui@latest
+pnpm add -D oxlint oxfmt    # oxc linter + formatter (https://oxc.rs)
 ```
 
 **If the target directory already exists and is non-empty** (e.g. it already holds design docs, or the chosen path equals the current folder), `npm create vite` becomes interactive and would clobber files. Instead scaffold into a scratch dir and copy in, preserving everything that already exists:
@@ -52,7 +53,7 @@ pnpm add daisyui@latest
 npm create vite@latest /tmp/<app-name>-scaffold -- --template vue-ts
 rm -f /tmp/<app-name>-scaffold/README.md      # never clobber an existing README
 cp -R /tmp/<app-name>-scaffold/. <project-dir>/   # trailing /. includes dotfiles; only README would collide
-cd <project-dir> && pnpm install && pnpm add -D tailwindcss @tailwindcss/vite && pnpm add daisyui@latest
+cd <project-dir> && pnpm install && pnpm add -D tailwindcss @tailwindcss/vite && pnpm add daisyui@latest && pnpm add -D oxlint oxfmt
 ```
 Set `"name"` in `package.json` to `<app-name>` (the scaffold names it after the temp dir). If an informative `README.md` already exists, keep it and **skip Step 6**.
 
@@ -68,8 +69,17 @@ Then write/patch these files (templates in `templates/`):
 - `Dockerfile` — copy `templates/Dockerfile.spa`.
 - `nginx.conf` — copy `templates/nginx.conf`.
 - `.dockerignore` — at minimum `node_modules`, `dist`, `.git`.
+- **oxc linter + formatter** ([oxc.rs](https://oxc.rs)) — run `pnpm exec oxlint --init` to generate `.oxlintrc.json` (a valid starter for the installed version; don't hand-write it). For oxfmt, write `.oxfmtrc.json` with `semi: false` (no trailing semicolons) and `singleQuote: false` (double quotes — also oxfmt's default, set explicitly):
+  ```json
+  {
+    "$schema": "./node_modules/oxfmt/configuration_schema.json",
+    "semi": false,
+    "singleQuote": false
+  }
+  ```
+  Add four scripts to `package.json`: `"lint": "oxlint"`, `"lint:fix": "oxlint --fix"`, `"fmt": "oxfmt"`, `"fmt:check": "oxfmt --check"`. **Coverage caveat:** oxlint lints the `<script>` blocks of `.vue` files but not `<template>`, and oxfmt's `.vue` support is partial — so the Vue markup layer isn't checked. oxfmt does **not** touch `src/style.css` (it formats JS/TS/Vue, not CSS), so the font `@import` ordering there is unaffected.
 
-Verify it builds two ways: (1) `pnpm dev` boots — start it, curl `http://localhost:5173` (use `curl --retry … --retry-connrefused` instead of a foreground `sleep` to wait for boot), then kill it; (2) **`pnpm build` succeeds with no warnings** — this is exactly what Coolify runs (`vue-tsc -b && vite build`) and catches type errors the dev server won't. A `@import must precede all rules` warning means the font import in `src/style.css` is misordered.
+Verify it builds, lints, and is formatted: (1) `pnpm dev` boots — start it, curl `http://localhost:5173` (use `curl --retry … --retry-connrefused` instead of a foreground `sleep` to wait for boot), then kill it; (2) **`pnpm build` succeeds with no warnings** — this is exactly what Coolify runs (`vue-tsc -b && vite build`) and catches type errors the dev server won't. A `@import must precede all rules` warning means the font import in `src/style.css` is misordered; (3) run `pnpm fmt` to format the generated code, then `pnpm lint` — both should pass clean on a fresh scaffold (fix anything oxlint flags before committing).
 
 ## Step 4 — Scaffold the backend (if selected)
 
@@ -106,6 +116,8 @@ Deployed at https://<subdomain>
 
 \`\`\`bash
 pnpm dev           # frontend on :5173
+pnpm lint          # oxlint  (pnpm lint:fix to autofix)
+pnpm fmt           # oxfmt   (pnpm fmt:check to verify only)
 # (backend only) cd backend && gleam run    # api on :8000
 # (compose) docker compose up
 \`\`\`
@@ -236,6 +248,7 @@ If deployed via Step 8, also give the live URL `https://<subdomain>` and note an
 - **Tailwind v4 via `@tailwindcss/vite`** — v4 dropped the `postcss` + `tailwind.config.js` ceremony; everything is configured in CSS via `@import "tailwindcss"` and `@plugin "daisyui"`.
 - **DaisyUI** — Tailwind component library, registered as a Tailwind v4 plugin in the stylesheet (no JS import).
 - **Fonts via `fonts.coollabs.io`** — privacy-friendly Google Fonts mirror (run by the Coolify team). The CSS `@import`s the font from `https://fonts.coollabs.io/css2?...` and sets it as `--font-sans` in the Tailwind v4 `@theme` block. **The font `@import url(...)` MUST be the first line, before `@import "tailwindcss"`** — Tailwind inlines its own import into real rules, and per the CSS spec `@import` must precede all other rules, so a font import placed second is dropped by the build (with a warning) and never loads. To swap fonts, edit `src/style.css` — change the `@import url(...)` family and the `--font-sans` value (and `--font-mono` if you want a mono font like Fira Code applied app-wide).
+- **oxc for lint + format** ([oxc.rs](https://oxc.rs)) — `oxlint` (Rust, ESLint-compatible, stable) and `oxfmt` (Prettier-compatible, Beta) replace the ESLint + Prettier stack with one fast toolchain and near-zero config. Chosen over ESLint/Prettier for speed and simplicity. **Limitation to be aware of:** as of mid-2026 oxlint lints only the `<script>` of `.vue` files (no `<template>` linting) and oxfmt's `.vue` support is partial — so the Vue markup layer is unchecked. Acceptable here because the type-checked `pnpm build` (`vue-tsc`) already catches template type errors, and most logic lives in `<script setup lang="ts">`. `.oxlintrc.json` is generated by `oxlint --init`; `.oxfmtrc.json` pins `semi: false` + `singleQuote: false` (no semicolons, double quotes).
 - **Nginx-alpine for SPA serving** — tiny image, SPA fallback via `try_files`. Coolify expects port 80 by default for SPAs.
 - **Gleam wisp + mist** — wisp is the request framework, mist the HTTP server. Standard combo.
 - **SQLite via `sqlight`** — Gleam binding to SQLite. File lives in `data/app.db`, mounted as a Coolify persistent volume.
