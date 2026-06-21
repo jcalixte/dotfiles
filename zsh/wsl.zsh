@@ -11,7 +11,7 @@ if [ -d "$FNM_PATH" ]; then
   eval "`fnm env --use-on-cd --corepack-enabled --version-file-strategy=recursive`"
 fi
 
-export EDITOR="code"
+export EDITOR="zed"
 alias note="cd ~/jcnote/notes && zed ~/jcnote/notes > /dev/null 2>&1 & gl & gctw &"
 
 # Erlang
