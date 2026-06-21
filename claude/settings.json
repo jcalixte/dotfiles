@@ -33,7 +33,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash '/Users/julien/.claude/hooks/herdr-agent-state.sh' blocked",
+            "command": "[ -f '/Users/julien/.claude/hooks/herdr-agent-state.sh' ] && bash '/Users/julien/.claude/hooks/herdr-agent-state.sh' blocked || true",
             "timeout": 10
           }
         ]
@@ -41,20 +41,11 @@
     ],
     "PreToolUse": [
       {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "rtk hook claude"
-          }
-        ]
-      },
-      {
         "matcher": "*",
         "hooks": [
           {
             "type": "command",
-            "command": "bash '/Users/julien/.claude/hooks/herdr-agent-state.sh' working",
+            "command": "[ -f '/Users/julien/.claude/hooks/herdr-agent-state.sh' ] && bash '/Users/julien/.claude/hooks/herdr-agent-state.sh' working || true",
             "timeout": 10
           }
         ]
@@ -66,7 +57,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash '/Users/julien/.claude/hooks/herdr-agent-state.sh' release",
+            "command": "[ -f '/Users/julien/.claude/hooks/herdr-agent-state.sh' ] && bash '/Users/julien/.claude/hooks/herdr-agent-state.sh' release || true",
             "timeout": 10
           }
         ]
@@ -78,7 +69,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash '/Users/julien/.claude/hooks/herdr-agent-state.sh' idle",
+            "command": "[ -f '/Users/julien/.claude/hooks/herdr-agent-state.sh' ] && bash '/Users/julien/.claude/hooks/herdr-agent-state.sh' idle || true",
             "timeout": 10
           }
         ]
@@ -90,7 +81,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash '/Users/julien/.claude/hooks/herdr-agent-state.sh' working",
+            "command": "[ -f '/Users/julien/.claude/hooks/herdr-agent-state.sh' ] && bash '/Users/julien/.claude/hooks/herdr-agent-state.sh' working || true",
             "timeout": 10
           }
         ]
@@ -102,19 +93,10 @@
     "command": "bash ~/.claude/statusline-command.sh"
   },
   "enabledPlugins": {
-    "agent-skills@addy-agent-skills": true,
     "clangd-lsp@claude-plugins-official": true,
     "rust-analyzer-lsp@claude-plugins-official": true,
     "swift-lsp@claude-plugins-official": true,
     "typescript-lsp@claude-plugins-official": true
-  },
-  "extraKnownMarketplaces": {
-    "addy-agent-skills": {
-      "source": {
-        "source": "github",
-        "repo": "addyosmani/agent-skills"
-      }
-    }
   },
   "syntaxHighlightingDisabled": false,
   "effortLevel": "xhigh",
