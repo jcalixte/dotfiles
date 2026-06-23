@@ -429,7 +429,19 @@ The 4 rows mean, top-to-bottom:
 \def\qfdNW{7}        % 7 WHATs instead of 5
 \def\qfdNH{6}        % 6 HOWs
 \def\qfdWhatW{5.0}   % wider WHATs column for longer labels
+\def\qfdHdrH{3.5}    % taller column-title band for longer HOW labels (see sizing rule below)
 ```
+
+**Sizing `\qfdHdrH`**: HOW labels grow upward from `y = 0.15` (rotate=90, anchor=west). At `\scriptsize`, each character is ~0.145 cm. Formula: `\qfdHdrH ≥ longest_label_chars × 0.145 + 0.4`. Quick lookup:
+
+| Longest HOW label | `\qfdHdrH` |
+| ----------------- | :--------: |
+| ≤ 15 chars        |    2.6     |
+| 16 – 22 chars     |    3.0     |
+| 23 – 28 chars     |    3.5     |
+| 29 + chars        |    4.0     |
+
+When in doubt, go one step larger — extra whitespace above the roof is harmless.
 
 **Rename labels**:
 
@@ -453,6 +465,8 @@ The 4 rows mean, top-to-bottom:
 Skip the perception zone (`\qfdshowcompetitivefalse`) unless a competitor benchmark exists.
 
 ## Gotchas
+
+- **HOW labels overflow into the roof.** Labels sit at `({\c - 0.5}, 0.15)` with `rotate=90, anchor=west` — they grow upward. If the longest label exceeds `\qfdHdrH − 0.15 cm`, it bleeds into the triangular roof. Fix: set `\qfdHdrH` using the sizing table in the Customisation section above. Count characters including spaces; err on the larger bracket.
 
 - **WHATs text overflows the column.** With `anchor=west` placed at `\qfdLeftEdge + 0.1`, a `text width=\qfdWhatW cm` box ends `0.1cm` past the cell's right edge and bleeds into the Importance column. Pre-compute a narrower width with `\pgfmathsetmacro{\qfdWhatTextW}{\qfdWhatW - 0.2}` and use `text width=\qfdWhatTextW cm` — `text width={\qfdWhatW - 0.2}cm` does **not** work because the braces don't evaluate the arithmetic, so TikZ sees `4.6 - 0.2cm` and chokes.
 - **`<` and `>` in text mode become `¡` and `¿`.** Use `$<$`, `$>$`, `$-$` or `\textless` / `\textgreater` / `\textendash` inside node text.

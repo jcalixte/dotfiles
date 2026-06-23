@@ -103,13 +103,13 @@ This translates what the system must _be_ (user-facing goals) into what it must 
 
 Update `DESIGN.md` inline as each level resolves. Sections are produced lazily — do not pre-populate empty sections.
 
-## Optional: render as a TikZ House of Quality
+## Render as a TikZ House of Quality
 
 When the matrices would benefit from a visual rendering (slide, stakeholder review, doc), offer to draw a TikZ "House of Quality" inside a ` ```tikz ` fenced block in markdown. See [QUALITY-HOUSE.md](./QUALITY-HOUSE.md) for the preamble, coordinate system, and placement recipes.
 
 Offer this **only when** the cascade has produced enough material to populate it: Goals + importance (§1), Functions + targets (§2), and at least one of the importance matrix (§4) or the roof (§5). A house with empty cells is just scaffolding.
 
-The house is a visualisation, not a replacement for `DESIGN.md`. Render it alongside the doc when stakeholders need the picture; the tables stay authoritative.
+**Placement**: the house goes as the **first section of `DESIGN.md`**, before §1 Goals — titled `## House of Quality`. It is the at-a-glance overview; the numbered sections that follow are the prose backing. Add a `---` separator after the house and before §1.
 
 ## Offer ADRs sparingly
 

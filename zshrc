@@ -2,6 +2,7 @@ export PATH="$HOME/bin:/usr/local/bin:$HOME/.local/bin:$PATH"
 export DENO_INSTALL="$HOME/.deno"
 export PATH="$DENO_INSTALL/bin:$PATH"
 export PATH="$HOME/.jenv/shims:$PATH"
+export PATH=/opt/homebrew/share/google-cloud-sdk/bin:"$PATH"
 export scheme=dev
 
 export OCR_SCRIPT_PATH=~/jclab/booktonote/scripts/ocr_engine.py
@@ -175,4 +176,3 @@ gcu() {
 # Added by LM Studio CLI (lms)
 export PATH="$PATH:/Users/julien/.lmstudio/bin"
 # End of LM Studio CLI section
-
