@@ -1,6 +1,6 @@
 ---
 name: apoena-new
-description: Use when the user wants to bootstrap a new *.apoena.dev app on Coolify — scaffolds a Vite + Vue + DaisyUI SPA (optionally with a Gleam backend and SQLite), creates a public Gitea repo on git.apoena.dev, and provisions the Coolify app via API (falling back to a printable deploy checklist).
+description: Use when the user wants to bootstrap a new *.apoena.dev app on Coolify — scaffolds a Vite + Vue + DaisyUI SPA (optionally with a Gleam backend and SQLite), creates a public Gitea repo on git.apoena.dev, provisions the Coolify app via API (falling back to a printable deploy checklist), builds a real first screen of the app the user asked for, and then hands off to the feature-build skills to flesh out the rest.
 ---
 
 <what-to-do>
@@ -9,7 +9,11 @@ Walk the user through bootstrapping a new `*.apoena.dev` app end-to-end. Ask the
 
 Then scaffold the code, create the Gitea repo, push, and provision the Coolify app via its API (Step 8) when `$COOLIFY_API_TOKEN` is available — otherwise print the checklist (Step 9) for the user to paste into the UI. Calling the Coolify **API** is expected and fine; do NOT try to drive the Coolify **web UI** / a browser.
 
+The scaffold is **not** a placeholder. Step 3 builds a real first screen of the app the user asked for, and once that's deployed, Step 11 designs the rest of the app with `/walk-with-me` and then hands off to the feature-build skills. Do not stop at the first screen and wait to be told to continue — proceed into Step 11.
+
 ## Step 1 — Gather inputs
+
+**First, establish what the app is.** Before the infra questions below, make sure you understand the app's purpose and core features — from the user's request in this conversation and any design docs / spec already in the target directory (read them; don't re-ask what's already written down). If the concept is thin or missing, ask the user for a one-paragraph description before continuing. You use this in three places: to theme the scaffold, to build a real first screen (Step 3), and to drive the feature build (Step 11). Then gather the infra inputs.
 
 Ask in this order:
 
@@ -61,7 +65,7 @@ Then write/patch these files (templates in `templates/`):
 
 - `vite.config.ts` — add `@tailwindcss/vite` plugin, and (if backend) the `/api` dev proxy to `http://localhost:8000`.
 - `src/style.css` — copy `templates/tailwind-style.css` then substitute `{{PRIMARY_COLOR}}` with the user's hex. **Keep the font `@import url(...)` as the first line** (the template already orders it correctly — do not move it below `@import "tailwindcss"` or the font silently won't load in the build).
-- `src/App.vue` — replace boilerplate with a minimal DaisyUI landing card showing the app name. Delete `src/components/HelloWorld.vue` (and the now-empty `src/components/`).
+- `src/App.vue` + supporting files — build the **real first screen of the app** established in Step 1, not a generic landing card. This is the genuine entry point the user would land on, themed with DaisyUI: for a data-driven app that means the primary screen actually wired up (fetching and rendering real data), not a mockup. Keep it to that one screen — secondary screens and the full feature set come in Step 11 — but it must be recognizably *this* app. Add only the components / composables / types that this one screen needs. Delete `src/components/HelloWorld.vue` (and the now-empty `src/components/` if nothing replaces it).
 - `src/assets/icons/` — create the folder and copy `templates/icons-readme.md` to `src/assets/icons/README.md`. This is the reusable in-app icon folder; the user drops Tabler SVGs here as needed.
 - `public/favicon.svg` — fetch `https://raw.githubusercontent.com/tabler/tabler-icons/main/icons/outline/<favicon-icon>.svg`, then `sed` replace `currentColor` with the primary-color hex, and **overwrite** `public/favicon.svg` (the modern `vue-ts` template already ships one). If the curl 404s, ask the user for a different icon name and retry.
 - **Remove the modern template's demo cruft** — recent `vue-ts` ships `src/assets/{vite.svg,vue.svg,hero.png}` and `public/icons.svg` (there is no longer a `public/vite.svg`). `rm -f` them since the new `App.vue` doesn't reference them.
@@ -80,7 +84,7 @@ Then write/patch these files (templates in `templates/`):
   Add four scripts to `package.json`: `"lint": "oxlint"`, `"lint:fix": "oxlint --fix"`, `"fmt": "oxfmt"`, `"fmt:check": "oxfmt --check"`. **Coverage caveat:** oxlint lints the `<script>` blocks of `.vue` files but not `<template>`, and oxfmt's `.vue` support is partial — so the Vue markup layer isn't checked. oxfmt does **not** touch `src/style.css` (it formats JS/TS/Vue, not CSS), so the font `@import` ordering there is unaffected.
 - **Zed format-on-save** — copy `templates/zed-settings.json` to `.zed/settings.json`. Without it, Zed formats `.ts`/`.vue` on save with its built-in (Prettier-style) formatter, which **adds semicolons** and fights the `semi: false` in `.oxfmtrc.json`. The config points Zed's on-save formatter at the project-local `./node_modules/.bin/oxfmt` (via `--stdin-filepath`, so it honours `.oxfmtrc.json`), for TypeScript/JavaScript/Vue only — CSS/JSON/Markdown keep Zed's defaults. Use the direct binary path, not `pnpm exec oxfmt`: both need cwd at the project root, but the wrapper adds ~300ms on every save. `.zed/` is committed (not git-ignored) so any Zed user on the repo gets consistent saves.
 
-Verify it builds, lints, and is formatted: (1) `pnpm dev` boots — start it, curl `http://localhost:5173` (use `curl --retry … --retry-connrefused` instead of a foreground `sleep` to wait for boot), then kill it; (2) **`pnpm build` succeeds with no warnings** — this is exactly what Coolify runs (`vue-tsc -b && vite build`) and catches type errors the dev server won't. A `@import must precede all rules` warning means the font import in `src/style.css` is misordered; (3) run `pnpm fmt` to format the generated code, then `pnpm lint` — both should pass clean on a fresh scaffold (fix anything oxlint flags before committing).
+Verify it builds, lints, and is formatted: (1) `pnpm dev` boots — start it, curl `http://localhost:5173` (use `curl --retry … --retry-connrefused` instead of a foreground `sleep` to wait for boot), then kill it; (2) **`pnpm build` succeeds with no warnings** — this is exactly what Coolify runs (`vue-tsc -b && vite build`) and catches type errors the dev server won't. A `@import must precede all rules` warning means the font import in `src/style.css` is misordered; (3) run `pnpm fmt` to format the generated code, then `pnpm lint` — both should pass clean on a fresh scaffold (fix anything oxlint flags before committing); (4) since the scaffold is now a real screen, not a static card, sanity-check that it actually renders — load it in a browser (the **browser-testing-with-devtools** skill) and confirm the first screen shows real content, not an error or empty state.
 
 ## Step 4 — Scaffold the backend (if selected)
 
@@ -231,13 +235,23 @@ Skip to Step 10.
 
 Reached only if Step 8 was skipped or any sub-step failed. Read `coolify-checklist.md` and substitute the placeholders, then print it to the user. Tell them: "Open https://platform.apoena.dev and paste these values into a new Application. I'll wait — let me know if any field is unclear."
 
-## Step 10 — Done
+## Step 10 — Bootstrap summary
 
-Summarise in two lines:
+The infra is live. Summarise the bootstrap in two lines:
 - Local path: `<absolute-path>`
 - Repo: `https://git.apoena.dev/julien/<app-name>`
 
-If deployed via Step 8, also give the live URL `https://<subdomain>` and note any pending manual step (e.g. the Gitea webhook if 8d was skipped).
+If deployed via Step 8, also give the live URL `https://<subdomain>` (the first screen is now live) and note any pending manual step (e.g. the Gitea webhook if 8d was skipped). Then continue to Step 11 — do not stop here.
+
+## Step 11 — Build out the app
+
+The bootstrap is done and the first screen is deployed; now build the rest of the app the user asked for (Step 1). Don't wait to be told to start (no "say the word and I'll start on it") — begin immediately with the design interview below.
+
+- **Design first with `/walk-with-me`.** Before writing any feature code, run the **walk-with-me** skill to reach shared understanding of the deep feature set: it interviews the user one decision at a time and writes the design docs (`CONTEXT.md`, `DESIGN.md`, any ADRs) into the project dir, escalating to `/qfd` for a goal→function→component decomposition when the change warrants it. This **is** the design step — do not also run `spec-driven-development`, it would be redundant ceremony.
+- **Then build from those docs with `incremental-implementation`**, slice by slice — use **frontend-ui-engineering** for the UI slices.
+- Build the features that go beyond the first screen — the remaining screens, search/filtering, detail views, persistence, whatever Step 1 and walk-with-me settled on.
+- Commit and push each working slice. Pushes to `main` auto-deploy via the Coolify webhook (Step 8d), so every slice ships to `https://<subdomain>` — verify the live site after pushes that matter.
+- Keep the deploy green: run `pnpm build` (clean, no warnings) + `pnpm lint` + `pnpm fmt` before each push, the same gates as Step 3.
 
 </what-to-do>
 
