@@ -62,6 +62,7 @@ Paste verbatim before `\begin{document}`:
 \newif\ifqfdshowimportance    \qfdshowimportancetrue
 \newif\ifqfdshowcorrlegend    \qfdshowcorrlegendtrue
 \newif\ifqfdshowevallegend    \qfdshowevallegendtrue
+\newif\ifqfdshowtitle         \qfdshowtitletrue   % title block above the roof
 
 % Dimensions — override before \begin{qfdhouse} to resize.
 \def\qfdNW{5}           % number of WHATs (rows)
@@ -84,6 +85,11 @@ Paste verbatim before `\begin{document}`:
 \def\qfdRelTitle{Relation}
 \def\qfdCorrTitle{Correlation}
 \def\qfdEvalTitle{Evaluation}
+
+% Title block above the roof — set both to name the house. Leave
+% \qfdProjectTitle empty (default) to draw no title at all.
+\def\qfdProjectTitle{}  % project / feature name (large, bold)
+\def\qfdConcept{}       % concept in one sentence; \textbf{} the keywords
 
 % Styles.
 \tikzset{
@@ -186,6 +192,24 @@ Paste verbatim before `\begin{document}`:
            {\ifqfdshowroof \qfdHdrH/2 \else 0.6 \fi}) {\qfdWhatsTitle};
 }
 
+% --- Title + concept subtitle, centred above the roof apex. ---
+\newcommand{\qfdDrawTitle}{%
+  \ifqfdshowtitle
+    \ifx\qfdProjectTitle\empty\else
+      \pgfmathsetmacro{\qfdTitleX}{\qfdNH/2}
+      \pgfmathsetmacro{\qfdTitleY}{\ifqfdshowroof \qfdApexY \else \qfdHdrH \fi + 0.9}
+      \pgfmathsetmacro{\qfdSubW}{\qfdNH + 2}    % pre-computed (braces don't do arithmetic)
+      \node[anchor=south, font=\large\bfseries, align=center]
+           at (\qfdTitleX, \qfdTitleY) {\qfdProjectTitle};
+      \ifx\qfdConcept\empty\else
+        \node[anchor=north, font=\footnotesize\itshape, align=center,
+              text width=\qfdSubW cm]
+             at (\qfdTitleX, {\qfdTitleY - 0.1}) {\qfdConcept};
+      \fi
+    \fi
+  \fi
+}
+
 % --- Outer frames around each zone. ---
 \newcommand{\qfdDrawFrames}{%
   \begin{scope}[qfdmed]
@@ -276,6 +300,7 @@ Paste verbatim before `\begin{document}`:
   \qfdDrawRoof
   \qfdDrawScale
   \qfdDrawZoneTitles
+  \qfdDrawTitle
 }{%
   \qfdDrawFrames
   \qfdDrawLegend
@@ -442,6 +467,23 @@ The 4 rows mean, top-to-bottom:
 | 29 + chars        |    4.0     |
 
 When in doubt, go one step larger — extra whitespace above the roof is harmless.
+
+**Title & subtitle** — name the house. Set *before* `\begin{qfdhouse}`. The
+project name renders large/bold at the top; the concept renders as an italic
+one-sentence subtitle just below it, centred over the roof apex. Bold the
+keywords inside the concept so they pop:
+
+```tex
+\def\qfdProjectTitle{Apoena}
+\def\qfdConcept{A goal-driven \textbf{design cascade} turning user
+  \textbf{goals} into \textbf{functions}, \textbf{components}, and
+  explicit \textbf{tradeoffs}.}
+```
+
+Both default to empty — leave `\qfdProjectTitle` unset (or `\qfdshowtitlefalse`)
+to draw no title block, exactly as before. The subtitle is skipped when
+`\qfdConcept` is empty, so a title-only house is fine. Keep the concept to one
+sentence: it wraps within `\qfdNH + 2` cm and longer text crowds the roof peak.
 
 **Rename labels**:
 

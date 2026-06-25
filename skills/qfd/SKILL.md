@@ -109,6 +109,8 @@ When the matrices would benefit from a visual rendering (slide, stakeholder revi
 
 Offer this **only when** the cascade has produced enough material to populate it: Goals + importance (§1), Functions + targets (§2), and at least one of the importance matrix (§4) or the roof (§5). A house with empty cells is just scaffolding.
 
+Always title the house: set `\qfdProjectTitle` to the project / feature name and `\qfdConcept` to the concept in one sentence with the keywords bolded (see "Title & subtitle" in [QUALITY-HOUSE.md](./QUALITY-HOUSE.md)). They render above the roof apex.
+
 **Placement**: the house goes as the **first section of `DESIGN.md`**, before §1 Goals — titled `## House of Quality`. It is the at-a-glance overview; the numbered sections that follow are the prose backing. Add a `---` separator after the house and before §1.
 
 ## Offer ADRs sparingly
