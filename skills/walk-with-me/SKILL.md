@@ -25,6 +25,7 @@ Most repos have a single context:
 
 ```
 /
+├── README.md          ← documentation map (links to the docs below)
 ├── CONTEXT.md
 ├── DESIGN.md
 ├── docs/
@@ -38,6 +39,7 @@ If a `CONTEXT-MAP.md` exists at the root, the repo has multiple contexts. The ma
 
 ```
 /
+├── README.md                         ← documentation map (links to every context + system-wide docs)
 ├── CONTEXT-MAP.md
 ├── docs/
 │   └── adr/                          ← system-wide decisions
@@ -52,7 +54,7 @@ If a `CONTEXT-MAP.md` exists at the root, the repo has multiple contexts. The ma
 │       └── docs/adr/
 ```
 
-Create files lazily — only when you have something to write. If no `CONTEXT.md` exists, create one when the first term is resolved. If no `docs/adr/` exists, create it when the first ADR is needed.
+Create files lazily — only when you have something to write. If no `CONTEXT.md` exists, create one when the first term is resolved. If no `docs/adr/` exists, create it when the first ADR is needed. Once two or more of these documents exist, keep a documentation map in `README.md` (see [Keep the documentation map](#keep-the-documentation-map)).
 
 ## When to escalate to `/qfd`
 
@@ -87,6 +89,18 @@ When the user states how something works, check whether the code agrees. If you 
 When a term is resolved, update `CONTEXT.md` right there. Don't batch these up — capture them as they happen. Use the format in [CONTEXT-FORMAT.md](./CONTEXT-FORMAT.md).
 
 `CONTEXT.md` should be totally devoid of implementation details. Do not treat `CONTEXT.md` as a spec, a scratch pad, or a repository for implementation decisions. It is a glossary and nothing else.
+
+### Keep the documentation map
+
+The `README.md` at the root is the **documentation map**: a short index that links to every document the session produces so a newcomer can find their way in. It is a table of contents, not a place to duplicate content — one line per document saying what it is, and a link.
+
+Maintain it inline, the same way you maintain `CONTEXT.md`: whenever you create or first touch a `CONTEXT.md`, `DESIGN.md`, `SPEC.md`, `PLAN.md`, or a new ADR, make sure it is linked from the map. Don't batch this to the end.
+
+- **No `README.md` yet** — create one once two or more docs exist. Start with the project name and a one-sentence description (lift it from `CONTEXT.md`), then the links.
+- **A `README.md` already exists** — do not overwrite it; it may hold build/run instructions or other prose. Maintain only a documentation section, delimited by `<!-- docs:start -->` and `<!-- docs:end -->` markers so you can update it without touching the rest. Add the markers around a new `## Documentation` section if they aren't there yet.
+- **Multi-context repo** (`CONTEXT-MAP.md` exists) — the root map links to each context and to system-wide docs; it does not try to inline every context's own documents.
+
+Keep the links relative and grouped in reading order — language (`CONTEXT.md`) first, then design/spec/plan, then decisions (`docs/adr/`). Never let the map drift: a link to a moved or deleted file is worse than no map.
 
 ### Offer ADRs sparingly
 
