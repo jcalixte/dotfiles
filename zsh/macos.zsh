@@ -19,6 +19,31 @@ fi
 alias chgho="nvim ~/.config/ghostty/config"
 alias f=yazi
 
+# teeclip — echo a command's output live AND copy it to the clipboard.
+# Writes to a temp file first so the copy is deterministic (no async race
+# like `tee >(pbcopy)`). Captures stdout+stderr; clipboard gets plain text.
+# The `always` block runs even on Ctrl+C, so an interrupted command still
+# copies whatever output it produced (and always cleans up the temp file).
+#   teeclip git log --oneline -20   # runs the command
+#   some_command | teeclip          # tees piped input through
+function teeclip {
+    local tmp rc
+    tmp=$(mktemp -t teeclip) || return
+    {
+        if (( $# )); then
+            "$@" 2>&1 | tee "$tmp"; rc=$pipestatus[1]
+        else
+            tee "$tmp"; rc=$pipestatus[1]
+        fi
+    } always {
+        pbcopy < "$tmp"
+        print -u2 "📋 teeclip: copied $(wc -l < "$tmp" | tr -d ' ') lines to clipboard"
+        rm -f "$tmp"
+    }
+    return $rc
+}
+alias tclip=teeclip
+
 . "/Users/julien/.deno/env"
 
 # Images
