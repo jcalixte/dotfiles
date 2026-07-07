@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://macroplan.apoena.dev/macroplan.schema.json",
+  "title": "Macroplan",
+  "description": "A week-by-week delivery plan. Portable TOML format v1 — see docs/format.md. Validates the TOML-decoded structure; dates are TOML date literals, surfaced to JSON Schema as date-formatted strings.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "macroplan_version": {
+      "description": "Format version. Omit for the current version (1). A newer version must be rejected by a consumer that only understands 1.",
+      "type": "integer",
+      "const": 1
+    },
+    "title": {
+      "description": "Display name of the plan. Defaults to \"Untitled Macroplan\" when absent.",
+      "type": "string"
+    },
+    "start": {
+      "description": "Optional left edge of the plan's week span. Only extends the span; never clips a feature. Snapped to its ISO-week Monday.",
+      "type": "string",
+      "format": "date"
+    },
+    "end": {
+      "description": "Optional right edge of the plan's week span. Only extends the span; never clips a feature. Snapped to its ISO-week Monday.",
+      "type": "string",
+      "format": "date"
+    },
+    "feature": {
+      "description": "The features of the plan. Written as [[feature]] blocks. Names must be unique.",
+      "type": "array",
+      "items": { "$ref": "#/$defs/feature" }
+    },
+    "milestone": {
+      "description": "Dated checkpoints. Written as [[milestone]] blocks.",
+      "type": "array",
+      "items": { "$ref": "#/$defs/milestone" }
+    }
+  },
+  "$defs": {
+    "date": {
+      "description": "A calendar date (TOML date literal, e.g. 2026-06-15). Snapped to its ISO-week Monday.",
+      "type": "string",
+      "format": "date"
+    },
+    "feature": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "start", "original"],
+      "properties": {
+        "name": {
+          "description": "Identifies the feature; the join key for a milestone's `requires`. Must be unique within the plan.",
+          "type": "string",
+          "minLength": 1
+        },
+        "start": {
+          "description": "The week work began.",
+          "$ref": "#/$defs/date"
+        },
+        "original": {
+          "description": "The Original Estimate — the immovable baseline all lateness is judged against (ADR-0001).",
+          "$ref": "#/$defs/date"
+        },
+        "reestimates": {
+          "description": "Each later week the estimate slipped to. Order-independent.",
+          "type": "array",
+          "items": { "$ref": "#/$defs/date" }
+        },
+        "delivered": {
+          "description": "The week the feature actually shipped. Absent means still in flight.",
+          "$ref": "#/$defs/date"
+        },
+        "learning": {
+          "description": "A post-delivery takeaway.",
+          "type": "string"
+        },
+        "status": {
+          "description": "In-flight confidence. Meaningful only while undelivered. Lateness is derived, never authored.",
+          "enum": ["on-track", "at-risk", "off-track"]
+        },
+        "note": {
+          "description": "A short note accompanying `status`.",
+          "type": "string"
+        }
+      }
+    },
+    "milestone": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "week"],
+      "properties": {
+        "name": {
+          "description": "Display name of the milestone.",
+          "type": "string",
+          "minLength": 1
+        },
+        "week": {
+          "description": "When the milestone falls due.",
+          "$ref": "#/$defs/date"
+        },
+        "requires": {
+          "description": "Feature names that must be delivered on/before `week` to meet the milestone.",
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    }
+  }
+}
