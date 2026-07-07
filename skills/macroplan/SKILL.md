@@ -5,11 +5,13 @@ description: Generate valid Macroplan TOML — the source file the macroplan app
 
 # Generate Macroplan TOML
 
-Turn a plan description into valid Macroplan TOML the app can parse. **Output only a single ```toml code block** ready to paste into the app's editor or save as a `.toml` file — no surrounding prose unless the user asks for an explanation.
+Turn a plan description into valid Macroplan TOML the app can parse. **Output only a single ```macroplan code block** (macroplan-fenced, TOML syntax inside) ready to paste into the app's editor or save as a `.toml` file — no surrounding prose unless the user asks for an explanation.
 
 If the user hasn't given you a feature's `start` or `original` date, ask for it (or restate a sensible assumption and proceed). Never invent a `delivered` date — a feature is delivered only if the user says so.
 
 ## Schema (authoritative)
+
+A machine-readable JSON Schema ships next to this skill as `macroplan.schema.json` (kept in sync with `public/macroplan.schema.json` in the macroplan repo) — read it when you need the exact validation rules beyond the summary below.
 
 Top-level keys:
 
@@ -55,7 +57,7 @@ Top-level keys:
 
 ## Minimal template
 
-```toml
+```macroplan
 title = "My plan"
 
 [[feature]]
@@ -66,7 +68,7 @@ original = 2026-06-15
 
 ## Worked example (covers every state)
 
-```toml
+```macroplan
 title = "Q3 — Checkout revamp"
 
 # Optional span: start ≤ every feature start, end ≥ every feature's last week.
@@ -122,4 +124,4 @@ requires = ["Auth", "Payments", "Dashboard"]
 3. No feature has both `delivered` and `status`.
 4. If `start`/`end` are set, they enclose every feature's span; otherwise omit them.
 5. Every `requires` entry matches a feature `name` exactly.
-6. Output is a single valid `toml` block and nothing the parser would reject.
+6. Output is a single ```` ```macroplan ````-fenced block of valid TOML and nothing the parser would reject.
