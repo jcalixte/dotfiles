@@ -22,6 +22,10 @@ One kaizen = one file, `docs/kaizen/<slug>.md`. Fill sections as the steps resol
 |---|---|
 | <value> | <value> |
 
+<Optional chart (mermaid xychart): bar the CURRENT value only + a target line.
+The after-kaizen slot stays empty forever — the measured after-bar goes in
+step 6, never here.>
+
 ## 2) Current method analysis
 
 <Diagram of the situation (mermaid or ASCII art), weak points called out.>
@@ -77,6 +81,9 @@ One kaizen = one file, `docs/kaizen/<slug>.md`. Fill sections as the steps resol
 ## 6) Evaluation
 
 **Measurement redone** (<unit>): <old value> → <new value> (target was <target>)
+
+<If step 1 had a chart, redraw it here with the measured after-bar filled in
+(before + after bars, target line). The step-1 chart itself is never back-filled.>
 
 **Learnings**: …
 

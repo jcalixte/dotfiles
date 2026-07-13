@@ -26,6 +26,7 @@ Kaizen brings value to the customer by making the job of the people doing the wo
 - Start from the client/user **value model**: "What does <client> want more of?" and "What should we do less of?"
 - Within everything that could be improved, what does *this* kaizen relate to?
 - Pin down the **measurement**: a unit, the current value, and the target. This becomes the improvement-potential baseline that step 6 re-measures. No measurement, no kaizen — push until one exists, even a rough proxy.
+- If you chart the potential (mermaid xychart works well): bar the **current value only**, with the target as a line. The after-kaizen slot stays **empty forever** — it is potential, not result; the measured after-bar belongs in step 6 and nowhere else.
 
 ## Step 2 — Analyse the current method
 
@@ -85,6 +86,7 @@ Do **not** show a measurement here. Evaluation is step 6, and mixing the two hid
 ## Step 6 — Evaluate the new method
 
 - Redo the **step 1 measurement** after the change has expressed itself — sometimes you must wait for the improvement to reach its potential. Record old vs new value against the target.
+- If step 1 had a chart, **redraw it here** with the measured after-bar filled in (before + after bars, target line). Never back-fill the step-1 chart — it stays potential-only.
 - Then reflect:
   - What did you learn?
   - What do you want to do next? (next steps list)
