@@ -1,6 +1,6 @@
 ---
 name: apoena-new
-description: Use when the user wants to bootstrap a new *.apoena.dev app on Coolify — scaffolds a Vite + Vue + DaisyUI SPA (optionally with a Gleam backend and SQLite), creates a public Gitea repo on git.apoena.dev, provisions the Coolify app via API (falling back to a printable deploy checklist), builds a real first screen of the app the user asked for, and then hands off to the feature-build skills to flesh out the rest.
+description: Use when the user wants to bootstrap a new *.apoena.dev app (or an app on a custom marque domain) on Coolify — scaffolds a Vite + Vue + DaisyUI SPA (optionally with a Gleam backend and SQLite), creates a public Gitea repo on git.apoena.dev, provisions the Coolify app via API (falling back to a printable deploy checklist), builds a real first screen of the app the user asked for, and then hands off to the feature-build skills to flesh out the rest.
 ---
 
 <what-to-do>
@@ -21,7 +21,7 @@ Ask in this order:
 2. **Backend?** (default: no). If yes, the stack is Gleam (`wisp` + `mist`). Skill does not support other backends — if the user wants something else, stop and ask them to scaffold the backend manually.
 3. **SQLite?** Default: yes if backend was chosen, no if SPA-only. (A SPA can still use SQLite via the backend; offering it for SPA-only means "set up the volume now even though there's nothing using it yet" — discourage that.)
 4. **Local scaffold path.** Default: `$PWD/<app-name>`. **If the current directory is already named `<app-name>` (or already holds the project's design docs), scaffold into the current directory instead of a nested `<app-name>/<app-name>` — confirm this with the user.**
-5. **Subdomain.** Default: `<app-name>.apoena.dev`. Confirm.
+5. **Subdomain / domain.** Default: `<app-name>.apoena.dev`. Confirm. If the user gives a **custom apex bought via marque** (not under `apoena.dev`, e.g. `typoena.app`), flag it — Step 2b provisions its DNS in the PDS, and it must already be registered in marque.
 6. **Primary color** (hex, e.g. `#570DF8`). Default: `#570DF8` (DaisyUI default). Used both as the Tailwind v4 `--color-primary` and as the favicon stroke color.
 7. **Favicon icon name** from Tabler (`https://tabler.io/icons`). Default: `circle`. Use the exact slug shown on the Tabler page (e.g. `bolt`, `paw`, `qrcode`). Outline variant only. Pre-verify it resolves (HTTP 200) before scaffolding so you don't discover a 404 late.
 
@@ -38,6 +38,35 @@ Run these checks. If any fail, print the missing tool + remediation and STOP.
 | `gleam` (backend only) | `gleam --version` (≥ 1.0) | `brew install gleam erlang rebar3` |
 
 > **The Gitea login may be named anything** (not necessarily `apoena`) and need not be tea's default. Identify it by URL in `tea login list`; capture its **NAME** (for `--login` in Step 7) and confirm the SSH host/port is `git.apoena.dev:22222`. Do not assume the login name is `apoena` anywhere downstream.
+
+## Step 2b — DNS for a custom domain (marque; skip for `*.apoena.dev`)
+
+Run this **only** when the domain is not under `apoena.dev` (a separate apex bought via marque). `*.apoena.dev` is covered by a wildcard — skip. Do it here, not at deploy, so DNS propagates while you scaffold.
+
+marque is atproto-native: a domain's DNS lives as an `at.marque.dns` record in the apoena PDS (`https://eurosky.social`, repo `did:plc:4m3kouplb7s7xozjd3whinvl` = `apoena.dev`), and marque's nameservers (`stratus`/`cirrus.ns.marque.network`) serve it directly — a `putRecord` **is** live DNS. `$MARQUE_APP_PASSWORD` is exported from `~/.dotfiles/zsh/private.zsh` (source it if not loaded; never prompt inline).
+
+```bash
+DID=did:plc:4m3kouplb7s7xozjd3whinvl; PDS=https://eurosky.social; DOMAIN=<domain>
+# 1) Domain must already be registered in marque (paid flow — the skill can't buy it). Grab its cid for the subject link.
+DOMAIN_CID=$(curl -fsSL "$PDS/xrpc/com.atproto.repo.getRecord?repo=$DID&collection=at.marque.domain&rkey=$DOMAIN" | jq -r '.cid // empty')
+[ -z "$DOMAIN_CID" ] && { echo "STOP: $DOMAIN not registered in marque — ask the user to buy it first"; exit 1; }
+# 2) Point @/* (A) and www (CNAME→apex) at the Coolify host. Derive the IP — never hardcode it.
+IP=$(dig +short platform.apoena.dev | head -1)
+JWT=$(curl -sS -X POST "$PDS/xrpc/com.atproto.server.createSession" -H "Content-Type: application/json" \
+  -d "$(jq -n --arg id "$DID" --arg pw "$MARQUE_APP_PASSWORD" '{identifier:$id,password:$pw}')" | jq -r '.accessJwt // empty')
+REC=$(jq -n --arg d "$DOMAIN" --arg cid "$DOMAIN_CID" --arg did "$DID" --arg ip "$IP" --arg now "$(date -u +%Y-%m-%dT%H:%M:%SZ)" '{
+  "$type":"at.marque.dns", domain:$d,
+  records:[{ttl:3600,name:"@",value:$ip,recordType:"A"},
+           {ttl:3600,name:"*",value:$ip,recordType:"A"},
+           {ttl:3600,name:"www",value:$d,recordType:"CNAME"}],
+  subject:{uri:("at://"+$did+"/at.marque.domain/"+$d), cid:$cid}, createdAt:$now}')
+curl -fsSL -X POST "$PDS/xrpc/com.atproto.repo.putRecord" -H "Authorization: Bearer $JWT" -H "Content-Type: application/json" \
+  -d "$(jq -n --arg did "$DID" --arg d "$DOMAIN" --argjson rec "$REC" '{repo:$did,collection:"at.marque.dns",rkey:$d,record:$rec,validate:false}')" | jq '{uri,error}'
+# 3) Verify it's live on marque's NS (both should return the IP):
+dig +short @stratus.ns.marque.network "$DOMAIN"; dig +short @stratus.ns.marque.network "www.$DOMAIN"
+```
+
+**`www` CNAME must target the apex hostname, never an IP** (a CNAME→IP is malformed). `putRecord` replaces on re-run, so it's idempotent. Then continue — in Step 8 the Coolify domain is `https://<domain>` and Let's Encrypt issues once DNS resolves.
 
 ## Step 3 — Scaffold the frontend
 
@@ -276,9 +305,12 @@ The bootstrap is done and the first screen is deployed; now build the rest of th
 - Domains are configured per-resource as `https://<subdomain>` — Coolify provisions Let's Encrypt automatically as long as the DNS A/AAAA record for `<subdomain>.apoena.dev` already points at the Coolify host.
 - Persistent storage paths must match what the container writes to (e.g. `/app/data` for SQLite).
 
-## DNS reminder
+## DNS
 
-The skill does NOT configure DNS. If `<subdomain>.apoena.dev` does not already resolve to the Coolify host, the Let's Encrypt step inside Coolify will fail. Tell the user to add the record (wildcard `*.apoena.dev` may already cover it — check `dig +short <subdomain>.apoena.dev` against `dig +short platform.apoena.dev` before deploying).
+Whatever the domain, it must resolve to the Coolify host before Step 8 or Coolify's Let's Encrypt step fails.
+
+- **`*.apoena.dev` subdomains** are covered by a wildcard — nothing to do. Sanity-check with `dig +short <subdomain>.apoena.dev` against `dig +short platform.apoena.dev` before deploying.
+- **Custom marque domains** (separate apex, e.g. `typoena.app`) are provisioned by **Step 2b** — a `putRecord` of an `at.marque.dns` record into the apoena PDS, which marque's nameservers serve directly. Point `@`/`*` (A) and `www` (CNAME→apex) at `dig +short platform.apoena.dev`. The domain must already be registered in marque (`at.marque.domain/<domain>` record exists); the skill can't buy it. Auth uses `$MARQUE_APP_PASSWORD` from `~/.dotfiles/zsh/private.zsh`.
 
 ## When the user wants a different stack
 
