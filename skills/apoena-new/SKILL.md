@@ -205,6 +205,8 @@ BUILD_PACK=$([ -f docker-compose.yml ] && echo dockercompose || echo dockerfile)
 APP_UUID=$(curl -sS -X POST https://platform.apoena.dev/api/v1/applications/public   -H "Authorization: Bearer $COOLIFY_API_TOKEN"   -H "Content-Type: application/json"   -d "$(jq -n --arg p "$PROJECT_UUID" --arg s "$SERVER_UUID"           --arg name "<app-name>" --arg repo "https://git.apoena.dev/julien/<app-name>"           --arg domain "https://<subdomain>" --arg bp "$BUILD_PACK"           '{project_uuid:$p, server_uuid:$s, environment_name:"production",            git_repository:$repo, git_branch:"main",            build_pack:$bp, ports_exposes:"80",            name:$name, domains:$domain, instant_deploy:false}')"   | jq -r '.uuid')
 ```
 
+**Custom domain → include `www`.** For a `*.apoena.dev` subdomain, `domains` is just `https://<subdomain>`. For a **custom apex from Step 2b**, set it to `https://<domain>,https://www.<domain>` (comma-separated) — Step 2b creates a `www` CNAME, so registering only the apex leaves `www.<domain>` resolving to a **certless endpoint** (Let's Encrypt never issues for `www`, TLS fails). Both domains share the one app.
+
 If the response has no `uuid` or curl fails → print the error body, then fall through to Step 9.
 
 **CRITICAL — fix `git_repository` after create.** The `applications/public` endpoint only fully parses github.com / gitlab.com / bitbucket URLs. For a self-hosted **Gitea** host it stores `git_repository` as the bare `julien/<app-name>`, and the deploy then fails instantly with `'julien/<app-name>' does not appear to be a git repository` (git treats it as a local path). PATCH it to the full clone URL and verify it persisted:
