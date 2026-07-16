@@ -33,6 +33,16 @@ Source column points at the doc the requirement comes from.
 | G1  | {user-facing outcome}      |   10   | [link to source]    |
 | G2  | …                          |    8   | …                   |
 
+_(optional)_ When several user segments would weight the goals differently,
+name the segments first and derive goal weights instead of asserting them:
+
+| ID  | Segment                | Weight (1–5) |
+|-----|------------------------|:------------:|
+| U1  | {who}                  |      5       |
+
+Goal weight = Σ(segment weight × strength 9/3/1), normalised to 1–10. Skip
+this block when one user is in mind — a single asserted weight is enough.
+
 ## 2. Functions — the HOWs
 
 Measurable engineering characteristics. Direction shows what "better" means
@@ -42,7 +52,30 @@ Measurable engineering characteristics. Direction shows what "better" means
 |-----|---------------------------|:---:|--------------|-----------------|
 | F1  | {verb-form responsibility}|  ↓  | ≤ 200 ms     | ≤ 150 ms        |
 
-## 3. Cascade — Goals → Functions → How → Components
+## 3. Competitive assessment   _(optional)_
+
+How the alternatives — a competitor, the current system, do-nothing —
+perform against what we're designing. Two views; produce only what the
+session actually benchmarked.
+
+**Goal ratings** — perception per alternative, 0–5 per goal (this is the
+house's perception zone):
+
+| Goal | Us (target) | {Current system} | {Alternative B} |
+|------|:-----------:|:----------------:|:---------------:|
+| G1   |      4      |        2         |        3        |
+
+**Function benchmarks** — measured values per function where known. A number
+beats a rating; a blank beats a guess:
+
+| Function | Us (target) | {Current system} | {Alternative B} |
+|----------|-------------|------------------|-----------------|
+| F1       | ≤ 200 ms    | 450 ms           | 180 ms          |
+
+**What this tells us:** where the alternatives already beat our targets, and
+which goal weights this evidence confirmed or changed.
+
+## 4. Cascade — Goals → Functions → How → Components
 
 The spine of the design. Hierarchical tree, readable top-down.
 
@@ -52,20 +85,21 @@ The spine of the design. Hierarchical tree, readable top-down.
       - **Component**: {concrete part}
     - **How**: {approach B — rejected, see T1}
 
-## 4. House — Goals × Functions   _(optional)_
+## 5. House — Goals × Functions   _(optional)_
 
 Cells: link strength (9/3/1/blank). Importance row = `Σ(weight × strength)`.
 
-|         | F1 | F2 | F3 |
-|---------|:--:|:--:|:--:|
-| G1 (10) |  9 |    |  3 |
-| G2 (8)  |    |  9 |    |
-| **Σ**   | 90 | 72 | 30 |
+|          | F1 | F2 | F3 |
+|----------|:--:|:--:|:--:|
+| G1 (10)  |  9 |    |  3 |
+| G2 (8)   |    |  9 |    |
+| **Σ**    | 90 | 72 | 30 |
+| **Rank** |  1 |  2 |  3 |
 
 **Top engineering priorities (from importance):** short commentary on which
 functions deserve the most attention and why.
 
-## 5. Roof — Function × Function tradeoffs   _(optional)_
+## 6. Roof — Function × Function tradeoffs   _(optional)_
 
 Where pushing one function pushes another the wrong way (or reinforces it).
 Symbols (single-character, classical QFD): `◎` strong reinforcement, `○` mild reinforcement, `×` mild conflict, `⊗` strong conflict.
@@ -79,7 +113,7 @@ Symbols (single-character, classical QFD): `◎` strong reinforcement, `○` mil
 **Conflicts that actually shape the design:** bullets on the conflicts that matter,
 how they're being mitigated, and which ADR (if any) owns the resolution.
 
-## 6. Components & Function → Component map   _(optional)_
+## 7. Components & Function → Component map   _(optional)_
 
 Component list with anchoring ADR per row:
 
@@ -87,16 +121,24 @@ Component list with anchoring ADR per row:
 |-----|-------------------------|---------|
 | C1  | {module / service / lib}| ADR-NNN |
 
-Function-to-component strength matrix (9/3/1/blank):
+Function-to-component strength matrix (9/3/1/blank). When §5 exists, carry
+the cascade down: component Σ = `Σ(function Σ from §5 × strength)` — so
+component priorities are derived, not asserted.
 
-|        | C1 | C2 | C3 |
-|--------|:--:|:--:|:--:|
-| F1     |  9 |  3 |    |
-| F2     |    |  9 |  3 |
+|          | C1  | C2  | C3  |
+|----------|:---:|:---:|:---:|
+| F1       |  9  |  3  |     |
+| F2       |     |  9  |  3  |
+| **Σ**    | 810 | 918 | 216 |
+| **Rank** |  2  |  1  |  3  |
 
-## 7. Critical performance budget
+**Where the engineering effort goes:** short commentary on the top-ranked
+components — and a flag if the ranking disagrees with where effort is
+currently being spent.
 
-Pulled from §4 importance and §5 conflicts, ranked. Each row names the
+## 8. Critical performance budget
+
+Pulled from §5 importance and §6 conflicts, ranked. Each row names the
 fallback / kill-switch if the target is missed — a target without a
 fallback is a wish, not a budget.
 
@@ -104,7 +146,7 @@ fallback is a wish, not a budget.
 |------|----------|--------|------------|-------------------------|
 | 1    | F2       | …      | bench / metric / spike | fallback or kill-switch |
 
-## 8. Tradeoffs — Got / Paid / ADR
+## 9. Tradeoffs — Got / Paid / ADR
 
 Plain-language ledger of what was accepted in exchange for what. Every row
 names what was bought *and* what was paid. Link to an ADR when the trade is
@@ -121,7 +163,7 @@ deferrals, each with the trigger that would force a decision.
 
 - **{conflict}.** {what we're doing instead}. **Trigger to revisit:** {condition}.
 
-## 9. Inconsistencies spotted and fixed
+## 10. Inconsistencies spotted and fixed
 
 Discrepancies surfaced during the session — between docs, between code and
 docs, between code and stated intent — and how they were resolved. This is
@@ -133,8 +175,8 @@ the audit trail of what the walk-with-me session actually caught.
 
 ## How to keep this honest
 
-- When a new ADR lands → add its components to §6 and re-score affected rows.
-- When a spike / measurement returns numbers → update §7 `Target` / `Watched on`.
+- When a new ADR lands → add its components to §7 and re-score affected rows.
+- When a spike / measurement returns numbers → update §3 benchmarks and §8 `Target` / `Watched on`.
 - WHATs change rarely; HOWs change with each release; matrices are recomputed
   when either side changes.
 - If a section becomes empty after edits, delete it — empty sections lie.
@@ -144,26 +186,28 @@ the audit trail of what the walk-with-me session actually caught.
 
 - **Goals are user-facing outcomes**, never implementation. Weight (1–10) and `Source` link are required.
 - **Functions are verbs with measurable targets and a direction.** Multi-stage targets are encouraged so the doc shows trajectory.
-- **The cascade tree (§3) is the spine.** It's the only required structural section beyond §1 and §2. Matrices (§§4–6) are produced only when the session resolved them.
+- **The cascade tree (§4) is the spine.** It's the only required structural section beyond §1 and §2. Matrices (§§5–7) and the competitive assessment (§3) are produced only when the session resolved them.
+- **§3 records evidence, not guesses.** Measured benchmark values beat 0–5 ratings; a blank cell beats a made-up number.
 - **Don't pre-populate empty sections.** Sections appear when content exists. If a section becomes empty after edits, delete it.
-- **§7 must include `If we miss it`** — the fallback / kill-switch column is mandatory for every row.
-- **§8 uses `Got / Paid / ADR`** — lean framing. Both sides of every trade are named.
-- **§9 (inconsistencies) is the audit trail.** Every discrepancy surfaced during the session lands here with its resolution, even if small.
+- **Group long levels.** When Goals or Functions grow past ~7 rows, group them under short theme headings (a bold full-width row in the table, a sub-bullet level in the tree). Matrices stay flat.
+- **§8 must include `If we miss it`** — the fallback / kill-switch column is mandatory for every row.
+- **§9 uses `Got / Paid / ADR`** — lean framing. Both sides of every trade are named.
+- **§10 (inconsistencies) is the audit trail.** Every discrepancy surfaced during the session lands here with its resolution, even if small.
 - **Maintenance footer is required** (not optional). The doc decays silently without it.
 - **Lazy creation.** Create `DESIGN.md` only when the first Goal resolves. Same rule applies recursively to its sections.
 
 ## When to produce matrices vs tree only
 
-Matrices (§§4–6) have real upkeep cost in markdown. Produce them when:
+Matrices (§§5–7) have real upkeep cost in markdown. Produce them when:
 
 - There are ≥2 goals and ≥3 functions (the matrix actually reveals priorities the tree hides).
 - Inter-function conflicts are likely to shape the design (the roof is the point).
 - Multiple components share responsibility for the same function (the function→component map prevents drift).
 
-Otherwise the cascade tree (§3) + critical performance budget (§7) + tradeoffs (§8) is enough. The skill should call out the upkeep cost before producing matrices and offer a tree-only variant when scope is small.
+Otherwise the cascade tree (§4) + critical performance budget (§8) + tradeoffs (§9) is enough. The skill should call out the upkeep cost before producing matrices and offer a tree-only variant when scope is small.
 
 ## Relationship to other artifacts
 
 - **`CONTEXT.md`** owns the glossary. Goals, Functions, Components are *named* in `DESIGN.md`; their _terms_ (when they introduce new vocabulary) are defined in `CONTEXT.md`. Never duplicate definitions across the two.
-- **ADRs** own hard-to-reverse decisions. `DESIGN.md` references ADRs from §6 (component anchors) and §8 (tradeoff rows). The ADR is the authoritative record; `DESIGN.md` is the index that shows how the decision fits into the cascade.
+- **ADRs** own hard-to-reverse decisions. `DESIGN.md` references ADRs from §7 (component anchors) and §9 (tradeoff rows). The ADR is the authoritative record; `DESIGN.md` is the index that shows how the decision fits into the cascade.
 - **`CONTEXT-MAP.md`** (multi-context repos) lists where each `CONTEXT.md` / `DESIGN.md` pair lives.

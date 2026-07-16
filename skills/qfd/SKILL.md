@@ -90,16 +90,19 @@ This translates what the system must _be_ (user-facing goals) into what it must 
 
 **Interview flow** — one question at a time, codebase-first when the answer is derivable from code. Each Goal/Function/Component name must clear the language bar above before it lands in `DESIGN.md`.
 
-1. **Goals (WHATs).** "From the user's POV, what outcome are we delivering? How important is it (1–10)? Where is it specified?"
+1. **Goals (WHATs).** "From the user's POV, what outcome are we delivering? How important is it (1–10)? Where is it specified?" When several user segments would weight the goals differently, name the segments first (weights 1–5) and derive the goal weights from them instead of asserting them; skip this when one user is in mind.
 2. **Functions (HOWs).** "What must the system *do* to deliver G1? Each as a verb with a measurable target and a direction (↑↓→)." Probe for completeness — missing functions are the common failure mode.
-3. **How.** "For F1, what are the candidate approaches? List them before picking."
-4. **Components.** "Which How are we choosing? What concrete components realise it?"
-5. **Importance** (when ≥2 goals and ≥3 functions). "Which functions strongly/weakly advance which goals? Score 9 / 3 / 1." Call out the upkeep cost of the matrix before producing it; offer a tree-only variant when scope is small.
-6. **Conflicts.** "Does pushing F1 push another function the wrong way? Where?" Captures the roof — function-vs-function tensions.
-7. **Critical performance budget.** "Rank what we just produced. For each top item, where do we watch it, and what's the fallback if we miss it?" A target without a fallback is a wish.
-8. **Tradeoffs.** Every time a How is chosen over another, record `Got / Paid`. If the trade is hard-to-reverse, also offer an ADR.
-9. **Tensions.** "Which conflicts are we *not* resolving now? Under what condition would we?"
-10. **Inconsistencies.** Surface and record any discrepancies noticed between current claims and the code / existing docs. This is where the cascade earns its keep.
+3. **Competitive assessment** (offer when alternatives exist — a competitor, the current system, do-nothing). "How does each alternative score on each goal, 0–5? For the functions, what measured values do we already know?" A number beats a rating; a blank beats a guess. This evidence often revises the goal weights — revisit them if it does.
+4. **How.** "For F1, what are the candidate approaches? List them before picking."
+5. **Components.** "Which How are we choosing? What concrete components realise it?"
+6. **Importance** (when ≥2 goals and ≥3 functions). "Which functions strongly/weakly advance which goals? Score 9 / 3 / 1." Compute Σ and rank per function; when the function → component map exists, carry the Σ down so component priorities are derived, not asserted. Call out the upkeep cost of the matrix before producing it; offer a tree-only variant when scope is small.
+7. **Conflicts.** "Does pushing F1 push another function the wrong way? Where?" Captures the roof — function-vs-function tensions.
+8. **Critical performance budget.** "Rank what we just produced. For each top item, where do we watch it, and what's the fallback if we miss it?" A target without a fallback is a wish.
+9. **Tradeoffs.** Every time a How is chosen over another, record `Got / Paid`. If the trade is hard-to-reverse, also offer an ADR.
+10. **Tensions.** "Which conflicts are we *not* resolving now? Under what condition would we?"
+11. **Inconsistencies.** Surface and record any discrepancies noticed between current claims and the code / existing docs. This is where the cascade earns its keep.
+
+When any level grows past ~7 rows, pause and group the rows under short theme headings before continuing — the grouping question ("what themes do these fall into?") often exposes missing rows.
 
 Update `DESIGN.md` inline as each level resolves. Sections are produced lazily — do not pre-populate empty sections.
 
@@ -107,7 +110,7 @@ Update `DESIGN.md` inline as each level resolves. Sections are produced lazily �
 
 When the matrices would benefit from a visual rendering (slide, stakeholder review, doc), offer to draw a TikZ "House of Quality" inside a ` ```tikz ` fenced block in markdown. See [QUALITY-HOUSE.md](./QUALITY-HOUSE.md) for the preamble, coordinate system, and placement recipes.
 
-Offer this **only when** the cascade has produced enough material to populate it: Goals + importance (§1), Functions + targets (§2), and at least one of the importance matrix (§4) or the roof (§5). A house with empty cells is just scaffolding.
+Offer this **only when** the cascade has produced enough material to populate it: Goals + importance (§1), Functions + targets (§2), and at least one of the importance matrix (§5) or the roof (§6). A house with empty cells is just scaffolding. If a competitive assessment (§3) exists, its goal ratings populate the house's perception zone.
 
 Always title the house: set `\qfdProjectTitle` to the project / feature name and `\qfdConcept` to the concept in one sentence with the keywords bolded (see "Title & subtitle" in [QUALITY-HOUSE.md](./QUALITY-HOUSE.md)). They render above the roof apex.
 

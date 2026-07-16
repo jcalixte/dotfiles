@@ -7,7 +7,7 @@ The QFD matrices in `DESIGN.md` are tables. When a visual rendering is useful �
 Offer this **only when** the cascade has produced enough material to populate it:
 
 - Goals + importance (DESIGN.md §1) and Functions + targets (§2) are filled in, **and**
-- The importance matrix (§4) or the roof (§5) — or both — have been resolved.
+- The importance matrix (§5) or the roof (§6) — or both — have been resolved.
 
 A house with empty cells is just scaffolding. The point is the populated relation matrix, roof correlations, and basement weights.
 
@@ -495,16 +495,16 @@ sentence: it wraps within `\qfdNH + 2` cm and longer text crowds the roof peak.
 
 ## Mapping DESIGN.md → House
 
-| DESIGN.md section          | House region                                            |
-| -------------------------- | ------------------------------------------------------- |
-| §1 Goals (WHATs)           | left column (WHATs) + Importance                        |
-| §2 Functions (HOWs)        | top column titles + basement row 1 (Target)             |
-| §4 House matrix (G × F)    | relation cells (`qfdrel/S\|M\|W`)                       |
-| §5 Roof (F × F)            | roof correlations at `(C-i-j)`                          |
-| §7 Critical perf. budget   | basement rows 2–4 (Difficulty / Abs / Rel weight)       |
-| (not in DESIGN.md)         | perception zone — competitive evaluation, optional      |
+| DESIGN.md section              | House region                                            |
+| ------------------------------ | ------------------------------------------------------- |
+| §1 Goals (WHATs)               | left column (WHATs) + Importance                        |
+| §2 Functions (HOWs)            | top column titles + basement row 1 (Target)             |
+| §3 Competitive assessment      | perception zone (goal ratings, 0–5 per alternative)     |
+| §5 House matrix (G × F)        | relation cells (`qfdrel/S\|M\|W`)                       |
+| §6 Roof (F × F)                | roof correlations at `(C-i-j)`                          |
+| §8 Critical perf. budget       | basement rows 2–4 (Difficulty / Abs / Rel weight)       |
 
-Skip the perception zone (`\qfdshowcompetitivefalse`) unless a competitor benchmark exists.
+Skip the perception zone (`\qfdshowcompetitivefalse`) unless §3 goal ratings exist.
 
 ## Gotchas
 
