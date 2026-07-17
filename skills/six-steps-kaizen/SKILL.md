@@ -21,6 +21,12 @@ The document lives at `docs/kaizen/<slug>.md` by default (create the directory l
 
 Kaizen brings value to the customer by making the job of the people doing the work (gemba) easier — one small, focused, measured improvement at a time.
 
+## It's a storytelling frame
+
+The six steps are also a narrative, and they only land if read in order. Each step raises the question the next one answers: what's slow (1) → why (2) → what might fix it (3) → what could go wrong (4) → what actually changed (5) → how well it worked (6). The payoff — *how well it went* — is step 6's alone.
+
+So don't spoil the ending. No after-bar before step 6, no metric in step 5, and — the one that's easy to miss — no naming the chosen fix or quoting its numbers back in the step-2 analysis. Step 2 is what's on your mind: the suspects and how you tested them, not the resolved outcome. A reader who already knows how it turned out has no reason to keep going. This matters most when the kaizen is retold for an audience (a write-up, a talk, a story page), but the discipline starts in the doc.
+
 ## Step 1 — Discover the improvement potential
 
 - Start from the client/user **value model**: "What does <client> want more of?" and "What should we do less of?"
@@ -30,15 +36,16 @@ Kaizen brings value to the customer by making the job of the people doing the wo
 
 ## Step 2 — Analyse the current method
 
-- **Draw the situation** (a mermaid diagram or ASCII art both work — ASCII renders anywhere, mermaid needs a viewer). Mark the weak points — the parts that are slower or break more often.
+- **Draw the situation.** The ideal step 2 is a picture, not prose — a diagram, a graph, a drawing of the current method (mermaid or ASCII both work; ASCII renders anywhere, mermaid needs a viewer). On it, **flag the weak point in red** (or the strongest emphasis your medium allows): the one subsystem that's slow or breaks and is keeping you from the target. Flagging *what* is wrong is the whole job of step 2 — just don't draw the *fixed* version here. The before/after picture of the system is step 5's redraw; step 2 stays in the present tense.
 - An analysis is breaking the problem down into **factors**. For each factor, formulate a hypothesis on what sub-parameter could drive performance, and how to verify it:
 
 | Factor # | Factor | Hypothesis | Test method | Test result | True or false? |
 |---|---|---|---|---|---|
 
   A good test method states exactly which variables are altered and what result is expected under each variation (e.g. brew at 95°C vs 65°C, compare tastes).
+  The **Test result** column is a finding about the *current* method — the evidence for or against that cause. It is never the effect of the fix you'll choose later, nor a post-fix number: those belong to step 3 (the idea) and step 6 (the result). Quote one here and you've spoiled the ending.
 - Actually run or help run the tests — a hypothesis column full of "untested" is not an analysis.
-- To improve with baby steps, **select one weak point** to address in this kaizen. One.
+- To improve with baby steps, **select one weak point** to address in this kaizen. One. Name it as the diagnosed cause, not the solution ("the pre-app slice is pure overhead", not "disable the memtest") — the idea is step 3's to reveal.
 
 ## Step 3 — Generate original ideas and choose one
 
@@ -100,5 +107,6 @@ Do **not** show a measurement here. Evaluation is step 6, and mixing the two hid
 - Ideas that don't map to any verified cause.
 - Attacking several weak points at once instead of one.
 - Showing a metric in step 5, or a diff in step 6 — the separation is the point.
+- Leaking the ending — naming the chosen fix or quoting a post-fix number in the step-2 analysis. Keep each step to its own question; the outcome is step 6's reveal.
 
 </supporting-info>
