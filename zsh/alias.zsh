@@ -63,7 +63,7 @@ alias wtr='curl "wttr.in/Paris?lang=fr"'
 alias python=python3
 
 # Kanata
-alias resetkanata='sudo launchctl stop org.pqrs.service.daemon.Karabiner-Core-Service && sudo launchctl kickstart -k system/com.kanata'
+alias resetkanata='sudo launchctl kickstart -k system/com.kanata'
 alias rk=resetkanata
 
 searchgit() {
