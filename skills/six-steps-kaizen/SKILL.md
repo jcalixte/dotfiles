@@ -25,7 +25,7 @@ Kaizen brings value to the customer by making the job of the people doing the wo
 
 The six steps are also a narrative, and they only land if read in order. Each step raises the question the next one answers: what's slow (1) → why (2) → what might fix it (3) → what could go wrong (4) → what actually changed (5) → how well it worked (6). The payoff — *how well it went* — is step 6's alone.
 
-So don't spoil the ending. No after-bar before step 6, no metric in step 5, and — the one that's easy to miss — no naming the chosen fix or quoting its numbers back in the step-2 analysis. Step 2 is what's on your mind: the suspects and how you tested them, not the resolved outcome. A reader who already knows how it turned out has no reason to keep going. This matters most when the kaizen is retold for an audience (a write-up, a talk, a story page), but the discipline starts in the doc.
+So don't spoil the ending: no after-bar before step 6, no metric in step 5, and no naming the chosen fix or quoting its numbers back in the step-2 analysis (that last one is the easy slip). Step 2 is what's on your mind: the suspects and how you tested them, not the resolved outcome. A reader who already knows how it turned out has no reason to keep going. This matters most when the kaizen is retold for an audience (a write-up, a talk, a story page), but the discipline starts in the doc.
 
 ## Step 1 — Discover the improvement potential
 
