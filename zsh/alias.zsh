@@ -42,6 +42,7 @@ function tf {
 alias podinstall="cd ios && bundle exec pod install && cd .."
 alias tct="tiny-care-terminal"
 alias sshpi="ssh pi@192.168.1.36"
+alias sshapo="ssh debian@51.77.135.129"
 
 # pnpm commands
 alias p='pnpm'

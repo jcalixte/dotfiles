@@ -6,17 +6,17 @@
   },
   "Bloc de références": {
     "prefix": "reference",
-    "body": ["___", "", "## Références", ""],
+    "body": ["---", "", "## Références", ""],
     "description": "Adding a reference block"
   },
   "Bloc de références en anglais": {
     "prefix": "refangl",
-    "body": ["___", "", "## References", ""],
+    "body": ["---", "", "## References", ""],
     "description": "Adding a reference block in English"
   },
   "Idée de notes permanentes": {
     "prefix": "ideenote",
-    "body": ["___", "", "## Idées de note permanente", ""],
+    "body": ["---", "", "## Idées de note permanente", ""],
     "description": "Idées de notes permanentes"
   },
   "Table traduction for French and Korean": {
@@ -61,11 +61,11 @@
   "fiche de lecture": {
     "prefix": "fiche",
     "body": [
-      "# 📘 ${1:Titre}",
+      "# ${1:Titre}",
       "",
       "## ${2:Auteur} - ${3:année}",
       "",
-      "## De quoi traite le livre",
+      "## :book-2: De quoi traite le livre",
       ""
     ],
     "description": "Fiche de lecture"
