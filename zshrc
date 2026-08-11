@@ -107,6 +107,8 @@ plugins=(
   zsh-autopair
 )
 
+ZSH_DISABLE_COMPFIX=true
+
 source $ZSH/oh-my-zsh.sh
 autoload zmv
 
@@ -166,7 +168,12 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 export PATH="~/.flashlight/bin:$PATH"
 
 # Zoxide
-eval "$(zoxide init zsh)"
+_zoxide_cache=$HOME/.cache/zsh/zoxide.zsh
+if [[ ! -s $_zoxide_cache || $commands[zoxide] -nt $_zoxide_cache ]]; then
+  mkdir -p $_zoxide_cache:h && zoxide init zsh >| $_zoxide_cache
+fi
+source $_zoxide_cache
+unset _zoxide_cache
 
 # Maestro
 export PATH=$PATH:$HOME/.maestro/bin
