@@ -142,21 +142,12 @@ source ~/.dotfiles/zsh/git-fzf.zsh
 export PNPM_HOME=~/pnpm
 export PATH="$PNPM_HOME:$PATH"
 
-# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
-export PATH="$PATH:$HOME/.rvm/bin"
-
 # tabtab source for packages
 # uninstall by removing these lines
 [[ -f ~/.config/tabtab/zsh/__tabtab.zsh ]] && . ~/.config/tabtab/zsh/__tabtab.zsh || true
 
 if [[ -f ~/.docker/init-zsh.sh ]]; then
   source ~/.docker/init-zsh.sh || true # Added by Docker Desktop
-fi
-
-if [[ -s " /opt/homebrew/opt/chruby/share/chruby/chruby.sh" ]]; then
-  source /opt/homebrew/opt/chruby/share/chruby/chruby.sh
-  source /opt/homebrew/opt/chruby/share/chruby/auto.sh
-  chruby ruby-3.2.2
 fi
 
 # bun completions
