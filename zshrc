@@ -149,7 +149,7 @@ export PATH="$PATH:$HOME/.rvm/bin"
 # uninstall by removing these lines
 [[ -f ~/.config/tabtab/zsh/__tabtab.zsh ]] && . ~/.config/tabtab/zsh/__tabtab.zsh || true
 
-if [[ -f "~/.docker/init-zsh.sh" ]]; then
+if [[ -f ~/.docker/init-zsh.sh ]]; then
   source ~/.docker/init-zsh.sh || true # Added by Docker Desktop
 fi
 
@@ -160,12 +160,12 @@ if [[ -s " /opt/homebrew/opt/chruby/share/chruby/chruby.sh" ]]; then
 fi
 
 # bun completions
-[ -s "~/.bun/_bun" ] && source "~/.bun/_bun"
+[[ -s $HOME/.bun/_bun ]] && source $HOME/.bun/_bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
 
 # flashlight
-export PATH="~/.flashlight/bin:$PATH"
+export PATH="$HOME/.flashlight/bin:$PATH"
 
 # Zoxide
 _zoxide_cache=$HOME/.cache/zsh/zoxide.zsh
