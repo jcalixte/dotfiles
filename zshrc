@@ -19,9 +19,17 @@ else
   source ~/.dotfiles/zsh/wsl.zsh
 fi
 
-# ruby
-if [ -x "$(command -v rbenv)" ]; then
-  eval "$(rbenv init - zsh)"
+# Replicates `rbenv init - zsh` minus its eager `rbenv rehash`, so run
+# `rbenv rehash` by hand after installing a gem binary or a new ruby.
+if [[ -d $HOME/.rbenv/shims ]]; then
+  path=($HOME/.rbenv/shims $path)
+  export RBENV_SHELL=zsh
+  rbenv() {
+    case "$1" in
+      rehash|shell) eval "$(command rbenv "sh-$1" "${@:2}")" ;;
+      *) command rbenv "$@" ;;
+    esac
+  }
 fi
 
 # Path to your oh-my-zsh installation.

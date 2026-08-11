@@ -1,18 +1,24 @@
 # ZSH_THEME="amuse"
 
-# Vite+ bin (https://viteplus.dev)
-. "$HOME/.vite-plus/env"
-
-export JAVA_HOME=$(/usr/libexec/java_home -v 17)
+# java_home forks (~19ms), so pin the path and only query if it's gone.
+JAVA_HOME=/Library/Java/JavaVirtualMachines/zulu-17.jdk/Contents/Home
+[[ -x $JAVA_HOME/bin/java ]] || JAVA_HOME=$(/usr/libexec/java_home -v 17)
+export JAVA_HOME
 
 export EDITOR="zed"
 
 # Claude Code
 export ENABLE_LSP_TOOL=1
 
-# Homebrew
-if command -v /opt/homebrew/bin/brew > /dev/null 2>&1;
-  then eval "$(/opt/homebrew/bin/brew shellenv)";
+# Inlined `brew shellenv` to skip its fork. path_helper is omitted because
+# /etc/zprofile already runs it. fpath must be set before compinit.
+if [[ -d /opt/homebrew ]]; then
+  export HOMEBREW_PREFIX=/opt/homebrew
+  export HOMEBREW_CELLAR=/opt/homebrew/Cellar
+  export HOMEBREW_REPOSITORY=/opt/homebrew
+  export INFOPATH="/opt/homebrew/share/info:${INFOPATH:-}"
+  path=(/opt/homebrew/bin /opt/homebrew/sbin $path)
+  fpath=(/opt/homebrew/share/zsh/site-functions $fpath)
 fi
 
 # Aliases
