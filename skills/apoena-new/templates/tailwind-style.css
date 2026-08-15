@@ -6,12 +6,42 @@
 @import url("https://api.fonts.coollabs.io/css2?family=Inter:wght@400;500;600;700&display=swap");
 @import "tailwindcss";
 @plugin "daisyui";
+
+/* --color-primary-content is the label colour DaisyUI paints ON the primary.
+   Overriding --color-primary alone leaves the near-white label that belonged to
+   DaisyUI's own dark-purple primary — on a light brand colour that reads at
+   about 1.9:1. Measure the pair, state both, in both themes. */
 @plugin "daisyui/theme" {
   name: "light";
   default: true;
   --color-primary: {{PRIMARY_COLOR}};
+  --color-primary-content: {{PRIMARY_CONTENT_COLOR}};
+}
+
+/* DaisyUI's dark theme applies from prefers-color-scheme whether or not anyone
+   designed for it, so the brand colour has to be stated here too — otherwise
+   half the visitors get DaisyUI's default purple. */
+@plugin "daisyui/theme" {
+  name: "dark";
+  prefersdark: true;
+  --color-primary: {{PRIMARY_COLOR}};
+  --color-primary-content: {{PRIMARY_CONTENT_COLOR}};
 }
 
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
 }
+
+/* A surface whose background is the same under both themes must set its own
+   text colour. Inheriting base-content here means dark mode paints near-white
+   type on a pale background. DaisyUI resolves a button's label from
+   base-content rather than inheriting, so ghost buttons need telling too.
+
+.brand-surface {
+  background-image: linear-gradient(120deg, #… 0%, #… 100%);
+  color: #…;
+}
+.brand-surface .btn-ghost {
+  --btn-rest-fg: #…;
+}
+*/
