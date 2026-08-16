@@ -1,17 +1,18 @@
 ---
 name: concise-doc
-description: Use when documentation has gone stale or bloated — dated status stamps ("as of 2026-08-04"), "previously X, now Y" passages, History/Background sections, finished migration diaries, "we decided/we refactored" narration, flags and commands that no longer exist, dead links, or padded AI prose. Also use when the user asks to prune, de-historicise, shorten, or make a README/CLAUDE.md/wiki page state only what is true now. Covers ADRs, which keep their decision history but get compressed.
+description: Use when documentation in a folder has gone stale, historic, or bloated: dated status stamps ("as of 2026-08-04"), "previously X, now Y" passages, History/Background sections, work journals and session logs, progress and status sections, NOTES.md/WORKLOG.md files, flags and commands that no longer exist, dead links, padded AI prose. Also use when the user asks to prune, de-historicise, shorten, or make a README/CLAUDE.md/wiki page state only what is true now. Deletes diaries whole, compresses ADRs without dropping their decisions.
 ---
 
 # Concise doc
 
 Documentation describes the present. Git holds the past. Any sentence that exists to record when something changed, what it used to be, or who decided it is spending the reader's attention on a state they will never meet.
 
-Three things come out in one pass:
+Four things come out in one pass:
 
 1. Outdated. The doc claims something the code no longer does.
 2. Historic. The doc narrates change instead of describing state.
-3. Bloated. The doc says in six paragraphs what fits in a table.
+3. Diary. The doc logs somebody's working day. This one leaves zero words behind.
+4. Bloated. The doc says in six paragraphs what fits in a table.
 
 A passage survives only if a reader acting today would do the wrong thing without it.
 
@@ -91,6 +92,24 @@ Structure beats paragraphs: reference material becomes a table, sequences become
 
 Concision has a floor. Do not compress a doc into something only its author can parse, do not drop the one example that makes an API usable, and do not delete an explanation just because it is long. Length is not the target, redundancy is.
 
+## Diary: zero words survive
+
+A diary is work narrated by the person doing it, addressed to nobody: what got tried, in what order, on what day. It is the one category with no compressed form. Do not summarize it, do not leave a stub, do not leave a pointer saying what used to be here. Zero words stay.
+
+Recognise it by shape, not by filename:
+
+- Dated entries outside a CHANGELOG: `## 2026-08-04`, `### Session 3`, `Day 12:`.
+- First-person work narration: "I tried X, that failed, so I switched to Y", "next I'll look at Z".
+- Progress and status: `## Progress`, `## Status`, `## Current state`, `## Where I left off`, `## Implementation log`, `## What we did`, done-checklists kept after the work shipped.
+- Scratch thinking preserved in place: hypotheses, dead ends, "note to self", debugging transcripts, pasted terminal output kept as evidence of a past run.
+- Files that are nothing else: `NOTES.md`, `JOURNAL.md`, `WORKLOG.md`, `PROGRESS.md`, `SESSION.md`, `SCRATCH.md`, `TODO.md` holding finished items, anything under `scratch/` or `wip/`.
+
+Extract before deleting. A diary sometimes holds a fact nobody wrote down anywhere else: an undocumented rate limit, a required env var, a build step that only works in one order. Put that fact in the reference doc where it belongs, verify it against the code first, then delete the diary. The fact lives in the right file, and zero words remain where it was.
+
+Deleting a section is the pass. Deleting a whole file is destructive, so name the files you propose to remove and get a yes before `git rm`. Once removed, they are in git and that is the point.
+
+Diary is exempt from move-don't-destroy. Do not append it to the CHANGELOG, do not open an ADR for it, do not relocate it to `docs/archive/`. Git already has it.
+
 ## ADRs
 
 An ADR is a decision record, so its history is its content. It stays in scope for this pass, but the pass is compression, not deletion.
@@ -114,9 +133,13 @@ Target shape: status, context, decision, consequences, links. A reader should re
 
 ## Never touch
 
-These files are the historic record, and pruning them destroys their reason to exist: `CHANGELOG.md`, release notes, migration and upgrade guides, RFCs, post-mortems, meeting notes, journals, dated blog posts, `LICENSE` and `NOTICE`, and anything under `history/`, `archive/`, or `_posts/`.
+These files are written for a reader who needs them, and pruning them destroys their reason to exist: `CHANGELOG.md`, release notes, migration and upgrade guides, RFCs, post-mortems, published and dated blog posts, `LICENSE` and `NOTICE`, and anything under `history/`, `archive/`, or `_posts/`.
 
-Ambiguous file, like a `NOTES.md` mixing reference and diary: ask before editing. Do not guess.
+Note what is absent from that list. A journal, a work log, or meeting notes are diaries, whoever wrote them and however long they have sat there. They go, whole.
+
+A post-mortem is the near miss: it survives because its payload is a failure mode and a set of actions, not a day's narration. Compress it the way an ADR gets compressed, and if what remains is only a timeline of who did what, treat it as a diary and say so in the report.
+
+Mixed file, like a `NOTES.md` holding real reference next to a running log: keep the reference, delete the log to zero words. Ask only when you cannot tell which is which.
 
 ## What counts as the docs
 
@@ -164,9 +187,9 @@ Present the resolved set before editing. Big trees get grouped by directory rath
 5. Run ai-writing-tropes over what remains.
 6. Repair links. A deleted heading breaks every anchor and TOC entry aimed at it. Grep the folder for the slug, and the wider checkout if there is one, then fix or drop the referrers.
 7. Verify, not optional. Read `git diff -- <paths>` hunk by hunk and name where each deleted fact now lives, or restore it. Grep for removed anchors. Run the docs build or link checker if the project has one.
-8. Report: deleted, rewritten, corrected against code, kept with reason, moved and where. Include before/after line counts per file. The user can overrule any of it.
+8. Report: deleted, diary removed (sections, and files awaiting your yes), facts extracted from a diary and where they landed, rewritten, corrected against code, kept with reason, moved and where. Include before/after line counts per file. The user can overrule any of it.
 
-When a fact is genuinely historic and genuinely valuable, move it rather than destroy it: append to the CHANGELOG or write the ADR, in the same commit, and say so in the report. Never park it in a comment or a `docs/old/` folder nobody opens.
+When a fact is genuinely historic and genuinely valuable, move it rather than destroy it: append to the CHANGELOG or write the ADR, in the same commit, and say so in the report. Never park it in a comment or a `docs/old/` folder nobody opens. Diary does not qualify, ever, under any framing.
 
 ## Red flags
 
@@ -180,6 +203,11 @@ When a fact is genuinely historic and genuinely valuable, move it rather than de
 | "The flag is probably still there" | Probably is not a check. Grep it. |
 | "The install command looks wrong, I'll write the right one" | Only if the code shows it. Otherwise ask. Invented instructions are worse than stale ones. |
 | "This link points outside the folder, so it's out of scope" | The README owns it. List it as an escapee and let the user decide. |
+| "I'll condense the work log to a two-line summary" | Diary has no compressed form. Zero words, including the summary. |
+| "I'll leave a note saying the log moved to git" | That note is a word. Delete it too. |
+| "The journal has one useful fact, so it stays" | Extract the fact into the reference doc, verify it, then delete the journal whole. |
+| "These notes are somebody's personal file, not mine to delete" | It sits in the docs folder. Propose the deletion and let them answer. |
+| "The dated entries look like a changelog, so they're safe" | A CHANGELOG documents releases for users. Dated work entries are a diary. |
 | "Both pages have good content, I'll merge them" | Merging grows the doc. Delete the stale one, link the survivor. |
 | "This ADR is obsolete, prune it" | Superseded ADRs stay, marked superseded. New reality means a new ADR. |
 | "The ADR's context is long but interesting" | Compress to what makes the decision legible, link the issue for the rest. |
