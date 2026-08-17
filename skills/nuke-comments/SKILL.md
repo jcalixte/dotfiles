@@ -33,13 +33,24 @@ python3 ~/.claude/skills/nuke-comments/nuke_comments.py --only everything --appl
 | `--apply` | write; originals copied to `.nuke-comments-backup/` first |
 | `--self-test` | run the scanner fixtures |
 
-It is string- and regex-aware per language (JS/TS regex literals, template `${}`, Python triple
-quotes, `$#` in shell, Vue/Svelte `<template>`/`<script>`/`<style>` regions), so `"# not a comment"`
-and `/https:\/\//` survive. Unknown file types are skipped and listed, never guessed at.
+It is string-aware per language, so `"# not a comment"` and `/https:\/\//` survive:
+
+| Language | What the scanner knows |
+|---|---|
+| JS/TS/Vue/Svelte | regex literals, template `${…}` nesting, `<template>`/`<script>`/`<style>` regions |
+| Rust | `'a` lifetime vs `'x'` char literal, raw/byte strings `r#"…"#` `b"…"`, nested `/* /* */ */` |
+| Gleam | `////` module docs and `///` doc runs merged into one comment each |
+| Go | backtick raw strings (no escape processing) |
+| Python / shell / SQL | triple quotes, `$#` and `${#var}`, `--` only after whitespace |
+| CSS/SCSS, HTML, Lua, Haskell, C-like | own scanners |
+
+Unknown file types are skipped and listed, never guessed at.
 
 Protected by default, reported separately: shebangs, toolchain directives (`eslint-disable`,
-`@ts-expect-error`, `# noqa`, `//go:build`, `# shellcheck`, `SPDX`…), JSDoc blocks carrying types in
-untyped files, and `TODO`/`FIXME`/`HACK` markers.
+`@ts-expect-error`, `# noqa`, `//go:build`, `# shellcheck`, `/// <reference>`, `SPDX`…), JSDoc blocks
+carrying types in untyped files, `TODO`/`FIXME`/`HACK` markers, **doctests** (a fenced ``` block in a
+`///` / `//!` / `/**` comment compiles and runs as a test) and **`SAFETY:` / `PANICS:` invariants** on
+unsafe blocks.
 
 ## Workflow
 
@@ -49,8 +60,12 @@ untyped files, and `TODO`/`FIXME`/`HACK` markers.
    option 1**, whatever else you offer.
 3. **Apply** exactly what was chosen: `--only everything`, or the `--only file:` / `kind:` / `id:`
    selectors matching the answer.
-4. **Verify.** `git diff -U0` — every added line must be the same code minus its comment. Then run
-   the project's typecheck / lint / tests. Stripped directives fail here, not in review.
+4. **Verify.** In order:
+   - **Formatter first** — `cargo fmt`, `gleam format`, `oxfmt`/`prettier`. Deleting the only line
+     inside a block leaves `fn() {\n  []\n}` that the formatter collapses; that drift is expected, and
+     running the formatter is what keeps the diff honest.
+   - `git diff -U0` — every added line must be the same code minus its comment.
+   - The project's typecheck / lint / tests. Stripped directives fail here, not in review.
 5. **Report back**: comments removed per file, lines removed, what stayed protected, backup path.
 
 ## Recap shape
