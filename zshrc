@@ -182,3 +182,11 @@ gcu() {
 # Added by LM Studio CLI (lms)
 export PATH="$PATH:/Users/julien/.lmstudio/bin"
 # End of LM Studio CLI section
+
+# pnpm
+export PNPM_HOME="/Users/julien/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME/bin:"*) ;;
+  *) export PATH="$PNPM_HOME/bin:$PATH" ;;
+esac
+# pnpm end
