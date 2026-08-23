@@ -44,6 +44,8 @@ Run these checks. If any fail, print the missing tool + remediation and STOP.
 | `pnpm` | `pnpm --version` | `npm i -g pnpm` (or fall back to `npm` — note the choice and use it everywhere below) |
 | `tea` | `tea --version` && `tea login list` contains `git.apoena.dev` | `brew install tea` then `tea login add --name apoena --url https://git.apoena.dev --token <PAT>` (PAT from `https://git.apoena.dev/user/settings/applications`) |
 
+> **A login entry does not prove the token works.** tea's stored login can hold an older, weaker token than `$TEA_TOKEN`, and `tea login list` looks identical either way. Step 6 then dies on `this endpoint is not available for public-only tokens` — after the scaffold is already built. It cannot be checked cheaply, so treat it as a known late failure; **apoena-gitea-repo** owns the remedy (delete and re-add the login from `$TEA_TOKEN`).
+
 > **The Gitea login may be named anything** (not necessarily `apoena`) and need not be tea's default. Identify it by URL in `tea login list`; capture its **NAME** (for `--login` in Step 6) and confirm the SSH host/port is `git.apoena.dev:22222`. Do not assume the login name is `apoena` anywhere downstream.
 
 Backend-only tools (`docker`, `gleam`) are checked by **apoena-gleam-backend** in Step 4.
@@ -92,7 +94,11 @@ Pushes to `main` are picked up by Coolify at https://platform.apoena.dev.
 
 ## Step 6 — Git + Gitea
 
-→ Run the **apoena-gitea-repo** skill with the app name, project dir, and the login NAME from Step 2. It commits, creates the public repo, and pushes `main`.
+→ Run the **apoena-gitea-repo** skill with the app name, project dir, and the login NAME from Step 2. It commits, creates the repo, and pushes `main`.
+
+**The repo must be public here.** Step 7 has Coolify clone it over HTTPS with no credentials and no deploy key, so a private repo fails at the git-clone step of the first deploy. `tea repos create --private` does work — just not for anything this chain deploys.
+
+If Step 6 reports a token that cannot create repos, STOP the chain — Step 7 has nothing to point Coolify at. The local commits are safe and the push can be replayed once the login is fixed.
 
 ## Step 7 — Provision in Coolify
 
@@ -128,7 +134,7 @@ Each stands alone and can be run directly against an existing project; this skil
 - **apoena-spa-scaffold** — Vite + Vue 3 + TS, Tailwind v4, DaisyUI, oxc lint/format, Tabler favicon, `Dockerfile` + `nginx.conf`. Builds the real first screen. Owns the SPA templates.
 - **daisyui-contrast** — measures WCAG contrast for `--color-primary` / `--color-primary-content` and any hand-written pair. Used by the scaffold and again during the feature build.
 - **apoena-gleam-backend** — Gleam `wisp` + `mist` in `backend/`, optional `sqlight`, Gleam Dockerfile, root `docker-compose.yml`.
-- **apoena-gitea-repo** — public repo on `git.apoena.dev` via `tea`, SSH remote on port `22222`, initial commit + push.
+- **apoena-gitea-repo** — repo on `git.apoena.dev` via `tea` (public for anything deployed), SSH remote on port `22222`, initial commit + push. Owns the `tea` failure modes: stale stored tokens, the `--owner` trap, and the fact that push-to-create is disabled server-side.
 - **apoena-coolify-deploy** — Coolify application via the API on `platform.apoena.dev`, the git-URL PATCH self-hosted Gitea needs, push webhook, first deploy polled to completion. Owns the manual fallback checklist.
 
 ## When the user wants a different stack
