@@ -42,6 +42,17 @@ this feature needs it — a concept with no line is a concept to cut.
 |---|---|---|
 | 1 | | |
 
+## Practices exercised
+
+The context half of the curriculum, from the phase 1 recon: the conventions
+of this stack and this codebase the feature must follow, each paired with the
+existing file that shows it being done. Empty only if the repo is brand new —
+in which case record the conventions chosen here instead.
+
+| Practice | Reference file |
+|---|---|
+| | |
+
 ## Ladder
 
 See below.

@@ -1,6 +1,6 @@
 ---
 name: learn-by-shipping
-description: Teach a programming language while pair-building one real feature in it, ending the session with the feature working. The language is the argument (`/learn-by-shipping gleam`, `/learn-by-shipping rust`). Runs `/walk-with-me` for the needs, lands a tech spec, then climbs a step-by-step verification ladder — one new language concept per rung. The user writes all the production code; Claude teaches, reviews, and owns the acceptance tests. Use when the user wants to learn or get support in a specific language by building something in it, not by reading about it.
+description: Teach a programming language while pair-building one real feature in it, ending the session with the feature working. The language is the argument (`/learn-by-shipping gleam`, `/learn-by-shipping rust`). Reads the folder first so the teaching matches this codebase's stack and conventions, not a blank slate. Runs `/walk-with-me` for the needs, lands a tech spec, then climbs a step-by-step verification ladder — one new language concept per rung. The user writes all the production code; Claude teaches, reviews, and owns the acceptance tests. Use when the user wants to learn or get support in a specific language by building something in it, not by reading about it.
 ---
 
 <what-to-do>
@@ -11,7 +11,7 @@ The first word of the argument is the **target language**. Everything in this se
 
 Drive the six phases below in order. Ask questions one at a time and wait for the answer. Recommend an answer whenever you can derive one. If a question can be answered by reading the codebase or running the toolchain, do that instead of asking.
 
-1. **Frame** — level, transfer languages, toolchain proven to run.
+1. **Frame** — level, transfer languages, the codebase read, toolchain proven to run.
 2. **Needs** — run `/walk-with-me` to pin down what the feature is for, in the project's own vocabulary.
 3. **Spec** — `SPEC.md`: behaviour, boundaries, and the language concepts this feature will exercise.
 4. **Ladder** — a numbered verification ladder, each rung one runnable command with its expected output written down before it is run.
@@ -60,7 +60,13 @@ Ask, in this order:
 
 1. **Level in the target language.** "Never written a line", "read it, never shipped it", "shipped it, rusty", "fluent, need a second pair of eyes". This sets how much you explain per rung and how small the rungs are.
 2. **Transfer languages.** Which languages they already know well. Every explanation from here on anchors to those: "this is Vue's `computed`, but total" lands; "this is a monadic bind" does not. If a transfer language misleads more than it helps, say so.
-3. **Prove the toolchain before teaching syntax.** Find and run, in this order: the version command, the formatter, the test runner, and a hello-world that actually executes. Report the versions you found — do not teach from memory of the language, teach from the version on this machine, and say plainly when you are unsure whether an idiom still holds in it.
+3. **Read the room before teaching anything.** Explore the working directory and learn how *this* project writes code, then teach the language as this codebase speaks it. Look for: the framework or runtime in play, the directory layout and where a feature like this one belongs, the naming and file conventions actually in use, the error-handling and state patterns repeated across existing modules, the test layout and style, `CLAUDE.md` / `AGENTS.md` / `CONTRIBUTING.md` / lint config for rules already written down, and the nearest existing feature that resembles the one being built.
+
+   Report what you found in a handful of lines and name the closest existing file — it becomes the reference the user reads and copies the shape of. If the directory is empty or brand new, say so; the conventions are then ours to choose, and choosing them is part of the teaching.
+
+   Two curricula come out of this, and both are yours to teach: **the language** (its constructs and idioms) and **the context** (how this stack, this framework, and this codebase expect the language to be used). A learner who writes textbook-correct code that no other file in the repo resembles has only learnt half of it.
+
+4. **Prove the toolchain before teaching syntax.** Find and run, in this order: the version command, the formatter, the test runner, and a hello-world that actually executes. Report the versions you found — do not teach from memory of the language, teach from the version on this machine, and say plainly when you are unsure whether an idiom still holds in it.
 
    Recon the five things you will refer to all session, and write them into the spec's toolchain section: build/run command, test command, formatter, linter, and where the real docs live. If the language has a canonical style guide or an official book, name it once here.
 
@@ -76,7 +82,9 @@ One addition on top of `/walk-with-me`: ask what the feature is *for* in the use
 
 Land `SPEC.md` using the structure in [LADDER-FORMAT.md](./LADDER-FORMAT.md). Beyond the usual behaviour and boundaries, it carries one section this skill depends on: **Concepts exercised** — the language constructs this feature will force the user to meet, in the order the ladder will meet them, one line each on why this feature needs it.
 
-That list is the curriculum. If the feature exercises nothing the user does not already know, it is too easy — say so and propose a sharper one. If it exercises nine new things at once, it is too hard — propose the cut.
+It also carries a **Practices exercised** table: the context half of the curriculum, each convention paired with the existing file that shows it being done. Derive both from phase 1's recon.
+
+Together they are the curriculum. If the feature exercises nothing the user does not already know, it is too easy — say so and propose a sharper one. If it exercises nine new things at once, it is too hard — propose the cut.
 
 ## Phase 4 — The verification ladder
 
@@ -102,7 +110,9 @@ For each rung, in this order:
 4. **Run the rung** — they run the command themselves, in their own terminal, so they see the real output. Remind them once that `! <command>` in the prompt runs it here with the output landing in the conversation. You may run it too, to see what they see, but never in place of them.
 5. **Read their code and their errors.** In a typed or compiled language the compiler is the tutor and its errors are the syllabus. Translate the message, then answer *why the compiler wants this*, not only how to silence it. When you spot a bug they have not hit yet, prefer the question that leads them to it over the answer: "what happens when that list is empty?" A rung that compiles first try teaches less than one that does not.
 6. **Their unit tests** — once your acceptance test is green, they write the unit tests for what they just wrote. Review those too.
-7. **Compare against idiom** — when their working version is not how the language would say it, describe the idiomatic shape in words and point at the construct, let them write it, and let them keep theirs if they prefer. Working-but-unidiomatic is a legitimate choice; unexplained is not.
+7. **Compare against idiom, then against this codebase** — two separate reads. First, is this how the language would say it? Then, is this how *this repo* says it: same layout, same naming, same error handling, same test shape as the reference file? Describe the target shape in words, point at the construct or the file, let them write it, and let them keep theirs if they prefer. Working-but-unidiomatic is a legitimate choice; unexplained is not.
+
+   When the language's idiom and the codebase's convention disagree, say so rather than picking silently. Consistency with the surrounding code usually wins — a lone perfect file is a maintenance cost — but if the convention is plainly wrong, name it as debt and leave the decision with them.
 8. **Commit the rung** — one commit per rung, so the history is a readable record of the climb and any rung can be reverted alone. Use `/gcp` if the repo is set up for it.
 
 Then move to the next rung. Do not stack two rungs to save time.
@@ -113,7 +123,7 @@ Then move to the next rung. Do not stack two rungs to save time.
 - **One new thing at a time.** New concept, new library, and new tool in the same rung is three rungs.
 - **Answer the question asked.** "Why does this need `&`?" is a question about the language, not a request to fix the code.
 - **Review, don't rewrite.** Point at the line, name the problem, say what the language expects there. Quoting their line back to them is reading; retyping it fixed is writing.
-- **Say when you are unsure.** Guessing at a language's idiom is worse than checking. Read the installed source, the local docs, or run it.
+- **Say when you are unsure.** Guessing at a language's idiom is worse than checking. Read the installed source, the local docs, or run it. The same applies to this repo's conventions: grep for a second example before calling something a convention — one occurrence is a coincidence.
 
 ## Phase 6 — Close
 
