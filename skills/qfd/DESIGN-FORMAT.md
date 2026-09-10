@@ -1,13 +1,13 @@
 # DESIGN.md Format
 
-`DESIGN.md` is the **goal-driven design artifact** produced by the `qfd` skill via a QFD (Quality Function Deployment) cascade. It translates what the system must _be_ (user-facing goals) into what it must _do_ (engineering functions), what we must _build_ (components), and the trade-offs we explicitly took.
+`DESIGN.md` is the **need-driven design artifact** produced by the `qfd` skill via a QFD (Quality Function Deployment) cascade. It translates what the system must _be_ (user-facing needs) into what it must _do_ (engineering functions), what we must _build_ (components), and the trade-offs we explicitly took.
 
 Where it lives mirrors `CONTEXT.md`:
 
 - **Single context repo**: `DESIGN.md` at the repo root.
 - **Multi-context repo**: one `DESIGN.md` per context, alongside the context's `CONTEXT.md` (e.g. `src/ordering/DESIGN.md`). System-wide design (cross-context) belongs at the root if it exists at all.
 
-Create it **lazily** — only when the first Goal is resolved in a session. Do not pre-populate empty sections.
+Create it **lazily** — only when the first Need is resolved in a session. Do not pre-populate empty sections.
 
 ## Structure
 
@@ -23,24 +23,24 @@ Strength weights used in matrices: **9** strong, **3** medium, **1** weak, blank
 
 ---
 
-## 1. Goals — the WHATs
+## 1. Needs — the WHATs
 
 User-facing requirements with importance weights on a 1–10 scale.
 Source column points at the doc the requirement comes from.
 
-| ID  | Goal                       | Weight | Source              |
+| ID  | Need                       | Weight | Source              |
 |-----|----------------------------|:------:|---------------------|
-| G1  | {user-facing outcome}      |   10   | [link to source]    |
-| G2  | …                          |    8   | …                   |
+| N1  | {user-facing outcome}      |   10   | [link to source]    |
+| N2  | …                          |    8   | …                   |
 
-_(optional)_ When several user segments would weight the goals differently,
-name the segments first and derive goal weights instead of asserting them:
+_(optional)_ When several user segments would weight the needs differently,
+name the segments first and derive need weights instead of asserting them:
 
 | ID  | Segment                | Weight (1–5) |
 |-----|------------------------|:------------:|
 | U1  | {who}                  |      5       |
 
-Goal weight = Σ(segment weight × strength 9/3/1), normalised to 1–10. Skip
+Need weight = Σ(segment weight × strength 9/3/1), normalised to 1–10. Skip
 this block when one user is in mind — a single asserted weight is enough.
 
 ## 2. Functions — the HOWs
@@ -58,12 +58,12 @@ How the alternatives — a competitor, the current system, do-nothing —
 perform against what we're designing. Two views; produce only what the
 session actually benchmarked.
 
-**Goal ratings** — perception per alternative, 0–5 per goal (this is the
+**Need ratings** — perception per alternative, 0–5 per need (this is the
 house's perception zone):
 
-| Goal | Us (target) | {Current system} | {Alternative B} |
+| Need | Us (target) | {Current system} | {Alternative B} |
 |------|:-----------:|:----------------:|:---------------:|
-| G1   |      4      |        2         |        3        |
+| N1   |      4      |        2         |        3        |
 
 **Function benchmarks** — measured values per function where known. A number
 beats a rating; a blank beats a guess:
@@ -73,26 +73,26 @@ beats a rating; a blank beats a guess:
 | F1       | ≤ 200 ms    | 450 ms           | 180 ms          |
 
 **What this tells us:** where the alternatives already beat our targets, and
-which goal weights this evidence confirmed or changed.
+which need weights this evidence confirmed or changed.
 
-## 4. Cascade — Goals → Functions → How → Components
+## 4. Cascade — Needs → Functions → How → Components
 
 The spine of the design. Hierarchical tree, readable top-down.
 
-- **G1** {goal}  _W:10_
+- **N1** {need}  _W:10_
   - **F1** {function}  _Dir↓ Target ≤200ms_
     - **How**: {approach A}
       - **Component**: {concrete part}
     - **How**: {approach B — rejected, see T1}
 
-## 5. House — Goals × Functions   _(optional)_
+## 5. House — Needs × Functions   _(optional)_
 
 Cells: link strength (9/3/1/blank). Importance row = `Σ(weight × strength)`.
 
 |          | F1 | F2 | F3 |
 |----------|:--:|:--:|:--:|
-| G1 (10)  |  9 |    |  3 |
-| G2 (8)   |    |  9 |    |
+| N1 (10)  |  9 |    |  3 |
+| N2 (8)   |    |  9 |    |
 | **Σ**    | 90 | 72 | 30 |
 | **Rank** |  1 |  2 |  3 |
 
@@ -184,23 +184,23 @@ the audit trail of what the QFD session actually caught.
 
 ## Rules
 
-- **Goals are user-facing outcomes**, never implementation. Weight (1–10) and `Source` link are required.
+- **Needs are user-facing outcomes**, never implementation. Weight (1–10) and `Source` link are required.
 - **Functions are verbs with measurable targets and a direction.** Multi-stage targets are encouraged so the doc shows trajectory.
 - **The cascade tree (§4) is the spine.** It's the only required structural section beyond §1 and §2. Matrices (§§5–7) and the competitive assessment (§3) are produced only when the session resolved them.
 - **§3 records evidence, not guesses.** Measured benchmark values beat 0–5 ratings; a blank cell beats a made-up number.
 - **Don't pre-populate empty sections.** Sections appear when content exists. If a section becomes empty after edits, delete it.
-- **Group long levels.** When Goals or Functions grow past ~7 rows, group them under short theme headings (a bold full-width row in the table, a sub-bullet level in the tree). Matrices stay flat.
+- **Group long levels.** When Needs or Functions grow past ~7 rows, group them under short theme headings (a bold full-width row in the table, a sub-bullet level in the tree). Matrices stay flat.
 - **§8 must include `If we miss it`** — the fallback / kill-switch column is mandatory for every row.
 - **§9 uses `Got / Paid / ADR`** — lean framing. Both sides of every trade are named.
 - **§10 (inconsistencies) is the audit trail.** Every discrepancy surfaced during the session lands here with its resolution, even if small.
 - **Maintenance footer is required** (not optional). The doc decays silently without it.
-- **Lazy creation.** Create `DESIGN.md` only when the first Goal resolves. Same rule applies recursively to its sections.
+- **Lazy creation.** Create `DESIGN.md` only when the first Need resolves. Same rule applies recursively to its sections.
 
 ## When to produce matrices vs tree only
 
 Matrices (§§5–7) have real upkeep cost in markdown. Produce them when:
 
-- There are ≥2 goals and ≥3 functions (the matrix actually reveals priorities the tree hides).
+- There are ≥2 needs and ≥3 functions (the matrix actually reveals priorities the tree hides).
 - Inter-function conflicts are likely to shape the design (the roof is the point).
 - Multiple components share responsibility for the same function (the function→component map prevents drift).
 
@@ -208,6 +208,6 @@ Otherwise the cascade tree (§4) + critical performance budget (§8) + tradeoffs
 
 ## Relationship to other artifacts
 
-- **`CONTEXT.md`** owns the glossary. Goals, Functions, Components are *named* in `DESIGN.md`; their _terms_ (when they introduce new vocabulary) are defined in `CONTEXT.md`. Never duplicate definitions across the two.
+- **`CONTEXT.md`** owns the glossary. Needs, Functions, Components are *named* in `DESIGN.md`; their _terms_ (when they introduce new vocabulary) are defined in `CONTEXT.md`. Never duplicate definitions across the two.
 - **ADRs** own hard-to-reverse decisions. `DESIGN.md` references ADRs from §7 (component anchors) and §9 (tradeoff rows). The ADR is the authoritative record; `DESIGN.md` is the index that shows how the decision fits into the cascade.
 - **`CONTEXT-MAP.md`** (multi-context repos) lists where each `CONTEXT.md` / `DESIGN.md` pair lives.

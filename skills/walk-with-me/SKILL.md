@@ -1,6 +1,6 @@
 ---
 name: walk-with-me
-description: Deep thinking session that builds the project's ubiquitous language, challenges your plan against the existing domain model, and sharpens terminology. Updates CONTEXT.md (and ADRs when warranted) inline as decisions crystallise. Use when stress-testing terminology against the existing glossary. For goal-driven design decomposition (Goal → Function → How → Component, with critical performance budget and explicit tradeoffs), run `/qfd` instead.
+description: Deep thinking session that builds the project's ubiquitous language, challenges your plan against the existing domain model, and sharpens terminology. Updates CONTEXT.md (and ADRs when warranted) inline as decisions crystallise. Use when stress-testing terminology against the existing glossary. For need-driven design decomposition (Need → Function → How → Component, with critical performance budget and explicit tradeoffs), run `/qfd` instead.
 ---
 
 <what-to-do>
@@ -58,7 +58,7 @@ Create files lazily — only when you have something to write. If no `CONTEXT.md
 
 ## When to escalate to `/qfd`
 
-This skill stops at language and decisions. When the session moves into goal-driven design — a new feature, an architectural shift, a cross-cutting concern, or any non-trivial change whose goals haven't been explicitly decomposed — run `/qfd`. It shares this skill's language discipline, then drives a Goal → Function → How → Component decomposition into `DESIGN.md`.
+This skill stops at language and decisions. When the session moves into need-driven design — a new feature, an architectural shift, a cross-cutting concern, or any non-trivial change whose needs haven't been explicitly decomposed — run `/qfd`. It shares this skill's language discipline, then drives a Need → Function → How → Component decomposition into `DESIGN.md`.
 
 ## During the session
 

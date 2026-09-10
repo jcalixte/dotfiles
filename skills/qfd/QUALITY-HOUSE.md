@@ -6,7 +6,7 @@ The QFD matrices in `DESIGN.md` are tables. When a visual rendering is useful �
 
 Offer this **only when** the cascade has produced enough material to populate it:
 
-- Goals + importance (DESIGN.md §1) and Functions + targets (§2) are filled in, **and**
+- Needs + importance (DESIGN.md §1) and Functions + targets (§2) are filled in, **and**
 - The importance matrix (§5) or the roof (§6) — or both — have been resolved.
 
 A house with empty cells is just scaffolding. The point is the populated relation matrix, roof correlations, and basement weights.
@@ -74,7 +74,7 @@ Paste verbatim before `\begin{document}`:
 \def\qfdBasementN{4}    % number of basement rows
 
 % Titles & labels — override before \begin{qfdhouse}.
-\def\qfdWhatsTitle{Customer needs}
+\def\qfdWhatsTitle{Needs}
 \def\qfdImpTitle{Imp.\ \%}
 \def\qfdPerceptionTitle{Comparative evaluation}
 \def\qfdPoorLabel{poor}
@@ -475,8 +475,8 @@ keywords inside the concept so they pop:
 
 ```tex
 \def\qfdProjectTitle{Apoena}
-\def\qfdConcept{A goal-driven \textbf{design cascade} turning user
-  \textbf{goals} into \textbf{functions}, \textbf{components}, and
+\def\qfdConcept{A need-driven \textbf{design cascade} turning user
+  \textbf{needs} into \textbf{functions}, \textbf{components}, and
   explicit \textbf{tradeoffs}.}
 ```
 
@@ -497,14 +497,14 @@ sentence: it wraps within `\qfdNH + 2` cm and longer text crowds the roof peak.
 
 | DESIGN.md section              | House region                                            |
 | ------------------------------ | ------------------------------------------------------- |
-| §1 Goals (WHATs)               | left column (WHATs) + Importance                        |
+| §1 Needs (WHATs)               | left column (WHATs) + Importance                        |
 | §2 Functions (HOWs)            | top column titles + basement row 1 (Target)             |
-| §3 Competitive assessment      | perception zone (goal ratings, 0–5 per alternative)     |
-| §5 House matrix (G × F)        | relation cells (`qfdrel/S\|M\|W`)                       |
+| §3 Competitive assessment      | perception zone (need ratings, 0–5 per alternative)     |
+| §5 House matrix (N × F)        | relation cells (`qfdrel/S\|M\|W`)                       |
 | §6 Roof (F × F)                | roof correlations at `(C-i-j)`                          |
 | §8 Critical perf. budget       | basement rows 2–4 (Difficulty / Abs / Rel weight)       |
 
-Skip the perception zone (`\qfdshowcompetitivefalse`) unless §3 goal ratings exist.
+Skip the perception zone (`\qfdshowcompetitivefalse`) unless §3 need ratings exist.
 
 ## Gotchas
 

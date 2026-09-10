@@ -1,17 +1,17 @@
 ---
 name: qfd
-description: Goal-driven design cascade (QFD) — Goal → Function → How → Component, with critical performance budget and explicit tradeoffs. Challenges terminology against CONTEXT.md inline; lands decisions in DESIGN.md (and ADRs when warranted). Use when designing a new feature, an architectural shift, or any non-trivial change that benefits from a goal-first decomposition.
+description: Need-driven design cascade (QFD) — Need → Function → How → Component, with critical performance budget and explicit tradeoffs. Challenges terminology against CONTEXT.md inline; lands decisions in DESIGN.md (and ADRs when warranted). Use when designing a new feature, an architectural shift, or any non-trivial change that benefits from a need-first decomposition.
 ---
 
 <what-to-do>
 
-Drive the user through a goal-driven cascade — Goal → Function → How → Component — that lands in `DESIGN.md`. Walk one level at a time, resolving each branch before descending. For each question, provide your recommended answer.
+Drive the user through a need-driven cascade — Need → Function → How → Component — that lands in `DESIGN.md`. Walk one level at a time, resolving each branch before descending. For each question, provide your recommended answer.
 
 Ask the questions one at a time, waiting for feedback on each question before continuing.
 
 If a question can be answered by exploring the codebase, explore the codebase instead.
 
-Sharpen language as you go: every Goal, Function, and Component name must clear the language bar below before it lands in `DESIGN.md`. The language-sharpening behaviours are not optional — they run interleaved with the cascade steps.
+Sharpen language as you go: every Need, Function, and Component name must clear the language bar below before it lands in `DESIGN.md`. The language-sharpening behaviours are not optional — they run interleaved with the cascade steps.
 
 </what-to-do>
 
@@ -54,7 +54,7 @@ If a `CONTEXT-MAP.md` exists at the root, the repo has multiple contexts. The ma
 │       └── docs/adr/
 ```
 
-Create files lazily — only when you have something to write. If no `CONTEXT.md` exists, create one when the first term is resolved. If no `DESIGN.md` exists, create one when the first Goal resolves. If no `docs/adr/` exists, create it when the first ADR is needed.
+Create files lazily — only when you have something to write. If no `CONTEXT.md` exists, create one when the first term is resolved. If no `DESIGN.md` exists, create one when the first Need resolves. If no `docs/adr/` exists, create it when the first ADR is needed.
 
 ## Language sharpening (runs interleaved with the cascade)
 
@@ -84,18 +84,18 @@ When a term is resolved, update `CONTEXT.md` right there. Don't batch these up �
 
 `CONTEXT.md` should be totally devoid of implementation details. Do not treat `CONTEXT.md` as a spec, a scratch pad, or a repository for implementation decisions. It is a glossary and nothing else.
 
-## Goal-driven cascade (QFD)
+## Need-driven cascade (QFD)
 
-This translates what the system must _be_ (user-facing goals) into what it must _do_ (functions), what we must _build_ (components), and the trade-offs we explicitly took. Output goes into `DESIGN.md` — see [DESIGN-FORMAT.md](./DESIGN-FORMAT.md).
+This translates what the system must _be_ (user-facing needs) into what it must _do_ (functions), what we must _build_ (components), and the trade-offs we explicitly took. Output goes into `DESIGN.md` — see [DESIGN-FORMAT.md](./DESIGN-FORMAT.md).
 
-**Interview flow** — one question at a time, codebase-first when the answer is derivable from code. Each Goal/Function/Component name must clear the language bar above before it lands in `DESIGN.md`.
+**Interview flow** — one question at a time, codebase-first when the answer is derivable from code. Each Need/Function/Component name must clear the language bar above before it lands in `DESIGN.md`.
 
-1. **Goals (WHATs).** "From the user's POV, what outcome are we delivering? How important is it (1–10)? Where is it specified?" When several user segments would weight the goals differently, name the segments first (weights 1–5) and derive the goal weights from them instead of asserting them; skip this when one user is in mind.
-2. **Functions (HOWs).** "What must the system *do* to deliver G1? Each as a verb with a measurable target and a direction (↑↓→)." Probe for completeness — missing functions are the common failure mode.
-3. **Competitive assessment** (offer when alternatives exist — a competitor, the current system, do-nothing). "How does each alternative score on each goal, 0–5? For the functions, what measured values do we already know?" A number beats a rating; a blank beats a guess. This evidence often revises the goal weights — revisit them if it does.
+1. **Needs (WHATs).** "From the user's POV, what outcome are we delivering? How important is it (1–10)? Where is it specified?" When several user segments would weight the needs differently, name the segments first (weights 1–5) and derive the need weights from them instead of asserting them; skip this when one user is in mind.
+2. **Functions (HOWs).** "What must the system *do* to deliver N1? Each as a verb with a measurable target and a direction (↑↓→)." Probe for completeness — missing functions are the common failure mode.
+3. **Competitive assessment** (offer when alternatives exist — a competitor, the current system, do-nothing). "How does each alternative score on each need, 0–5? For the functions, what measured values do we already know?" A number beats a rating; a blank beats a guess. This evidence often revises the need weights — revisit them if it does.
 4. **How.** "For F1, what are the candidate approaches? List them before picking."
 5. **Components.** "Which How are we choosing? What concrete components realise it?"
-6. **Importance** (when ≥2 goals and ≥3 functions). "Which functions strongly/weakly advance which goals? Score 9 / 3 / 1." Compute Σ and rank per function; when the function → component map exists, carry the Σ down so component priorities are derived, not asserted. Call out the upkeep cost of the matrix before producing it; offer a tree-only variant when scope is small.
+6. **Importance** (when ≥2 needs and ≥3 functions). "Which functions strongly/weakly advance which needs? Score 9 / 3 / 1." Compute Σ and rank per function; when the function → component map exists, carry the Σ down so component priorities are derived, not asserted. Call out the upkeep cost of the matrix before producing it; offer a tree-only variant when scope is small.
 7. **Conflicts.** "Does pushing F1 push another function the wrong way? Where?" Captures the roof — function-vs-function tensions.
 8. **Critical performance budget.** "Rank what we just produced. For each top item, where do we watch it, and what's the fallback if we miss it?" A target without a fallback is a wish.
 9. **Tradeoffs.** Every time a How is chosen over another, record `Got / Paid`. If the trade is hard-to-reverse, also offer an ADR.
@@ -110,11 +110,11 @@ Update `DESIGN.md` inline as each level resolves. Sections are produced lazily �
 
 When the matrices would benefit from a visual rendering (slide, stakeholder review, doc), offer to draw a TikZ "House of Quality" inside a ` ```tikz ` fenced block in markdown. See [QUALITY-HOUSE.md](./QUALITY-HOUSE.md) for the preamble, coordinate system, and placement recipes.
 
-Offer this **only when** the cascade has produced enough material to populate it: Goals + importance (§1), Functions + targets (§2), and at least one of the importance matrix (§5) or the roof (§6). A house with empty cells is just scaffolding. If a competitive assessment (§3) exists, its goal ratings populate the house's perception zone.
+Offer this **only when** the cascade has produced enough material to populate it: Needs + importance (§1), Functions + targets (§2), and at least one of the importance matrix (§5) or the roof (§6). A house with empty cells is just scaffolding. If a competitive assessment (§3) exists, its need ratings populate the house's perception zone.
 
 Always title the house: set `\qfdProjectTitle` to the project / feature name and `\qfdConcept` to the concept in one sentence with the keywords bolded (see "Title & subtitle" in [QUALITY-HOUSE.md](./QUALITY-HOUSE.md)). They render above the roof apex.
 
-**Placement**: the house goes as the **first section of `DESIGN.md`**, before §1 Goals — titled `## House of Quality`. It is the at-a-glance overview; the numbered sections that follow are the prose backing. Add a `---` separator after the house and before §1.
+**Placement**: the house goes as the **first section of `DESIGN.md`**, before §1 Needs — titled `## House of Quality`. It is the at-a-glance overview; the numbered sections that follow are the prose backing. Add a `---` separator after the house and before §1.
 
 ## Offer ADRs sparingly
 
