@@ -78,6 +78,8 @@ Run `/walk-with-me` with the feature as the subject. It builds `CONTEXT.md` and 
 
 One addition on top of `/walk-with-me`: ask what the feature is *for* in the user's real work, and keep it small enough to finish today at a learner's typing-and-thinking speed. A feature that cannot be demonstrated by the end of the session is the wrong feature — cut scope now, and say what you cut.
 
+These needs land in `SPEC.md` (phase 3), not in a `DESIGN.md` cascade. `/qfd` uses the same word for the WHATs at the top of its Need → Function → How → Component decomposition; one feature small enough to ship in a session rarely warrants that machinery, so stay here unless the user asks for it.
+
 ## Phase 3 — Spec
 
 Land `SPEC.md` using the structure in [LADDER-FORMAT.md](./LADDER-FORMAT.md). Beyond the usual behaviour and boundaries, it carries one section this skill depends on: **Concepts exercised** — the language constructs this feature will force the user to meet, in the order the ladder will meet them, one line each on why this feature needs it.
