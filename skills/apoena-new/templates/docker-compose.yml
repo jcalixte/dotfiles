@@ -1,0 +1,16 @@
+services:
+  web:
+    build: .
+    ports:
+      - "80:80"
+    depends_on:
+      - api
+
+  api:
+    build: ./backend
+    environment:
+      - PORT=8000
+    volumes:
+      - ./data:/app/data
+    ports:
+      - "8000:8000"
