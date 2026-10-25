@@ -1,6 +1,6 @@
 ---
 name: apoena-android-app
-description: Use when the user wants to create a new native Android App for their personal Store (the F-Droid repo read by Neo Store), or to make an existing Android repo Store-ready — scaffolds Kotlin + Jetpack Compose with `applicationId dev.apoena.<name>`, derives `versionCode` from the `vX.Y.Z` tag, signs with the shared App key from Gitea user-level secrets, adds the Gitea Actions release workflow (signed APK → Gitea release → Coolify Store rebuild), creates the public Gitea repo, and registers the App in the Store's `apps.yaml`.
+description: Use when the user wants to create a new native Android App for their personal Store (the F-Droid repo read by Neo Store), or to make an existing Android repo Store-ready — scaffolds Kotlin + Jetpack Compose with `applicationId dev.apoena.<name>`, generates a launcher icon, derives `versionCode` from the `vX.Y.Z` tag, signs with the shared App key from Gitea user-level secrets, adds the Gitea Actions release workflow (signed APK → Gitea release → Coolify Store rebuild), creates the public Gitea repo, and registers the App in the Store's `apps.yaml`.
 ---
 
 <what-to-do>
@@ -22,6 +22,8 @@ Bootstrap one **App** for the **Store**. The rules come from the Store's design 
 2. **App label** — the name under the icon on the phone. Default: app name in Title Case.
 3. **applicationId** — default `dev.apoena.<name without dashes>`. For an existing App that already shipped a Release, keep its current ID.
 4. **Project dir** — default `~/projects/<app-name>`. If the dir already holds an Android project, this is an **adopt** run: skip Step 3 and apply Step 4 to the existing files.
+5. **License** — an SPDX short identifier, e.g. `GPL-3.0-only`, `AGPL-3.0-only`, `MIT`. Without one the Store lists the App as license `Unknown`.
+6. **Description** — a few lines on what the App does, shown on the App's page in the Client. Basic HTML, no Markdown, 4000 characters at most.
 
 ## Step 2 — One-time setup (per user, not per App)
 
@@ -67,6 +69,20 @@ Copy the templates from this skill's `templates/` and replace `{{APP_NAME}}`, `{
 | `gitignore` | `.gitignore` |
 | `release.yml` | `.gitea/workflows/release.yml` |
 
+**Launcher icon** — generate it, never hand-write it:
+
+```bash
+python3 ~/.claude/skills/apoena-android-app/scripts/make-icon.py \
+  --id dev.apoena.<name> --res app/src/main/res
+```
+
+It writes `mipmap-<density>/ic_launcher.png` at all five densities: a grid mark on a solid
+colour, both derived from the applicationId, so each App looks different and white on the
+colour clears WCAG AA. `templates/AndroidManifest.xml` already points `android:icon` at it.
+Plain PNGs on purpose — fdroidserver cannot rasterise an adaptive XML icon, so an adaptive
+icon would leave the App with no icon in the Repo index. When the App gets real artwork,
+replace these files and keep the format.
+
 **Versions.** The templates pin the versions that were last verified to build. Before scaffolding, check for newer stable AGP / Gradle / Kotlin / Compose BOM (see [Versions](#versions)); bump only if the new set builds.
 
 **Gradle wrapper** — no local Gradle needed. Download the three wrapper files from the Gradle tag and verify the jar checksum:
@@ -111,7 +127,13 @@ Run `git -C ~/projects/store pull --rebase` first (other sessions push there too
 apps:
   - id: dev.apoena.<name>
     repo: julien/<app-name>
+    license: <SPDX id>
+    description: |
+      <what the App does, basic HTML>
 ```
+
+`license` and `description` feed the Repo index. The App's summary is not here: it follows
+the Gitea repo description, so change it on the repo.
 
 ## Step 8 — First Release
 
@@ -147,6 +169,14 @@ Last verified to build (2026-10-24): AGP 9.4.0, Gradle 9.8.2, Kotlin 2.4.21, Com
 - Gitea sets `GITHUB_REF_NAME`, `GITHUB_SERVER_URL`, `GITHUB_REPOSITORY`; it does **not** set `GITEA_REF_NAME` (use `gitea.ref_name` in expressions).
 - Coolify `/api/v1/deploy` is **POST** only since v4.5 (`GET` returns 405). It uses `force=true` (rebuild without Docker cache): a new Release changes nothing in the Store's build inputs, so a cached build would serve the old Repo.
 - `STORE_DEPLOY_TOKEN` must be a `deploy`-scoped Coolify token: it sits in every App's CI, so a `write`/`root` token there would expose the whole Coolify instance.
+
+## App metadata in the Repo
+
+`~/projects/store/fdroid/build-repo.py` writes one `metadata/<id>.yml` per App for
+`fdroid update`: `Summary` from the Gitea repo description, `License` and `Description`
+from `apps.yaml`. Field names are CamelCase and `License` takes an SPDX short identifier —
+see the [Build Metadata Reference](https://f-droid.org/en/docs/Build_Metadata_Reference/).
+The build prints a warning for each missing field instead of failing.
 
 ## Why these rules
 
