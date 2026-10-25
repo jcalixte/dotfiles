@@ -34,7 +34,7 @@ Check these once; skip the step when they exist. Variables can be listed: `curl 
 | `APP_KEY_ALIAS` | secret | key alias (e.g. `app`) |
 | `APP_KEY_PASSWORD` | secret | key password (PKCS12: same as keystore password) |
 | `STORE_DEPLOY_TOKEN` | secret | Coolify API token with the **`deploy` permission only** |
-| `STORE_COOLIFY_UUID` | variable | UUID of the Store's Coolify application |
+| `STORE_COOLIFY_UUID` | variable | UUID of the Store's Coolify application — set: `urzae6uwh0lzk352gqvuug6n` |
 
 **Creating the App key** — only if it does not exist anywhere yet. Creating a second one silently would split the Apps across two keys.
 
@@ -47,7 +47,7 @@ Then STOP and have the user store `app-key.jks` and its password in their passwo
 
 Upload secrets with `curl -fsS -X PUT -H "Authorization: token $TEA_TOKEN" -H "Content-Type: application/json" -d '{"data":"<value>"}' https://git.apoena.dev/api/v1/user/actions/secrets/<NAME>`, and the variable with `POST .../user/actions/variables/STORE_COOLIFY_UUID` and `{"value":"<uuid>"}`. Delete the local `app-key.jks` only after the user confirms the backup. Never echo secret values into the conversation.
 
-`STORE_COOLIFY_UUID` may not exist yet (Store not deployed). That is fine: the workflow skips the Store rebuild while the variable is empty.
+**`STORE_DEPLOY_TOKEN`** cannot be made by API: the user creates it in Coolify (https://platform.apoena.dev → Keys & Tokens → API tokens) with only the `deploy` permission, then it is uploaded like the other secrets. Without it the release still publishes, but the last step (Store rebuild) fails with HTTP 401.
 
 ## Step 3 — Scaffold (new App only)
 
@@ -85,7 +85,7 @@ echo "$(curl -fsSL https://services.gradle.org/distributions/gradle-$V-wrapper.j
 Bring the existing files in line with the rules, keeping the App's own code and dependencies:
 
 - `app/build.gradle.kts`: replace the hard-coded `versionCode`/`versionName` with the `releaseVersion` block, and add the `signingConfigs` block and `signingConfig` line, both exactly as in `templates/app.build.gradle.kts`.
-- Add `.gitea/workflows/release.yml` from the template.
+- Add `.gitea/workflows/release.yml` from the template. If one already exists, replace it with the template: older copies trigger the Store with `force=false`, which serves a stale Repo.
 - Add `*.jks` and `*.keystore` to `.gitignore`.
 - If the project is still on AGP 8, leave it there unless the user asks to upgrade — the release rules work on AGP 8 too. On AGP 8, keep the `kotlin-android` plugin; on AGP 9 it must be removed (built-in Kotlin).
 
@@ -105,7 +105,7 @@ New App: run the **apoena-gitea-repo** skill (public repo, SSH remote on port 22
 
 ## Step 7 — Register in the Store
 
-Add the App to `~/projects/store/apps.yaml` (create the file if missing), commit `feat(apps): add <app-name>`, and push:
+Run `git -C ~/projects/store pull --rebase` first (other sessions push there too). Add the App to `~/projects/store/apps.yaml`, commit `feat(apps): add <app-name>`, and push. The push redeploys the Store; an App with no Release yet is listed in `apps.yaml` but not shown.
 
 ```yaml
 apps:
@@ -121,7 +121,13 @@ Only after Step 2 is complete and the App key backup is confirmed:
 git tag v0.1.0 && git push origin v0.1.0
 ```
 
-Watch the run at `https://git.apoena.dev/julien/<app-name>/actions`, then confirm the release has the asset `dev.apoena.<name>-v0.1.0.apk`. If the Store is deployed, Neo Store shows the App after its next repo sync.
+Watch the run at `https://git.apoena.dev/julien/<app-name>/actions`, then confirm the release has the asset `dev.apoena.<name>-v0.1.0.apk`. After the Store rebuild finishes (a few minutes), confirm the App is in the Repo:
+
+```bash
+curl -fsS https://store.apoena.dev/fdroid/repo/index-v2.json | jq '.packages | keys'
+```
+
+Neo Store shows the App after its next repo sync (pull to refresh). If the Store rebuild step failed, the release is still fine: fix the token and re-run only that job, or trigger `POST /api/v1/deploy?uuid=$STORE_COOLIFY_UUID&force=true`.
 
 </what-to-do>
 
@@ -139,11 +145,11 @@ Last verified to build (2026-10-24): AGP 9.4.0, Gradle 9.8.2, Kotlin 2.4.21, Com
 - Runs on `git.apoena.dev`'s act_runner (`ubuntu-latest` = `docker.gitea.com/runner-images:ubuntu-latest`: Node, no Java), hence `setup-java` + `setup-android`. AGP downloads missing platforms and build-tools itself once licenses are accepted.
 - The job token creates the release because of `permissions: contents: write` (Gitea 1.26 supports `permissions:`; a user or admin "restricted" default would otherwise make releases read-only).
 - Gitea sets `GITHUB_REF_NAME`, `GITHUB_SERVER_URL`, `GITHUB_REPOSITORY`; it does **not** set `GITEA_REF_NAME` (use `gitea.ref_name` in expressions).
-- Coolify `/api/v1/deploy` is **POST** only since v4.5 (`GET` returns 405).
+- Coolify `/api/v1/deploy` is **POST** only since v4.5 (`GET` returns 405). It uses `force=true` (rebuild without Docker cache): a new Release changes nothing in the Store's build inputs, so a cached build would serve the old Repo.
 - `STORE_DEPLOY_TOKEN` must be a `deploy`-scoped Coolify token: it sits in every App's CI, so a `write`/`root` token there would expose the whole Coolify instance.
 
 ## Why these rules
 
-The Store design is recorded in `~/projects/store`: ADR 0001 (F-Droid repo + Neo Store), ADR 0002 (one App key), ADR 0003 (the Store pulls Releases from Gitea releases).
+The Store design is recorded in `~/projects/store`: ADR 0001 (F-Droid repo + Neo Store), ADR 0002 (one App key), ADR 0003 (the Store pulls Releases from Gitea releases). The Store is live at https://store.apoena.dev; its README explains how to add it to Neo Store.
 
 </supporting-info>

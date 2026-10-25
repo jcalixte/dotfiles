@@ -61,5 +61,5 @@ jobs:
           STORE_DEPLOY_TOKEN: ${{ secrets.STORE_DEPLOY_TOKEN }}
           STORE_COOLIFY_UUID: ${{ vars.STORE_COOLIFY_UUID }}
         run: |
-          curl -fsS -X POST "https://platform.apoena.dev/api/v1/deploy?uuid=$STORE_COOLIFY_UUID&force=false" \
+          curl -fsS -X POST "https://platform.apoena.dev/api/v1/deploy?uuid=$STORE_COOLIFY_UUID&force=true" \
             -H "Authorization: Bearer $STORE_DEPLOY_TOKEN"
