@@ -67,7 +67,12 @@ Copy the templates from this skill's `templates/` and replace `{{APP_NAME}}`, `{
 | `strings.xml` | `app/src/main/res/values/strings.xml` |
 | `MainActivity.kt` | `app/src/main/java/<applicationId as path>/MainActivity.kt` |
 | `gitignore` | `.gitignore` |
+| `LICENSE` | `LICENSE` |
 | `release.yml` | `.gitea/workflows/release.yml` |
+
+**License file.** `templates/LICENSE` is MIT, with `{{YEAR}}` to replace. The repo is public
+and the Store advertises the SPDX id from Step 1, so a different choice there means writing
+that license's full text instead, and the two must agree.
 
 **Launcher icon** — generate it, never hand-write it:
 
