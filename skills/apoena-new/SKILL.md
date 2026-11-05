@@ -37,19 +37,13 @@ Run these checks. If any fail, print the missing tool + remediation and STOP.
 | `docker` (backend only) | `docker --version` | install OrbStack / Docker Desktop |
 | `gleam` (backend only) | `gleam --version` (≥ 1.0) | `brew install gleam erlang rebar3` |
 
-<<<<<<< Updated upstream
-> **A login entry does not prove the token works.** tea's stored login can hold an older, weaker token than `$TEA_TOKEN`, and `tea login list` looks identical either way. Step 6 then dies on `this endpoint is not available for public-only tokens` — after the scaffold is already built. It cannot be checked cheaply, so treat it as a known late failure; **apoena-gitea-repo** owns the remedy (delete and re-add the login from `$TEA_TOKEN`).
-
-> **The Gitea login may be named anything** (not necessarily `apoena`) and need not be tea's default. Identify it by URL in `tea login list`; capture its **NAME** (for `--login` in Step 6) and confirm the SSH host/port is `git.apoena.dev:22222`. Do not assume the login name is `apoena` anywhere downstream.
-=======
 > **The Gitea login may be named anything** (not necessarily `apoena`) and need not be tea's default. Identify it by URL in `tea login list`; capture its **NAME** (for `--login` in Step 7) and confirm the SSH host/port is `git.apoena.dev:22222`. Do not assume the login name is `apoena` anywhere downstream.
->>>>>>> Stashed changes
 
 ## Step 2b — DNS for a custom domain (marque; skip for `*.apoena.dev`)
 
 Run this **only** when the domain is not under `apoena.dev` (a separate apex bought via marque). `*.apoena.dev` is covered by a wildcard — skip. Do it here, not at deploy, so DNS propagates while you scaffold.
 
-marque is atproto-native: a domain's DNS lives as an `at.marque.dns` record in the apoena PDS (`https://eurosky.social`, repo `did:plc:4m3kouplb7s7xozjd3whinvl` = `apoena.dev`), and marque's nameservers (`stratus`/`cirrus.ns.marque.network`) serve it directly — a `putRecord` **is** live DNS. `$MARQUE_APP_PASSWORD` is exported from `~/.dotfiles/zsh/private.zsh` (source it if not loaded; never prompt inline).
+marque is atproto-native: a domain's DNS lives as an `at.marque.dns` record in the apoena PDS (`https://eurosky.social`, repo `did:plc:4m3kouplb7s7xozjd3whinvl` = `apoena.dev`), and marque's nameservers (read them with `dig +short NS <domain>`; today `cirrus.mqdns.at`, `nimbus.mqdns.app`, `stratus.mqdns.de`) serve it directly — a `putRecord` **is** live DNS. `$MARQUE_APP_PASSWORD` is exported from `~/.dotfiles/zsh/private.zsh` (source it if not loaded; never prompt inline).
 
 ```bash
 DID=did:plc:4m3kouplb7s7xozjd3whinvl; PDS=https://eurosky.social; DOMAIN=<domain>
@@ -69,7 +63,8 @@ REC=$(jq -n --arg d "$DOMAIN" --arg cid "$DOMAIN_CID" --arg did "$DID" --arg ip 
 curl -fsSL -X POST "$PDS/xrpc/com.atproto.repo.putRecord" -H "Authorization: Bearer $JWT" -H "Content-Type: application/json" \
   -d "$(jq -n --arg did "$DID" --arg d "$DOMAIN" --argjson rec "$REC" '{repo:$did,collection:"at.marque.dns",rkey:$d,record:$rec,validate:false}')" | jq '{uri,error}'
 # 3) Verify it's live on marque's NS (both should return the IP):
-dig +short @stratus.ns.marque.network "$DOMAIN"; dig +short @stratus.ns.marque.network "www.$DOMAIN"
+NS=$(dig +short NS "$DOMAIN" | head -1)   # marque's nameservers, e.g. cirrus.mqdns.at.
+dig +short "$DOMAIN" @"$NS"; dig +short "www.$DOMAIN" @"$NS"
 ```
 
 **`www` CNAME must target the apex hostname, never an IP** (a CNAME→IP is malformed). `putRecord` replaces on re-run, so it's idempotent. Then continue — in Step 8 the Coolify domain is `https://<domain>` and Let's Encrypt issues once DNS resolves.
@@ -143,6 +138,12 @@ Copy `templates/docker-compose.yml` to the project root. Substitute `<APP_NAME>`
 
 If no backend, do NOT create a `docker-compose.yml` — Coolify will use the Dockerfile build pack directly.
 
+**Never publish a host port in the compose file.** Coolify's Traefik already owns host port 80 and routes to the container by label, so `ports: - "80:80"` fails the deploy with `Bind for 0.0.0.0:80 failed: port is already allocated`. Use `expose: - "80"` on `web`, and `expose` (not `ports`) on `api` too — the SPA reaches the API through an `/api/` `proxy_pass` block in `nginx.conf`, inside the compose network.
+
+**Give every service a `healthcheck`.** Without one Coolify reports the app as `running:unknown` and cannot tell a booted container from a crashed one. Both base images are Alpine, so busybox `wget` is available: `test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1/ || exit 1"]` on `web`, the same against `http://127.0.0.1:8000/api/health` on `api`. Then make `web` wait with `depends_on: {api: {condition: service_healthy}}`. Verify after deploy: the app status must read `running:healthy`.
+
+**Name the SQLite volume.** A bind mount (`./data:/app/data`) points at the build artifact directory, which Coolify replaces on each deploy. Declare a named top-level volume instead, e.g. `bluebin-data:/app/data`.
+
 ## Step 6 — README
 
 Skip this step if an informative `README.md` already exists (see Step 3). Otherwise write a short `README.md`:
@@ -169,13 +170,6 @@ Pushes to `main` are picked up by Coolify at https://platform.apoena.dev.
 
 ## Step 7 — Git + Gitea
 
-<<<<<<< Updated upstream
-→ Run the **apoena-gitea-repo** skill with the app name, project dir, and the login NAME from Step 2. It commits, creates the repo, and pushes `main`.
-
-**The repo must be public here.** Step 7 has Coolify clone it over HTTPS with no credentials and no deploy key, so a private repo fails at the git-clone step of the first deploy. `tea repos create --private` does work — just not for anything this chain deploys.
-
-If Step 6 reports a token that cannot create repos, STOP the chain — Step 7 has nothing to point Coolify at. The local commits are safe and the push can be replayed once the login is fixed.
-=======
 ```bash
 git init -b main
 git add -A
@@ -185,7 +179,6 @@ tea repos create --login <login-name> --name <app-name> --description "<app-name
 git remote add origin ssh://git@git.apoena.dev:22222/julien/<app-name>.git
 git push -u origin main
 ```
->>>>>>> Stashed changes
 
 **Do not pass `--owner julien` to `tea repos create`** — `--owner` is for *organizations*, and passing a user account fails with `Error: GetOrgByName`. Omitting `--owner` creates the repo under the authenticated user. Pass `--login <login-name>` (the NAME from Step 2) since the git.apoena.dev login may not be tea's default.
 
@@ -218,6 +211,8 @@ BUILD_PACK=$([ -f docker-compose.yml ] && echo dockercompose || echo dockerfile)
 
 APP_UUID=$(curl -sS -X POST https://platform.apoena.dev/api/v1/applications/public   -H "Authorization: Bearer $COOLIFY_API_TOKEN"   -H "Content-Type: application/json"   -d "$(jq -n --arg p "$PROJECT_UUID" --arg s "$SERVER_UUID"           --arg name "<app-name>" --arg repo "https://git.apoena.dev/julien/<app-name>"           --arg domain "https://<subdomain>" --arg bp "$BUILD_PACK"           '{project_uuid:$p, server_uuid:$s, environment_name:"production",            git_repository:$repo, git_branch:"main",            build_pack:$bp, ports_exposes:"80",            name:$name, domains:$domain, instant_deploy:false}')"   | jq -r '.uuid')
 ```
+
+**`dockercompose` build pack takes a different domain field.** `domains` is rejected (`The domains field cannot be used for dockercompose applications`); pass `docker_compose_domains` instead — an **array of objects**, one per compose service, each `{name, domain}` and nothing else: `docker_compose_domains:[{name:"web", domain:"https://<domain>,https://www.<domain>"}]`. Also PATCH `docker_compose_location` to `/docker-compose.yml`, because create defaults it to `/docker-compose.yaml` and the deploy fails on the missing file.
 
 **Custom domain → include `www`.** For a `*.apoena.dev` subdomain, `domains` is just `https://<subdomain>`. For a **custom apex from Step 2b**, set it to `https://<domain>,https://www.<domain>` (comma-separated) — Step 2b creates a `www` CNAME, so registering only the apex leaves `www.<domain>` resolving to a **certless endpoint** (Let's Encrypt never issues for `www`, TLS fails). Both domains share the one app.
 
@@ -292,13 +287,8 @@ If deployed via Step 8, also give the live URL `https://<subdomain>` (the first 
 
 The bootstrap is done and the first screen is deployed; now build the rest of the app the user asked for (Step 1). Don't wait to be told to start (no "say the word and I'll start on it") — begin immediately with the design interview below.
 
-<<<<<<< Updated upstream
-- **Design first with `/walk-with-me`.** Before writing any feature code, run the **walk-with-me** skill to reach shared understanding of the deep feature set: it interviews the user one decision at a time and writes the design docs (`CONTEXT.md`, `DESIGN.md`, any ADRs) into the project dir, escalating to `/qfd` for a need→function→component decomposition when the change warrants it. This **is** the design step — do not also run `spec-driven-development`, it would be redundant ceremony.
-- **Then build from those docs with `incremental-implementation`**, slice by slice — use **frontend-ui-engineering** for the UI slices, and **daisyui-contrast** for any new colour you introduce.
-=======
 - **Design first with `/walk-with-me`.** Before writing any feature code, run the **walk-with-me** skill to reach shared understanding of the deep feature set: it interviews the user one decision at a time and writes the design docs (`CONTEXT.md`, `DESIGN.md`, any ADRs) into the project dir, escalating to `/qfd` for a goal→function→component decomposition when the change warrants it. This **is** the design step — do not also run `spec-driven-development`, it would be redundant ceremony.
 - **Then build from those docs with `incremental-implementation`**, slice by slice — use **frontend-ui-engineering** for the UI slices.
->>>>>>> Stashed changes
 - Build the features that go beyond the first screen — the remaining screens, search/filtering, detail views, persistence, whatever Step 1 and walk-with-me settled on.
 - Commit and push each working slice. Pushes to `main` auto-deploy via the Coolify webhook (Step 8d), so every slice ships to `https://<subdomain>` — verify the live site after pushes that matter.
 - Keep the deploy green: run `pnpm build` (clean, no warnings) + `pnpm lint` + `pnpm fmt` before each push, the same gates as Step 3.
@@ -318,14 +308,6 @@ The bootstrap is done and the first screen is deployed; now build the rest of th
 - **Gleam wisp + mist** — wisp is the request framework, mist the HTTP server. Standard combo.
 - **SQLite via `sqlight`** — Gleam binding to SQLite. File lives in `data/app.db`, mounted as a Coolify persistent volume.
 
-<<<<<<< Updated upstream
-- **marque-dns** — `at.marque.dns` record into the apoena PDS for a custom apex. Marque's nameservers serve it directly, so the `putRecord` is live DNS.
-- **apoena-spa-scaffold** — Vite + Vue 3 + TS, Tailwind v4, DaisyUI, oxc lint/format, Tabler favicon, `Dockerfile` + `nginx.conf`. Builds the real first screen. Owns the SPA templates.
-- **daisyui-contrast** — measures WCAG contrast for `--color-primary` / `--color-primary-content` and any hand-written pair. Used by the scaffold and again during the feature build.
-- **apoena-gleam-backend** — Gleam `wisp` + `mist` in `backend/`, optional `sqlight`, Gleam Dockerfile, root `docker-compose.yml`.
-- **apoena-gitea-repo** — repo on `git.apoena.dev` via `tea` (public for anything deployed), SSH remote on port `22222`, initial commit + push. Owns the `tea` failure modes: stale stored tokens, the `--owner` trap, and the fact that push-to-create is disabled server-side.
-- **apoena-coolify-deploy** — Coolify application via the API on `platform.apoena.dev`, the git-URL PATCH self-hosted Gitea needs, push webhook, first deploy polled to completion. Owns the manual fallback checklist.
-=======
 ## Coolify conventions on platform.apoena.dev
 
 - Apps deploy from public Gitea repos. **The `applications/public` API truncates non-GitHub git URLs to `owner/repo`** — you must PATCH `git_repository` to the full `https://git.apoena.dev/julien/<app>.git` URL after create, or the first deploy fails at the git-clone step (see Step 8b).
@@ -340,7 +322,6 @@ Whatever the domain, it must resolve to the Coolify host before Step 8 or Coolif
 
 - **`*.apoena.dev` subdomains** are covered by a wildcard — nothing to do. Sanity-check with `dig +short <subdomain>.apoena.dev` against `dig +short platform.apoena.dev` before deploying.
 - **Custom marque domains** (separate apex, e.g. `typoena.app`) are provisioned by **Step 2b** — a `putRecord` of an `at.marque.dns` record into the apoena PDS, which marque's nameservers serve directly. Point `@`/`*` (A) and `www` (CNAME→apex) at `dig +short platform.apoena.dev`. The domain must already be registered in marque (`at.marque.domain/<domain>` record exists); the skill can't buy it. Auth uses `$MARQUE_APP_PASSWORD` from `~/.dotfiles/zsh/private.zsh`.
->>>>>>> Stashed changes
 
 ## When the user wants a different stack
 
