@@ -7,7 +7,7 @@ description: Use when a custom apex domain bought via marque needs DNS pointed a
 
 Run this **only** when the domain is not under `apoena.dev` (a separate apex bought via marque). `*.apoena.dev` is covered by a wildcard — skip. When bootstrapping an app, do this *before* scaffolding so DNS propagates while you work, not at deploy time.
 
-marque is atproto-native: a domain's DNS lives as an `at.marque.dns` record in the apoena PDS (`https://eurosky.social`, repo `did:plc:4m3kouplb7s7xozjd3whinvl` = `apoena.dev`), and marque's nameservers (`stratus`/`cirrus.ns.marque.network`) serve it directly — a `putRecord` **is** live DNS. `$MARQUE_APP_PASSWORD` is exported from `~/.dotfiles/zsh/private.zsh` (source it if not loaded; never prompt inline).
+marque is atproto-native: a domain's DNS lives as an `at.marque.dns` record in the apoena PDS (`https://eurosky.social`, repo `did:plc:4m3kouplb7s7xozjd3whinvl` = `apoena.dev`), and marque's nameservers (read them with `dig +short NS <domain>`; today `cirrus.mqdns.at`, `nimbus.mqdns.app`, `stratus.mqdns.de`) serve it directly — a `putRecord` **is** live DNS. `$MARQUE_APP_PASSWORD` is exported from `~/.dotfiles/zsh/private.zsh` (source it if not loaded; never prompt inline).
 
 ```bash
 DID=did:plc:4m3kouplb7s7xozjd3whinvl; PDS=https://eurosky.social; DOMAIN=<domain>
@@ -27,7 +27,8 @@ REC=$(jq -n --arg d "$DOMAIN" --arg cid "$DOMAIN_CID" --arg did "$DID" --arg ip 
 curl -fsSL -X POST "$PDS/xrpc/com.atproto.repo.putRecord" -H "Authorization: Bearer $JWT" -H "Content-Type: application/json" \
   -d "$(jq -n --arg did "$DID" --arg d "$DOMAIN" --argjson rec "$REC" '{repo:$did,collection:"at.marque.dns",rkey:$d,record:$rec,validate:false}')" | jq '{uri,error}'
 # 3) Verify it's live on marque's NS (both should return the IP):
-dig +short @stratus.ns.marque.network "$DOMAIN"; dig +short @stratus.ns.marque.network "www.$DOMAIN"
+NS=$(dig +short NS "$DOMAIN" | head -1)   # marque's nameservers, e.g. cirrus.mqdns.at.
+dig +short "$DOMAIN" @"$NS"; dig +short "www.$DOMAIN" @"$NS"
 ```
 
 **`www` CNAME must target the apex hostname, never an IP** (a CNAME→IP is malformed). `putRecord` replaces on re-run, so it's idempotent.

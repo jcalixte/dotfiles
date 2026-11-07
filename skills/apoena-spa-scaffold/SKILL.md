@@ -42,7 +42,15 @@ Then write/patch these files (templates in `templates/`):
 
 - `vite.config.ts` — add `@tailwindcss/vite` plugin, and (if backend) the `/api` dev proxy to `http://localhost:8000`.
 - `src/style.css` — copy `templates/tailwind-style.css`, substitute `{{PRIMARY_COLOR}}` with the user's hex, and substitute `{{PRIMARY_CONTENT_COLOR}}` with the label colour you compute for it (use the **daisyui-contrast** skill — do not skip this, and do not eyeball it). **Keep the font `@import url(...)` as the first line** (the template already orders it correctly — do not move it below `@import "tailwindcss"` or the font silently won't load in the build).
-- `src/App.vue` + supporting files — build the **real first screen of the app**, not a generic landing card. This is the genuine entry point the user would land on, themed with DaisyUI: for a data-driven app that means the primary screen actually wired up (fetching and rendering real data), not a mockup. Keep it to that one screen — secondary screens and the full feature set come later — but it must be recognizably *this* app. Add only the components / composables / types that this one screen needs. **Every popup must close on Esc** — if the screen has a modal, copy `templates/AppModal.vue` to `src/components/AppModal.vue` and render each modal as `<AppModal v-if="open" @close="open = false">…</AppModal>`. Never hand-write `<dialog class="modal modal-open">`: it is not opened through `showModal()`, so Esc does nothing and focus is not trapped. Delete `src/components/HelloWorld.vue` (and the now-empty `src/components/` if nothing replaces it).
+- `src/App.vue` + supporting files — build the **real first screen of the app**, not a generic landing card. This is the genuine entry point the user would land on, themed with DaisyUI: for a data-driven app that means the primary screen actually wired up (fetching and rendering real data), not a mockup. Keep it to that one screen — secondary screens and the full feature set come later — but it must be recognizably *this* app. Add only the components / composables / types that this one screen needs. **Every popup must close on Esc** — if the screen has a modal, copy `templates/AppModal.vue` to `src/components/AppModal.vue` and render each modal as `<AppModal v-if="open" @close="open = false">…</AppModal>`. The template sets `text-base-content` on the modal box: a modal declared inside a coloured top bar otherwise inherits the bar's text colour (dark text on the dark dialog, or white on white). Never hand-write `<dialog class="modal modal-open">`: it is not opened through `showModal()`, so Esc does nothing and focus is not trapped. Delete `src/components/HelloWorld.vue` (and the now-empty `src/components/` if nothing replaces it).
+- **Light / dark theme toggle (always)** — copy `templates/ThemeToggle.vue` to `src/components/ThemeToggle.vue` and render `<ThemeToggle />` in the app's top bar, so every app ships one. It flips `data-theme` on `<html>` and stores the choice in `localStorage`; with no stored choice the page follows `prefers-color-scheme` (DaisyUI shows the `prefersdark` theme only on `:root:not([data-theme])`). Add this script to `<head>` in `index.html`, after `<title>`, so a stored choice applies before the first paint (no flash of the wrong theme):
+  ```html
+  <script>
+    const theme = localStorage.getItem("theme")
+    if (theme === "light" || theme === "dark") document.documentElement.dataset.theme = theme
+  </script>
+  ```
+  **On a coloured top bar** (`bg-primary text-primary-content`), give the toggle and every other ghost button there `class="[--btn-rest-fg:var(--color-primary-content)]"`: `.btn-ghost` paints its label in `base-content`, not the inherited colour, so it vanishes on the bar. Do not set the variable on the bar itself — modals and dropdowns rendered inside it would inherit it.
 - `src/assets/icons/` — create the folder and copy `templates/icons-readme.md` to `src/assets/icons/README.md`. This is the reusable in-app icon folder; the user drops Tabler SVGs here as needed.
 - `public/favicon.svg` — fetch `https://raw.githubusercontent.com/tabler/tabler-icons/main/icons/outline/<favicon-icon>.svg`, then `sed` replace `currentColor` with the primary-color hex, and **overwrite** `public/favicon.svg` (the modern `vue-ts` template already ships one). If the curl 404s, ask the user for a different icon name and retry.
 - **Remove the modern template's demo cruft** — recent `vue-ts` ships `src/assets/{vite.svg,vue.svg,hero.png}` and `public/icons.svg` (there is no longer a `public/vite.svg`). `rm -f` them since the new `App.vue` doesn't reference them.
@@ -73,7 +81,7 @@ Verify it builds, lints, and is formatted:
 2. **`pnpm build` succeeds with no warnings** — this is exactly what Coolify runs (`vue-tsc -b && vite build`) and catches type errors the dev server won't. A `@import must precede all rules` warning means the font import in `src/style.css` is misordered.
 3. Run `pnpm fmt` to format the generated code, then `pnpm lint` — both should pass clean on a fresh scaffold (fix anything oxlint flags before committing).
 4. Since the scaffold is a real screen, not a static card, sanity-check that it actually renders — load it in a browser (the **browser-testing-with-devtools** skill) and confirm the first screen shows real content, not an error or empty state.
-5. **Look at it in both colour schemes** — DevTools' "Emulate prefers-color-scheme: dark" — and re-check with **daisyui-contrast** for anything that vanished.
+5. **Look at it in both themes** — click the theme toggle, and also check DevTools' "Emulate prefers-color-scheme: dark" with no stored choice — open each modal and dropdown in both, and re-check with **daisyui-contrast** for anything that vanished.
 
 </what-to-do>
 
@@ -104,6 +112,7 @@ This skill is opinionated for Vite/Vue/DaisyUI. If the user says "actually I wan
 - `templates/nginx.conf` — SPA fallback.
 - `templates/tailwind-style.css` — Tailwind v4 + DaisyUI import (font import ordered first), with `{{PRIMARY_COLOR}}` placeholder.
 - `templates/AppModal.vue` — DaisyUI modal opened with `showModal()`; Esc emits `close`.
+- `templates/ThemeToggle.vue` — light / dark toggle button (Tabler sun / moon); stores the choice in `localStorage`.
 - `templates/icons-readme.md` — README dropped into `src/assets/icons/` to document the icon folder.
 - `templates/zed-settings.json` — copied verbatim to `.zed/settings.json`; points Zed's format-on-save at project-local oxfmt for TS/JS/Vue so editor saves match `.oxfmtrc.json` (no semicolons).
 

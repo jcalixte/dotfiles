@@ -38,9 +38,26 @@ Copy `templates/Dockerfile.gleam` to `backend/Dockerfile`.
 
 ## Step 2 — docker-compose
 
-Copy `templates/docker-compose.yml` to the project root. Substitute `<APP_NAME>`. If no SQLite, remove the `volumes:` block and the `data/` mount from `api`.
+Copy `templates/docker-compose.yml` to the project root. Substitute `<APP_NAME>`. If no SQLite, remove the top-level `volumes:` block and the `volumes:` mount from `api`.
 
 The compose file's presence is what makes Coolify pick the **Docker Compose** build pack instead of the plain Dockerfile one — so only create it when there really is a backend.
+
+The template already follows these rules. Keep them when you edit it:
+
+- **Never publish a host port.** Coolify's Traefik already owns host port 80 and routes to the container by label, so `ports: - "80:80"` fails the deploy with `Bind for 0.0.0.0:80 failed: port is already allocated`. Use `expose`, not `ports`, on both services.
+- **Every service has a `healthcheck`.** Without one Coolify reports the app as `running:unknown` and cannot tell a booted container from a crashed one. Both base images are Alpine, so busybox `wget` is available. `web` waits for `api` with `depends_on: {api: {condition: service_healthy}}`. After deploy, the app status must read `running:healthy`.
+- **The SQLite volume is named.** A bind mount (`./data:/app/data`) points at the build artifact directory, which Coolify replaces on each deploy, so the data is lost.
+
+The SPA reaches the API inside the compose network, through nginx. Add this block to `nginx.conf` (from **apoena-spa-scaffold**), inside `server { … }`:
+
+```nginx
+  location /api/ {
+    proxy_pass http://api:8000;
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+  }
+```
 
 ## Step 3 — Verify
 
@@ -62,6 +79,6 @@ This skill only supports Gleam. If the user wants Rust/Node/Go: stop, name what'
 ## Files in this skill
 
 - `templates/Dockerfile.gleam` — Gleam build → erlang runtime, port 8000.
-- `templates/docker-compose.yml` — web + api + sqlite-volume template.
+- `templates/docker-compose.yml` — web + api + named SQLite volume, `expose` only, with healthchecks.
 
 </supporting-info>
