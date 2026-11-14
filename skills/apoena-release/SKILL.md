@@ -20,7 +20,7 @@ Stop and tell the user if any fails:
 - `.gitea/workflows/release.yml` exists and triggers on `tags: ["v*"]`.
 - On `main`, working tree clean, and `main` is pushed (`git fetch -q && git status -sb` shows no ahead/behind). If `main` is behind origin, stop: don't pull or rebase on the user's behalf.
 - There are commits since the last tag (`git describe --tags --abbrev=0`). Nothing new → nothing to release.
-- Unit tests pass: `./gradlew -q :app:testDebugUnitTest`.
+- Unit tests pass: `flutter test` when `pubspec.yaml` exists (a Flutter App), else `./gradlew -q :app:testDebugUnitTest`.
 
 ## Step 3 — Pick the version (semver)
 
@@ -51,24 +51,27 @@ Never move, delete or re-push an existing tag: a published version is final. To 
 
 ## Step 5 — Watch the release workflow
 
-Owner/repo comes from `git remote get-url origin` (`ssh://git.apoena.dev:22222/<owner>/<repo>.git`). Poll every 15 s until the run for the tag ends (a build takes about 2–3 minutes):
+Owner/repo comes from `git remote get-url origin` (`ssh://git.apoena.dev:22222/<owner>/<repo>.git`). Call the Gitea API with `curl` and `$TEA_TOKEN` (the installed `tea` has no `api` subcommand). Poll every 15 s until the run for the tag ends (a build takes about 2–3 minutes):
 
 ```bash
-tea api "/repos/$OWNER/$REPO/actions/tasks?limit=5" \
+G=https://git.apoena.dev/api/v1; H="Authorization: token $TEA_TOKEN"
+curl -fsS -H "$H" "$G/repos/$OWNER/$REPO/actions/tasks?limit=5" \
   | jq -r --arg t "vX.Y.Z" '[.workflow_runs[] | select(.head_branch == $t)][0].status'
 ```
+
+If the first poll prints an error or nothing, stop and fix the call: don't keep polling.
 
 `success` → go on. `failure` → link `https://git.apoena.dev/$OWNER/$REPO/actions` and stop. The usual causes are a compile error or a missing App key secret.
 
 Then confirm the APK is attached:
 
 ```bash
-tea api "/repos/$OWNER/$REPO/releases/tags/vX.Y.Z" | jq -r '.html_url, .assets[].name'
+curl -fsS -H "$H" "$G/repos/$OWNER/$REPO/releases/tags/vX.Y.Z" | jq -r '.html_url, .assets[].name'
 ```
 
 ## Step 6 — Confirm the Store lists it
 
-The app ID is `applicationId` in `app/build.gradle.kts`.
+The app ID is `applicationId` in `app/build.gradle.kts` (`android/app/build.gradle.kts` in a Flutter App).
 
 ```bash
 curl -fsS https://store.apoena.dev/fdroid/repo/index-v2.json \
