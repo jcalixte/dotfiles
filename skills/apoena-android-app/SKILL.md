@@ -176,6 +176,7 @@ Last verified to build (2026-10-24): AGP 9.4.0, Gradle 9.8.2, Kotlin 2.4.21, Com
 ## Release workflow
 
 - Runs on `git.apoena.dev`'s act_runner (`ubuntu-latest` = `docker.gitea.com/runner-images:ubuntu-latest`: Node, no Java), hence `setup-java` + `setup-android`. AGP downloads missing platforms and build-tools itself once licenses are accepted.
+- Caches use `actions/cache` with lowercase keys, never setup-java's `cache: gradle`: the act_runner cache server lowercases keys, so setup-java (exact, case-sensitive match) never sees a hit and re-saves the Gradle cache on every run (~1 min for 1.4 GB). `~/.android/sdk` is cached before `setup-android` so AGP's installs are kept.
 - The job token creates the release because of `permissions: contents: write` (Gitea 1.26 supports `permissions:`; a user or admin "restricted" default would otherwise make releases read-only).
 - Gitea sets `GITHUB_REF_NAME`, `GITHUB_SERVER_URL`, `GITHUB_REPOSITORY`; it does **not** set `GITEA_REF_NAME` (use `gitea.ref_name` in expressions).
 - Coolify `/api/v1/deploy` is **POST** only since v4.5 (`GET` returns 405). It uses `force=true` (rebuild without Docker cache): a new Release changes nothing in the Store's build inputs, so a cached build would serve the old Repo.

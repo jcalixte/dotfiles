@@ -19,7 +19,23 @@ jobs:
         with:
           distribution: temurin
           java-version: 21
-          cache: gradle
+
+      # Not setup-java's `cache: gradle`: the Gitea cache server lowercases keys, setup-java
+      # then never sees an exact hit and saves the whole cache again on every run.
+      - uses: actions/cache@v5
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ hashFiles('**/*.gradle.kts', 'gradle.properties', 'gradle/libs.versions.toml', 'gradle/wrapper/gradle-wrapper.properties') }}
+          restore-keys: gradle-
+
+      # AGP installs the platforms and build-tools it needs during the build.
+      - uses: actions/cache@v5
+        with:
+          path: ~/.android/sdk
+          key: android-sdk-${{ hashFiles('**/*.gradle.kts', 'gradle/libs.versions.toml') }}
+          restore-keys: android-sdk-
 
       - uses: android-actions/setup-android@v4
 
