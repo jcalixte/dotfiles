@@ -44,4 +44,10 @@ Whatever the domain, it must resolve to the target host before a Coolify app is 
 - **`*.apoena.dev` subdomains** are covered by a wildcard — nothing to do here. Sanity-check with `dig +short <subdomain>.apoena.dev` against `dig +short platform.apoena.dev` before deploying.
 - **Custom marque domains** (separate apex, e.g. `typoena.app`) are what this skill provisions. The domain must already be registered in marque (`at.marque.domain/<domain>` record exists); the skill can't buy it.
 
+## Adding one record to an existing zone (TXT, MX, …)
+
+The script above writes a fresh 3-record zone. For a zone that already has records (`apoena.dev` holds SPF, DKIM, DMARC, `_atproto`, MX), never write a fresh one: `putRecord` replaces the whole zone. Get the record, append to `.value.records`, and write it back with `swapRecord` set to the old `cid`, so a concurrent change fails instead of being lost. Names are relative to the zone (`_atproto`, `_lexicon.lena`); TXT values are unquoted.
+
+**Wildcard trap.** A record under `<x>.<sub>.<domain>` (e.g. `_lexicon.lena.apoena.dev`) makes `<sub>` an existing empty name, and the `*` wildcard stops covering it (RFC 4592): `<sub>.<domain>` then has no A record and its app goes offline. Before such a write, check whether `<sub>.<domain>` resolves only through the wildcard; if so, add an explicit `<sub>` A record (IP of `platform.apoena.dev`) in the same write. After the write, check both names on every marque nameserver (`dig +short NS <domain>`).
+
 </supporting-info>
