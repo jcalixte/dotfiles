@@ -1,6 +1,6 @@
 ---
 name: apoena-release
-description: Use when the user wants to release, ship, deploy or tag a new version of one of their Android Store Apps (a repo with `.gitea/workflows/release.yml` triggered on `v*` tags). Commits and pushes pending work, picks the next semver version from the conventional commits since the last tag, tags and pushes it, watches the Gitea Actions run, checks the signed APK landed on the Gitea release, confirms the Store (store.apoena.dev) lists the new version (retrying or unblocking the Store rebuild on Coolify), then deletes the App's older Gitea releases and checks the server disk usage.
+description: Use when the user wants to release, ship, deploy or tag a new version of one of their Android Store Apps (a repo with `.gitea/workflows/release.yml` triggered on `v*` tags). Commits and pushes pending work, picks the next semver version from the conventional commits since the last tag, tags and pushes it, watches the Gitea Actions run, checks the signed APK landed on the Gitea release, confirms the Store (store.apoena.dev) lists the new version (retrying or unblocking the Store rebuild on Coolify), then deletes the App's Gitea releases older than the last five and checks the server disk usage.
 ---
 
 <what-to-do>
@@ -119,21 +119,22 @@ curl -fsS -H "$AUTH" "$API/deployments/applications/urzae6uwh0lzk352gqvuug6n?tak
 - `failed` on a transient Coolify error (e.g. `container name ... is already in use`): trigger one rebuild with `curl -fsS -X POST -H "$AUTH" "$API/deploy?uuid=urzae6uwh0lzk352gqvuug6n&force=true"`, watch the new deployment the same way, then re-check the index. A rebuild only regenerates the index from Gitea releases, so it is safe to repeat.
 - Fails for any other reason, or fails again: show the log lines and stop. The Gitea release is still fine. Skip Step 7: the older releases stay until the Store lists the new one.
 
-## Step 7 — Delete old releases, check the disk
+## Step 7 — Keep the last five releases, check the disk
 
 Only after the Store index lists the new version.
 
-1. Delete this App's older Gitea releases. Keep the release of the new tag, and keep every git tag: `DELETE /releases/{id}` removes the release and its APK, not the tag. A release with no APK (a failed run) goes too.
+1. Keep this App's five newest releases that have an APK (the new tag is one of them) and delete the others. A release with no APK (a failed run) goes too. Keep every git tag: `DELETE /releases/{id}` removes the release and its APK, not the tag.
 
    ```bash
    curl -fsS -H "$H" "$G/repos/$OWNER/$REPO/releases?limit=50" \
-     | jq -r --arg t "vX.Y.Z" '.[] | select(.tag_name != $t) | "\(.id) \(.tag_name)"'
+     | jq -r '(map(select(any(.assets[]; .name | endswith(".apk")))) | sort_by(.created_at) | reverse | .[:5] | map(.id)) as $keep
+         | .[] | select(.id as $i | $keep | index($i) | not) | "\(.id) \(.tag_name)"'
    # for each id: curl -fsS -X DELETE -H "$H" "$G/repos/$OWNER/$REPO/releases/<id>"   (204 = deleted)
    ```
 
-   Then list the releases again: only `vX.Y.Z` with its APK must remain.
+   Then list the releases again: at most five remain, each with its APK, and `vX.Y.Z` is the newest.
 
-2. Check the server disk (read-only). Don't run a cleanup here: Coolify runs a forced Docker cleanup every night at midnight, a Store image now holds one APK per App, and a cleanup removes unused images of every app on the server. The last cleanup run on the server (UUID `adnwww057yrh5a1b1nfo5o26`) gives the disk usage; the API returns a bare array:
+2. Check the server disk (read-only). Don't run a cleanup here: Coolify runs a forced Docker cleanup every night at midnight, a Store image holds at most five APKs per App, and a cleanup removes unused images of every app on the server. The last cleanup run on the server (UUID `adnwww057yrh5a1b1nfo5o26`) gives the disk usage; the API returns a bare array:
 
    ```bash
    curl -fsS -H "$AUTH" "$API/servers/adnwww057yrh5a1b1nfo5o26/docker-cleanup/executions" \
