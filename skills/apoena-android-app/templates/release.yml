@@ -71,11 +71,10 @@ jobs:
           curl -fsS -X POST "$API/releases/$RELEASE_ID/assets?name=$APK_NAME" \
             -H "Authorization: token $GITEA_TOKEN" -F "attachment=@$RUNNER_TEMP/$APK_NAME"
 
-      - name: Rebuild the Store
-        if: ${{ vars.STORE_COOLIFY_UUID != '' }}
+      # Pins this Release in the Store's apps.yaml; that commit fires the Store's push webhook (Store ADR 0006).
+      - name: Pin the Release in the Store
         env:
-          STORE_DEPLOY_TOKEN: ${{ secrets.STORE_DEPLOY_TOKEN }}
-          STORE_COOLIFY_UUID: ${{ vars.STORE_COOLIFY_UUID }}
+          STORE_GITEA_TOKEN: ${{ secrets.STORE_GITEA_TOKEN }}
         run: |
-          curl -fsS -X POST "https://platform.apoena.dev/api/v1/deploy?uuid=$STORE_COOLIFY_UUID&force=true" \
-            -H "Authorization: Bearer $STORE_DEPLOY_TOKEN"
+          curl -fsS https://git.apoena.dev/julien/store/raw/branch/main/fdroid/pin-release.mjs \
+            | node - {{APP_ID}} "$GITHUB_REF_NAME"

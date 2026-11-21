@@ -5,7 +5,7 @@ description: Use when the user wants to release, ship, deploy or tag a new versi
 
 <what-to-do>
 
-Ship one **Release** of a Store App. A Release is an annotated git tag `vX.Y.Z` pushed to git.apoena.dev; the repo's release workflow builds the signed APK, attaches it to a Gitea release, then asks Coolify to rebuild the Store. The Store lists only the highest Release of each App, and only that Gitea release is kept (the server disk is small). Report each check's outcome as you go; never claim a step passed without seeing it.
+Ship one **Release** of a Store App. A Release is an annotated git tag `vX.Y.Z` pushed to git.apoena.dev; the repo's release workflow builds the signed APK, attaches it to a Gitea release, then pins that version in the Store's `apps.yaml` as `store-bot`; that commit fires the Store's push webhook (a cached build, ~40 s). The Store lists only the pinned Release of each App, and old Gitea releases are deleted (the server disk is small). Report each check's outcome as you go; never claim a step passed without seeing it.
 
 `$TEA_TOKEN` and `$COOLIFY_API_TOKEN` come from `~/.dotfiles/zsh/private.zsh`. If one is missing, tell the user to `source` it; don't hunt for tokens on disk.
 
@@ -93,20 +93,20 @@ Then confirm the APK is attached:
 curl -fsS -H "$H" "$G/repos/$OWNER/$REPO/releases/tags/vX.Y.Z" | jq -r '.html_url, .assets[].name'
 ```
 
-The APK lands before the last step ("Rebuild the Store"), so an attached APK alone doesn't mean the run is done.
+The APK lands before the last step ("Pin the Release in the Store"), so an attached APK alone doesn't mean the run is done.
 
 ## Step 6 — Confirm the Store lists it
 
-The app ID is `applicationId` in `app/build.gradle.kts` (`android/app/build.gradle.kts` in a Flutter App). The workflow's last step starts a Store rebuild on Coolify; it takes a few minutes after the run ends, so the index often doesn't list the new version yet.
+The app ID is `applicationId` in `app/build.gradle.kts` (`android/app/build.gradle.kts` in a Flutter App). The workflow's last step commits `version: vX.Y.Z` to the Store's `apps.yaml`; the Store rebuild takes about 40 s after the run ends.
 
 ```bash
 curl -fsS https://store.apoena.dev/fdroid/repo/index-v2.json \
   | jq -c --arg id "$APP_ID" '.packages[$id].versions | to_entries | map(.value.manifest.versionName)'
 ```
 
-Done when it prints `["X.Y.Z"]`: the Store build keeps only the highest-version APK of each App, so the old version goes away.
+Done when it prints `["X.Y.Z"]`: the Store build keeps only the pinned APK of each App, so the old version goes away.
 
-If the new version isn't there, find the Store's latest Coolify deployment (Store app UUID `urzae6uwh0lzk352gqvuug6n`):
+If the new version isn't there, first check the pin: `curl -fsS https://git.apoena.dev/julien/store/raw/branch/main/apps.yaml | grep -A3 "id: $APP_ID"`. No `version: vX.Y.Z` there means the pin step did not write it: read its log. If it says the App is pinned higher, the Store is right as it is. Otherwise add the line by hand in `~/projects/store` (`git pull --rebase` first), commit `chore(apps): pin $APP_ID vX.Y.Z` and push. With the pin in place, find the Store's latest Coolify deployment (Store app UUID `urzae6uwh0lzk352gqvuug6n`):
 
 ```bash
 API=https://platform.apoena.dev/api/v1; AUTH="Authorization: Bearer $COOLIFY_API_TOKEN"
@@ -116,7 +116,7 @@ curl -fsS -H "$AUTH" "$API/deployments/applications/urzae6uwh0lzk352gqvuug6n?tak
 - `queued` behind an older `in_progress` deployment: Coolify runs one deployment at a time. If the older one's last log line is `Gracefully shutting down build container` and it has not moved for 10 minutes, it is stuck (its new container is already live). Cancel it with `curl -fsS -X POST -H "$AUTH" "$API/deployments/<old uuid>/cancel"`; yours then starts.
 
 - `in_progress` / `queued`: watch it with a Monitor, the same way as Step 5 (`timeout_ms` 900000). The script polls `$API/deployments/$D` every 30 s, and on `finished` prints the index versions and exits; on `failed`/`cancelled*` prints the status plus `.logs | fromjson | .[] | select(.hidden|not) | .output | tail -15` and exits.
-- `failed` on a transient Coolify error (e.g. `container name ... is already in use`): trigger one rebuild with `curl -fsS -X POST -H "$AUTH" "$API/deploy?uuid=urzae6uwh0lzk352gqvuug6n&force=true"`, watch the new deployment the same way, then re-check the index. A rebuild only regenerates the index from Gitea releases, so it is safe to repeat.
+- `failed` on a transient Coolify error (e.g. `container name ... is already in use`): trigger one rebuild with `curl -fsS -X POST -H "$AUTH" "$API/deploy?uuid=urzae6uwh0lzk352gqvuug6n&force=false"` (no image exists for a failed commit, so Coolify builds it, with cache), watch the new deployment the same way, then re-check the index. A rebuild only regenerates the Repo from `apps.yaml`, so it is safe to repeat.
 - Fails for any other reason, or fails again: show the log lines and stop. The Gitea release is still fine. Skip Step 7: the older releases stay until the Store lists the new one.
 
 ## Step 7 — Keep the last five releases, check the disk
@@ -134,7 +134,7 @@ Only after the Store index lists the new version.
 
    Then list the releases again: at most five remain, each with its APK, and `vX.Y.Z` is the newest.
 
-2. Check the server disk (read-only). Don't run a cleanup here: Coolify runs a forced Docker cleanup every night at midnight, a Store image holds at most five APKs per App, and a cleanup removes unused images of every app on the server. The last cleanup run on the server (UUID `adnwww057yrh5a1b1nfo5o26`) gives the disk usage; the API returns a bare array:
+2. Check the server disk (read-only). Don't run a cleanup here: Coolify runs a forced Docker cleanup every night at midnight, a Store image holds one APK per App, and a cleanup removes unused images of every app on the server. The last cleanup run on the server (UUID `adnwww057yrh5a1b1nfo5o26`) gives the disk usage; the API returns a bare array:
 
    ```bash
    curl -fsS -H "$AUTH" "$API/servers/adnwww057yrh5a1b1nfo5o26/docker-cleanup/executions" \
