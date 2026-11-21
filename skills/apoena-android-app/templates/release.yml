@@ -10,6 +10,13 @@ permissions:
 jobs:
   release:
     runs-on: ubuntu-latest
+    # Persistent volumes instead of actions/cache: nothing to restore, the runner allows `ci-*`
+    # volumes and runs one job at a time, so no two jobs share them.
+    container:
+      image: docker.gitea.com/runner-images:ubuntu-latest
+      volumes:
+        - ci-{{APP_NAME}}-gradle:/root/.gradle
+        - ci-{{APP_NAME}}-android-sdk:/root/.android/sdk
     env:
       APK_NAME: {{APP_ID}}-${{ gitea.ref_name }}.apk
     steps:
@@ -20,23 +27,7 @@ jobs:
           distribution: temurin
           java-version: 21
 
-      # Not setup-java's `cache: gradle`: the Gitea cache server lowercases keys, setup-java
-      # then never sees an exact hit and saves the whole cache again on every run.
-      - uses: actions/cache@v5
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: gradle-${{ hashFiles('**/*.gradle.kts', 'gradle.properties', 'gradle/libs.versions.toml', 'gradle/wrapper/gradle-wrapper.properties') }}
-          restore-keys: gradle-
-
-      # AGP installs the platforms and build-tools it needs during the build.
-      - uses: actions/cache@v5
-        with:
-          path: ~/.android/sdk
-          key: android-sdk-${{ hashFiles('**/*.gradle.kts', 'gradle/libs.versions.toml') }}
-          restore-keys: android-sdk-
-
+      # ~/.android/sdk is a volume: AGP's own installs (platforms, build-tools) stay.
       - uses: android-actions/setup-android@v4
 
       - name: Decode App key
