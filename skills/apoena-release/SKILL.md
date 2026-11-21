@@ -1,6 +1,6 @@
 ---
 name: apoena-release
-description: Use when the user wants to release, ship, deploy or tag a new version of one of their Android Store Apps (a repo with `.gitea/workflows/release.yml` triggered on `v*` tags). Commits and pushes pending work, picks the next semver version from the conventional commits since the last tag, tags and pushes it, watches the Gitea Actions run, checks the signed APK landed on the Gitea release, confirms the Store (store.apoena.dev) lists the new version (retrying or unblocking the Store rebuild on Coolify), then deletes the App's Gitea releases older than the last five and checks the server disk usage.
+description: Use when the user wants to release, ship, deploy or tag a new version of one of their Android Store Apps (a repo with `.gitea/workflows/release.yml` triggered on `v*` tags). Commits and pushes pending work, picks the next semver version from the conventional commits since the last tag, tags and pushes it, watches the Gitea Actions run, checks the signed APK landed on the Gitea release, confirms the workflow pinned the version in the Store's `apps.yaml` and the Store (store.apoena.dev) lists it (pinning by hand, retrying or unblocking the Store rebuild on Coolify), then deletes the App's Gitea releases older than the last five and checks the server disk usage.
 ---
 
 <what-to-do>
@@ -18,6 +18,7 @@ If `git status --porcelain` lists changes or `git fetch -q && git status -sb` sh
 Stop and tell the user if any fails:
 
 - `.gitea/workflows/release.yml` exists and triggers on `tags: ["v*"]`.
+- Its last step runs `pin-release.mjs` (`grep -q pin-release.mjs .gitea/workflows/release.yml`). An older workflow calls Coolify with `force=true` and a Coolify token that is gone: replace that step with the one in `apoena-android-app/templates/release.yml` (App ID in place of `{{APP_ID}}`), commit `ci(release): pin the Release in the Store's apps.yaml` and push before you tag.
 - On `main`, working tree clean, and `main` is pushed (`git fetch -q && git status -sb` shows no ahead/behind). If `main` is behind origin, stop: don't pull or rebase on the user's behalf.
 - There are commits since the last tag (`git describe --tags --abbrev=0`). Nothing new → nothing to release.
 - Unit tests pass: `flutter test` when `pubspec.yaml` exists (a Flutter App), else `./gradlew -q :app:testDebugUnitTest`.
@@ -85,7 +86,7 @@ Owner/repo comes from `git remote get-url origin` (`ssh://git.apoena.dev:22222/<
 
 Use `actions/runs/<id>` (`status` + `conclusion`) and `actions/runs/<id>/jobs` (one line per step). Don't use `actions/tasks`: its `status` lags and says `running` after the run has ended.
 
-`success` → go on. `failure` → name the failed step (from the jobs call), link `https://git.apoena.dev/$OWNER/$REPO/actions/runs/<id>` and stop. The usual causes are a compile error or a missing App key secret.
+`success` → go on. `failure` → name the failed step (from the jobs call), link `https://git.apoena.dev/$OWNER/$REPO/actions/runs/<id>` and stop. The usual causes are a compile error or a missing App key secret. Only exception: when the one failed step is "Pin the Release in the Store", the release itself is fine: confirm the APK below, then pin by hand in Step 6. Don't re-run the job: `POST /releases` on an existing tag returns 409. A 401 there means `STORE_GITEA_TOKEN` is missing or revoked (see `apoena-android-app` to make a new one).
 
 Then confirm the APK is attached:
 

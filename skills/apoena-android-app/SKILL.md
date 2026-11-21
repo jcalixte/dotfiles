@@ -96,7 +96,7 @@ echo "$(curl -fsSL https://services.gradle.org/distributions/gradle-$V-wrapper.j
 Bring the existing files in line with the rules, keeping the App's own code and dependencies:
 
 - `app/build.gradle.kts`: replace the hard-coded `versionCode`/`versionName` with the `releaseVersion` block, and add the `signingConfigs` block and `signingConfig` line, both exactly as in `templates/app.build.gradle.kts`.
-- Add `.gitea/workflows/release.yml` from the template. If one already exists, replace it with the template: older copies trigger the Store with `force=false`, which serves a stale Repo.
+- Add `.gitea/workflows/release.yml` from the template. If one already exists, replace it with the template: older copies end with a Coolify deploy (`STORE_DEPLOY_TOKEN`, now gone) instead of the pin step, so the Store never gets the Release.
 - Add `*.jks` and `*.keystore` to `.gitignore`.
 - Add `android:icon="@mipmap/ic_launcher"` to `<application>` if it is missing. Delete any old `mipmap-*dpi/ic_launcher*.png`/`.webp` and any `mipmap-anydpi-v26/ic_launcher_round.xml` once Step 4b has run (the script warns about the first).
 - If the project is still on AGP 8, leave it there unless the user asks to upgrade — the release rules work on AGP 8 too. On AGP 8, keep the `kotlin-android` plugin; on AGP 9 it must be removed (built-in Kotlin).
