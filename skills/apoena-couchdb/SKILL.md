@@ -17,76 +17,51 @@ A new **database** inside the app's own instance needs no skill: something with 
 | --- | --- | --- |
 | `APP` | `bluebin` | kebab-case. Repo and Coolify app: `<APP>-couchdb` |
 | `DB_HOST` | `db.bluebin.app` | `db.<domain>` for a custom domain, `<APP>-db.apoena.dev` for an `*.apoena.dev` app |
-| `ORIGINS` | see below | every origin that serves the SPA, plus the dev server |
-| `AUTH_HOST`, `SLUG` | `auth.bluebin.app`, `bluebin` | the Authentik host the app logs in on, and its OIDC provider slug |
+| `ORIGINS` | `https://bluebin.app,https://www.bluebin.app,http://localhost:5173` | exact origins that serve the SPA, plus the dev server, comma-separated. The first one is the one `smoke.sh` tests |
+| `ISS` | `https://auth.bluebin.app/application/o/bluebin/` | the app's **own** Authentik provider: `https://<auth host>/application/o/<provider slug>/`. Another app's provider makes the two apps' tokens valid on both instances |
 
-`ORIGINS` is a regex body, alternatives separated by a plain pipe, dots written `[.]`:
+The Coolify steps need `$COOLIFY_API_TOKEN` (exported from `~/.dotfiles/zsh/private.zsh`). Without it, stop after Step 3 and hand the user the Step 4 values.
 
-```bash
-ORIGINS='https://(www[.])?bluebin[.]app|http://localhost:5173'
-```
-
-The Coolify steps need `$COOLIFY_API_TOKEN` (exported from `~/.dotfiles/zsh/private.zsh`). Without it, stop after Step 4 and hand the user the Step 5 values.
-
-## Step 0 — Preconditions (stop if one fails)
+## Step 1 — DNS
 
 ```bash
 [ "$(dig +short "$DB_HOST" | head -1)" = "$(dig +short platform.apoena.dev | head -1)" ] || echo "STOP: DNS"
-ISS=$(curl -fsS "https://$AUTH_HOST/application/o/$SLUG/.well-known/openid-configuration" | jq -r .issuer)
-curl -fsS "https://$AUTH_HOST/application/o/$SLUG/jwks/" | jq -e '[.keys[]? | select(.kty=="RSA")] | length > 0'   # must print true
 ```
 
-- DNS fails on a custom domain → run the **marque-dns** skill (its zone has a `*` record that covers `db.`).
-- No provider (404 on openid-configuration) → the app needs an Authentik OIDC provider first. There is no Authentik API token: the user imports a blueprint in the Authentik UI (Flows and Stages > Flows > Import). Do not continue without it.
-- JWKS is `{}` (the `jq -e` prints `false`) and openid-configuration lists only `HS256` → the provider has no signing key, so it signs with the client secret and CouchDB cannot verify it. Ask the user to set **Signing Key** on the provider in the Authentik UI (Applications > Providers > edit, an RSA certificate such as the default self-signed one), then re-run Step 0. In a blueprint this is `signing_key` on the provider.
-- `ISS` is exact, trailing slash included. Authentik puts the request host in it, so the app must always log in on `AUTH_HOST`.
+Fails on a custom domain → run the **marque-dns** skill (its zone has a `*` record that covers `db.`).
 
-## Step 1 — Copy the template
+## Step 2 — Generate the repo from the template
 
-The template is the Vaquant instance, `julien/couchdb` (public). Clone it fresh, files only. Do not copy `~/projects/couchdb`: that is the live Vaquant checkout and may hold uncommitted work.
+`template/` in this skill is a complete instance repo with `{{PLACEHOLDERS}}`. `new-instance.mjs` fills them, so do not edit the generated files by hand:
 
 ```bash
-git clone --depth 1 https://git.apoena.dev/julien/couchdb.git ~/projects/$APP-couchdb
-cd ~/projects/$APP-couchdb && rm -rf .git .env
+node ~/.claude/skills/apoena-couchdb/new-instance.mjs "$APP" "$DB_HOST" "$ORIGINS" "$ISS" ~/projects/$APP-couchdb
 ```
 
-## Step 2 — Make it the app's instance
+It reads the issuer and the RSA keys from the provider, builds the anchored CORS regex, prefixes every Traefik name with `<APP>-couchdb-` (all stacks share one Traefik: a name used twice overwrites the other app's CORS or Fauxton login), hashes a new Fauxton password with `bcryptjs`, and writes `.env` (mode 600, git-ignored) with local passwords and `FAUXTON_PASSWORD`. It never prints a secret.
 
-| File | Change |
+It stops (`STOP: …`, exit 1, nothing written) when:
+
+| Message | Fix |
 | --- | --- |
-| `docker-compose.coolify.yml` | Prefix every Traefik router, middleware and service name (see below) |
-| `docker-compose.coolify.yml` | Both `rule=` labels: replace the `Host(...)` part with `Host(\`$DB_HOST\`)` and drop the Vaquant hosts. The Fauxton rule keeps `&& PathPrefix(\`/_utils\`)` |
-| `docker-compose.coolify.yml` | `accesscontrolalloworiginlistregex=^($ORIGINS)$`. Keep `^` and `$`: without them `https://bluebin.app.evil.com` passes |
-| `docker-compose.coolify.yml` | `basicauth.users=fauxton:<new hash>` (Step 3) |
-| `config/local.ini` | `required_claims = exp, {iss, "$ISS"}` |
-| `config/local.ini` | Replace every `rsa:` line under `[jwt_keys]` with the output of `node scripts/jwt-keys.mjs https://$AUTH_HOST/application/o/$SLUG/jwks/` |
-| `config/local.ini` | Delete `roles_claim_path` unless the provider adds a `couchdb_roles` claim |
-| `README.md`, comments | First paragraph: "The CouchDB of <App>, at `https://$DB_HOST`". Replace Vaquant names, hosts and origins |
-| `scripts/smoke.sh` | The allowed-origin CORS check (3 lines, `https://vaquant.at`): use one of the app's origins. Nothing else in the script is app-specific |
+| `no OIDC provider at …` (404) | The app needs an Authentik OIDC provider. No Authentik API token exists: the user imports a blueprint in the Authentik UI (Flows and Stages > Flows > Import) |
+| `… has no RSA key` | The provider signs with HS256 (client secret), CouchDB cannot verify that. The user sets **Signing Key** on the provider (Applications > Providers > edit, an RSA certificate such as the default self-signed one). Blueprint: `signing_key`. It applies to new tokens at once; logged-in users get an RSA token at their next refresh |
+| `origin "…" must be exact` | Give `scheme://host[:port]` only: no path, no trailing slash, no regex |
+| `… already exists` | Pick another output dir; the script never overwrites |
 
-**Traefik names are global.** Every compose stack on the server shares one Traefik. Two stacks that both define `couchdb-api` or `couchdb-cors` overwrite each other, and the other app's CouchDB loses its CORS or its Fauxton login. Prefix them:
+The app's OIDC client must always use the auth host in `ISS`: a token from another host of the shared Authentik has another `iss` and gets 400 `Invalid iss claim`.
 
-```bash
-# also renames couchdb-fauxton-auth: \b matches between "fauxton" and "-auth"
-sed -i "s/\bcouchdb-\(api\|fauxton\|cors\|svc\)\b/$APP-couchdb-\1/g" docker-compose.coolify.yml
-grep -o 'traefik\.http\.[a-z]*\.[a-z0-9-]*' docker-compose.coolify.yml | sort -u   # every name starts with $APP-couchdb-
-grep -rniE 'vaquant|apoena\.dev' --exclude-dir=.git .                              # only hits you meant to keep
-```
+To change the template itself (a CouchDB upgrade, a new label), edit `template/` and run it with Vaquant's values (`vaquant db.vaquant.at https://vaquant.at,https://vaquant.space,http://localhost:8080 https://auth.vaquant.at/application/o/vaquant/`) into `/tmp` and diff with `julien/couchdb`. Expected differences only: the prefixed Traefik names, the CORS regex written as a flat list, the old `couchdb.apoena.dev` host, and `roles_claim_path` (Vaquant still has it). Running instances do not follow the template; port a change to each repo.
 
-## Step 3 — Fauxton password
+## Step 3 — Repo
 
 ```bash
-FAUXTON_PASSWORD=$(openssl rand -hex 16)
-pnpm --silent dlx bcryptjs@3 "$FAUXTON_PASSWORD"   # prints $2b$10$...
+cd ~/projects/$APP-couchdb && git init -b main && git add -A && git commit -m "feat: CouchDB instance for $APP"
 ```
 
-Paste the hash in the label with single `$` signs. Coolify escapes every `$` in labels, so a `${VAR}` there reaches Traefik as literal text. The hash is public in the repo, which is safe only because the password is 32 random hex characters. Keep `FAUXTON_PASSWORD` for Step 5. No Docker daemon is needed (`htpasswd` via `docker run` fails in the container).
+Then run the **apoena-gitea-repo** skill for `<APP>-couchdb`. Public is fine: the repo holds no secret (`.env` is ignored, the admin password comes from Coolify, `[jwt_keys]` are public keys, the Fauxton hash is of a 32-character random password).
 
-## Step 4 — Repo
-
-Commit (`feat: CouchDB instance for <APP>`) and run the **apoena-gitea-repo** skill for `<APP>-couchdb`. Public is fine: the repo holds no secret (`.env` is ignored, admin password comes from Coolify, JWT keys are public keys).
-
-## Step 5 — Coolify
+## Step 4 — Coolify
 
 Run the **apoena-coolify-deploy** skill for `<APP>-couchdb` with these values:
 
@@ -98,19 +73,26 @@ Before the first deploy, check that Coolify generated the admin secrets:
 
 ```bash
 curl -fsS -H "Authorization: Bearer $COOLIFY_API_TOKEN" https://platform.apoena.dev/api/v1/applications/$APP_UUID/envs \
-  | jq -r '.[].key' | grep -E '^SERVICE_(USER|PASSWORD)_COUCHDB$'
+  | jq -r '.[].key' | sort -u | grep -E '^SERVICE_(USER_COUCHDB|PASSWORD_COUCHDB|PASSWORD_COUCHDBCOOKIE)$'   # 3 lines
 ```
 
 If they are missing, Coolify has not parsed the compose file yet: ask the user to click **Reload Compose** on the app in the Coolify UI (no API endpoint does it), then set `docker_compose_domains` again and re-check. A deploy without them crash-loops (CouchDB 3 refuses to start without an admin).
 
-Add `FAUXTON_PASSWORD` as an env var (reference only, nothing reads it), then deploy.
+Add `FAUXTON_PASSWORD` from the generated `.env` as an env var (reference only, nothing reads it), then deploy:
 
-## Step 6 — Verify
+```bash
+FP=$(grep '^FAUXTON_PASSWORD=' ~/projects/$APP-couchdb/.env | cut -d= -f2)
+curl -fsS -X POST -H "Authorization: Bearer $COOLIFY_API_TOKEN" -H "Content-Type: application/json" \
+  https://platform.apoena.dev/api/v1/applications/$APP_UUID/envs -d "$(jq -n --arg v "$FP" '{key:"FAUXTON_PASSWORD", value:$v}')" >/dev/null
+```
+
+## Step 5 — Verify
 
 Read the admin login from the envs (`real_value` of `SERVICE_USER_COUCHDB` / `SERVICE_PASSWORD_COUCHDB`, production row) into variables; never print them. Tell the user you used the admin login.
 
 ```bash
-COUCHDB_USER=… COUCHDB_PASSWORD=… FAUXTON_PASSWORD=… ./scripts/smoke.sh https://$DB_HOST   # ends "All checks passed"
+cd ~/projects/$APP-couchdb
+COUCHDB_USER=… COUCHDB_PASSWORD=… FAUXTON_PASSWORD=… bash scripts/smoke.sh https://$DB_HOST   # ends "All checks passed"
 curl -s -w ' %{http_code}\n' -H 'Authorization: Bearer abc.def.ghi' https://$DB_HOST/_session   # 400 Malformed authentication token
 ```
 
@@ -123,7 +105,7 @@ curl -s -o /dev/null -D - -X OPTIONS -H 'Origin: https://vaquant.at' -H 'Access-
   https://db.vaquant.at/_session | grep -i '^access-control-allow-origin'   # Vaquant's instance (app "couchdb")
 ```
 
-## Step 7 — Wire the app
+## Step 6 — Wire the app
 
 - SPA build env: the CouchDB URL (for example `VITE_COUCHDB=https://$DB_HOST`), in the repo `.env` and in the Coolify envs (production and preview).
 - `connect-src` of the app's Content-Security-Policy: add `https://$DB_HOST`.
@@ -160,8 +142,7 @@ PouchDB checkpoints are per remote URL, so a new URL means a slower first sync, 
 
 | Mistake | Effect |
 | --- | --- |
-| Template Traefik names kept | Another app's CouchDB loses CORS or Fauxton login after this deploy |
-| `ISS` typed by hand | Every request: 400 `Invalid iss claim` |
+| Generated files edited by hand to rename or re-host | Traefik names or hosts drift; regenerate instead |
 | `ports: 5984` in compose | Database exposed on the host, bypassing Traefik. Keep `expose:` |
 | Bind-mounted `local.ini` | Coolify mounts an empty directory; the Dockerfile copies it instead |
 | Bind mount for data | `eacces`: the image runs as uid 5984. Keep the named volume |

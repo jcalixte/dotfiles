@@ -1,0 +1,74 @@
+# Coolify deployment: New Resource -> Docker Compose, compose file docker-compose.coolify.yml.
+# Coolify fills SERVICE_FQDN_* and SERVICE_PASSWORD_* itself; it exposes them under
+# Configuration -> Environment Variables after the first deploy.
+services:
+  couchdb:
+    build: .
+    restart: unless-stopped
+    environment:
+      # Coolify generates the domain and routes it to container port 5984.
+      - SERVICE_FQDN_COUCHDB_5984
+      - COUCHDB_USER=${SERVICE_USER_COUCHDB:-admin}
+      - COUCHDB_PASSWORD=${SERVICE_PASSWORD_COUCHDB}
+      - COUCHDB_ERLANG_COOKIE=${SERVICE_PASSWORD_COUCHDBCOOKIE}
+    # No `ports:` on purpose. Coolify's proxy reaches the container on the internal
+    # network; publishing 5984 on the host would expose the database to the internet.
+    expose:
+      - "5984"
+    labels:
+      # Extra routers on top of the ones Coolify generates. A higher priority wins
+      # over Coolify's catch-all `PathPrefix(/)` router for the same host.
+      # Every stack on the server shares one Traefik, so router, middleware and service
+      # names carry the app name: the same name in two stacks overwrites the other one.
+      # Coolify escapes every `$` in labels itself: write a single `$`, and do not use
+      # ${VAR} here, it reaches Traefik as literal text.
+      - traefik.http.services.{{APP}}-couchdb-svc.loadbalancer.server.port=5984
+
+      # API: CORS for the {{APP}} origins. Traefik answers preflight requests itself,
+      # so they never reach CouchDB.
+      - 'traefik.http.routers.{{APP}}-couchdb-api.rule=Host(`{{DB_HOST}}`)'
+      - traefik.http.routers.{{APP}}-couchdb-api.priority=100
+      - traefik.http.routers.{{APP}}-couchdb-api.entrypoints=https
+      - traefik.http.routers.{{APP}}-couchdb-api.tls=true
+      - traefik.http.routers.{{APP}}-couchdb-api.tls.certresolver=letsencrypt
+      - traefik.http.routers.{{APP}}-couchdb-api.service={{APP}}-couchdb-svc
+      - traefik.http.routers.{{APP}}-couchdb-api.middlewares={{APP}}-couchdb-cors
+      # Anchored: Traefik accepts an origin if the regex matches any part of it.
+      - 'traefik.http.middlewares.{{APP}}-couchdb-cors.headers.accesscontrolalloworiginlistregex=^({{ORIGINS}})$'
+      - traefik.http.middlewares.{{APP}}-couchdb-cors.headers.accesscontrolallowcredentials=true
+      - traefik.http.middlewares.{{APP}}-couchdb-cors.headers.accesscontrolallowmethods=GET,PUT,POST,HEAD,DELETE,OPTIONS
+      - traefik.http.middlewares.{{APP}}-couchdb-cors.headers.accesscontrolallowheaders=accept,authorization,content-type,origin,referer,if-match,if-none-match,x-requested-with
+      - traefik.http.middlewares.{{APP}}-couchdb-cors.headers.accesscontrolexposeheaders=content-type,cache-control,accept-ranges,etag,server,x-couch-request-id,x-couch-update-newrev,x-couchdb-body-time
+      - traefik.http.middlewares.{{APP}}-couchdb-cors.headers.accesscontrolmaxage=600
+      - traefik.http.middlewares.{{APP}}-couchdb-cors.headers.addvaryheader=true
+
+      # Fauxton: basic auth in front of /_utils only. The header is removed before
+      # CouchDB sees it; Fauxton then logs in to CouchDB with its own cookie session.
+      # bcrypt hash of a 32-character random password (README, "Fauxton access").
+      - 'traefik.http.routers.{{APP}}-couchdb-fauxton.rule=Host(`{{DB_HOST}}`) && PathPrefix(`/_utils`)'
+      - traefik.http.routers.{{APP}}-couchdb-fauxton.priority=200
+      - traefik.http.routers.{{APP}}-couchdb-fauxton.entrypoints=https
+      - traefik.http.routers.{{APP}}-couchdb-fauxton.tls=true
+      - traefik.http.routers.{{APP}}-couchdb-fauxton.tls.certresolver=letsencrypt
+      - traefik.http.routers.{{APP}}-couchdb-fauxton.service={{APP}}-couchdb-svc
+      - traefik.http.routers.{{APP}}-couchdb-fauxton.middlewares={{APP}}-couchdb-fauxton-auth
+      - 'traefik.http.middlewares.{{APP}}-couchdb-fauxton-auth.basicauth.users=fauxton:{{FAUXTON_HASH}}'
+      - traefik.http.middlewares.{{APP}}-couchdb-fauxton-auth.basicauth.realm=Fauxton
+      - traefik.http.middlewares.{{APP}}-couchdb-fauxton-auth.basicauth.removeheader=true
+    volumes:
+      # A named volume, not a bind mount: the image runs as uid 5984 and cannot write
+      # a host directory owned by root.
+      - couchdb-data:/opt/couchdb/data
+    healthcheck:
+      test:
+        - CMD
+        - bash
+        - -c
+        - "exec 3<>/dev/tcp/127.0.0.1/5984; printf 'GET /_up HTTP/1.0\r\n\r\n' >&3; grep -q '200 OK' <&3"
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
+volumes:
+  couchdb-data:

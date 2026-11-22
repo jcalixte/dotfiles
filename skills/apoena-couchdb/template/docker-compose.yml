@@ -1,0 +1,25 @@
+services:
+  couchdb:
+    build: .
+    restart: unless-stopped
+    environment:
+      COUCHDB_USER: ${COUCHDB_USER:?set COUCHDB_USER in .env}
+      COUCHDB_PASSWORD: ${COUCHDB_PASSWORD:?set COUCHDB_PASSWORD in .env}
+      COUCHDB_ERLANG_COOKIE: ${COUCHDB_ERLANG_COOKIE:?set COUCHDB_ERLANG_COOKIE in .env}
+    ports:
+      - "${COUCHDB_PORT:-5984}:5984"
+    volumes:
+      - couchdb-data:/opt/couchdb/data
+    healthcheck:
+      test:
+        - CMD
+        - bash
+        - -c
+        - "exec 3<>/dev/tcp/127.0.0.1/5984; printf 'GET /_up HTTP/1.0\r\n\r\n' >&3; grep -q '200 OK' <&3"
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 20s
+
+volumes:
+  couchdb-data:
