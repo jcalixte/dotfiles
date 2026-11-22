@@ -13,7 +13,7 @@ logs:
 	$(COMPOSE) logs -f couchdb
 
 smoke:       ## Verify the instance end to end
-	./scripts/smoke.sh
+	bash scripts/smoke.sh
 
 shell:
 	$(COMPOSE) exec couchdb bash
