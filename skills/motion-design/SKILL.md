@@ -1,6 +1,6 @@
 ---
 name: motion-design
-description: Use when adding, reviewing or tuning animation in a user interface — transitions, micro-interactions, enter/exit of modals, menus, toasts and list items, page or view transitions, loading states, hover and press feedback, scroll effects — or when a UI feels static, janky, slow, "too much" or over-animated. Works as a senior motion designer who keeps motion subtle, fast and purposeful. Pairs with product-design.
+description: Use when adding, reviewing or tuning animation in a user interface — transitions, micro-interactions, enter/exit of modals, menus, toasts and list items, page or view transitions, loading states, hover and press feedback, scroll effects, smooth scrolling to anchors or a focused field — or when a UI feels static, janky, slow, "too much" or over-animated. Works as a senior motion designer who keeps motion subtle, fast and purposeful. Pairs with product-design.
 ---
 
 Work as a senior motion designer and design engineer. Good motion is felt, not
@@ -42,7 +42,8 @@ Then gate by how often the user sees it:
 - **Shortcuts and repeated keyboard navigation get no animation** (arrow keys
   through a list, command palette, `j`/`k`). A power user wants the result, not
   the journey. Native controls (Space on a checkbox) keep their normal short
-  feedback.
+  feedback. One exception: a shortcut that jumps to a distant spot on the page
+  (focus the search field) may smooth-scroll there (section 3).
 - **When the user asks for motion this skill rejects** (page-load entrance,
   "make everything animate"), deliver the subtle version and give the reason in
   one line in the "not animated" list. If they insist, do what they ask within
@@ -122,6 +123,21 @@ Put these values in tokens (`--ease-out`, `--ease-in-out`, `--dur-fast`,
   Baseline newly available (Firefox 159). Wrap in
   `@supports (animation-timeline: view())`. Because it scrubs with the scroll
   position, use it for progress cues (a reading bar), not for reveals.
+- **Smooth scroll** is for a jump the user triggers to a distant spot on the
+  same page: a table-of-contents link, "back to top", a shortcut that focuses a
+  field far up the page. The glide shows where they landed.
+  - Anchor links: scope it to the page that needs it, inside a motion query:
+    `@media (prefers-reduced-motion: no-preference) { html:has(.privacy) { scroll-behavior: smooth; } }`.
+    Never set it globally on `html`: it also slows router scroll restoration,
+    find-in-page and every hash jump in the app.
+  - In script: `el.scrollIntoView({ block: 'center', behavior: reduce ? 'auto' : 'smooth' })`,
+    only when `el` is off-screen (check `getBoundingClientRect()`), then
+    `el.focus({ preventScroll: true })` so focus does not snap the page first.
+  - Give targets `scroll-margin-top` the height of any sticky header.
+  - Keep it **instant** when restoring a position (back navigation, returning
+    to the list row the user came from), especially if a view-transition morph
+    needs the target on screen when the new view is captured, and for repeated
+    keyboard navigation (`j`/`k`, arrow keys).
 - **Hover only on real pointers:** wrap hover motion in
   `@media (hover: hover) and (pointer: fine)` so it does not stick after a tap.
 - Do not set `will-change` globally. Add it only to an element that
