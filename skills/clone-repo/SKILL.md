@@ -1,6 +1,6 @@
 ---
 name: clone-repo
-description: Use when the user asks to clone / fetch / pull down a repository, especially terse asks like "clone into ." where the host, owner, or URL is not spelled out. Resolves the clone target from host-scoping keywords and per-host owner defaults, handles git.apoena.dev's non-standard SSH port, sets up dual-host mirror remotes (GitHub + Gitea) so one push writes both, treats repos as private-by-default (failing clearly on auth), and clones non-destructively into a non-empty directory.
+description: Use when the user asks to clone / fetch / pull down a repository, especially terse asks like "clone into ." where the host, owner, or URL is not spelled out. Resolves the clone target from host-scoping keywords and per-host owner defaults, handles git.apoena.dev's non-standard SSH port, makes Gitea (git.apoena.dev, the Coolify deploy source) the primary origin with GitHub as a push mirror so one push writes both, repairs GitHub-only remotes that push but never deploy, treats repos as private-by-default (failing clearly on auth), and clones non-destructively into a non-empty directory.
 ---
 
 <what-to-do>
@@ -13,6 +13,8 @@ Resolve and clone a repository even when the ask is terse (e.g. "clone into .").
 - If the user says **"apoena.dev only"** / **"git.apoena.dev only"** → use Gitea at `git.apoena.dev`, do NOT probe GitHub.
 - If a full URL is given, use it verbatim (skip host/owner inference).
 - If neither a scope nor a URL is given, ask which host (short numbered choice), or infer from context (a `git.apoena.dev` project → Gitea; a GitHub issue/PR context → GitHub).
+
+**Gitea is the primary remote; GitHub is only a push mirror.** For the user's own repos (`jcalixte/*` on GitHub, `julien/*` on Gitea), `origin` fetches from `git.apoena.dev`, even when the user gave a GitHub URL. Coolify deploys from Gitea, so a clone whose `origin` points only at GitHub pushes fine but **never deploys**: Gitea stays on an old commit and `git push` reports nothing wrong. When given a GitHub URL for one of these repos, check whether Gitea has it (`git ls-remote ssh://git@git.apoena.dev:22222/julien/<repo>.git`). If it does, set up the mirror remote in §5.
 
 ## 2. Resolve owner + repo
 
@@ -54,16 +56,16 @@ Some repos live on **both** GitHub and `git.apoena.dev` (Gitea mirror). Do NOT s
 ```
 git remote set-url origin ssh://git@git.apoena.dev:22222/<owner>/<repo>.git
 git remote set-url --add --push origin ssh://git@git.apoena.dev:22222/<owner>/<repo>.git
-git remote set-url --add --push origin https://github.com/<gh-owner>/<repo>
+git remote set-url --add --push origin git@github.com:<gh-owner>/<repo>.git
 ```
 
-- First line: fetch URL (pick the primary host — Gitea here).
+- First line: fetch URL, always Gitea (the primary and the deploy source).
 - The first `--add --push` re-declares the fetch host as a push target (adding any push URL clears the implicit default, so the primary must be listed explicitly).
 - Second `--add --push` adds the mirror. After this, one `git push` updates both; `git remote -v` shows one fetch + two push lines.
 
-**To repair an already-split remote** (fetch and push on different hosts): run the three commands above to reset it. Then `git push` once to sync whichever mirror lagged.
+**To repair a split or GitHub-only remote:** run `git config --unset-all remote.origin.pushurl`, then the three commands above. Then `git push` once to bring the lagging host up to date. The symptom is "I pushed but nothing deployed". Confirm it by comparing `git ls-remote <gitea-url> refs/heads/main` with `git rev-parse HEAD`.
 
-Only wire dual push when the user wants both hosts kept in sync; a single-host repo needs none of this.
+Wire dual push whenever the repo exists on both hosts. A repo that exists on only one host needs none of this.
 
 ## 6. Auth: private by default, fail clearly
 
